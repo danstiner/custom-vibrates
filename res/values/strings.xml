@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Vibrates User!</string>
+    <string name="app_name">Custom Vibrates</string>
+    <string name="no_contacts_message">No custom contacts, please add some to get started.</string>
+    <string name="add_contact_buttonlabel">Add Contact...</string>
+    <string name="or">or</string>
+    <string name="menu_delete">Delete</string>
+    <string name="contactedit_title">Customize Vibrates for Contact</string>
+    <string name="edit_delete_button">Remove Customization</string>
+    <string name="edit_save_button">Save Changes</string>
+    <string name="menu_insert">Add New</string>
+    <string name="accessiblity_listener_desc">Tie in for vibrating on accessibility events</string>
+    <string name="menu_add_title">Add new Contact or Service</string>
+    <string name="menu_add_shortitle">Add...</string>
+    <string name="menu_settings_title">Settings</string>
+</resources>
