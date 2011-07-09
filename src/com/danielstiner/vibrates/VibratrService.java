@@ -32,7 +32,7 @@ public class VibratrService extends Service {
 
 	private Vibrator vibrator;
 	
-	private CustomContactManager ccm;
+	private Manager ccm;
 	
 	// receives interactions from clients activities
     private final IBinder mBinder = new LocalBinder();
@@ -47,48 +47,27 @@ public class VibratrService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		ccm = new CustomContactManager(this);
+		ccm = new Manager(this);
 		
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Contact contact = null;
-		
 		Bundle bundle = intent.getExtras();
 		
+		// Use identifier to lookup the contact
+		Entity entity = ccm.get(bundle.getString(Notification.IDENTIFIER_KEY));
 		
-		// We at least need an identifier to lookup for a mimetype
-		String mimetype = bundle.getString(CustomContactManager.KEY_VIBRATE_MIMETYPE);
-		String identifier = bundle.getString(CustomContactManager.KEY_VIBRATE_IDENTIFIER);
-		
-		if(mimetype != null && identifier != null) {
-			// Try and find the corresponding contact
-			
-			// Lookup by the given mimetype first
-			contact = ccm.getContact(mimetype, identifier);
-			
-			// If we have something, then vibrate away!
-			if(contact != null)
-				vibrator.vibrate(contact.getPattern(mimetype), -1);
-			
-			// TODO combined contact + service patterns
-			
-		}
-		
-		String description = bundle.getString(KEY_VIBRATE_DESCRIPTION);
+		// If we have something, then vibrate away!
+		if(entity != null)
+			vibrator.vibrate(ccm.getPattern(entity, bundle.getString(Notification.TYPE_KEY)), -1);
 		
 		// TODO Fancy toast notifications
-		if(description != null) {
-			// include contact info if possible
-			if(contact != null)
-				Toast.makeText(this, contact.getDisplayName()+":"+description, Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(this, description, Toast.LENGTH_SHORT).show();
-		}
-		
-		
+		// FIXME Based on user settings please
+		String extra = bundle.getString(Notification.EXTRA_KEY);
+		if(extra != null && entity != null)
+				Toast.makeText(this, ccm.getDisplayName(entity)+": "+extra, Toast.LENGTH_SHORT).show();
 		
 		// We are lightweight to start, and notifications do not come often enough
 		// to justify sticking around forever, so just exit

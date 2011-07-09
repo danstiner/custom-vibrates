@@ -59,7 +59,7 @@ public class ContactList extends ListActivity {
 	private static final String DEBUG_TAG = "Vibrates";
 
 	
-	private CustomContactManager ccm;
+	private Manager ccm;
 
 	private Cursor mContactsCursor;
 	
@@ -72,14 +72,14 @@ public class ContactList extends ListActivity {
 		setContentView(R.layout.contactlist);
 
 		// Setup the contact list backend and populate list
-		ccm = new CustomContactManager(this);
+		ccm = new Manager(this);
 		
-		fillContactList();
+		// FIXME fillContactList();
 
 		// Register for context events from the list
 		registerForContextMenu(getListView());
 	
-		initEmptyView();
+		// FIXME ADD BACK: initEmptyView();
 	}
 	
 	private void initEmptyView() {
@@ -127,10 +127,10 @@ public class ContactList extends ListActivity {
 		case CONTEXTMENU_DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 					.getMenuInfo();
-			//ccm.deleteContact(info.id);
 			// TODO Not a great method for linking row in list to database delete
 			mContactsCursor.moveToPosition((int)info.position);
-			ccm.remove(ccm.getContactFromCursor(mContactsCursor));
+			
+			ccm.remove(ccm.fromCursor(mContactsCursor));
 			fillContactList();
 			return true;
 		}
@@ -144,11 +144,10 @@ public class ContactList extends ListActivity {
 		mContactsCursor.moveToPosition(position);
 		
 		//mContactsCursor.moveToPosition((int)info.id);
-		Contact contact = ccm.getContactFromCursor(mContactsCursor);
+		Entity entity = ccm.fromCursor(mContactsCursor);
 
-		Intent i = new Intent(this, ContactEdit.class);
-		i.putExtra(CustomContactManager.KEY_CONTACT_ID, contact.getId());
-		i.putExtra(CustomContactManager.KEY_CONTACT_LOOKUP, contact.getLookupKey());
+		Intent i = new Intent(this, EditEntity.class);
+		i.putExtra(Manager.ENTITY_ID_KEY, entity.getId());
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 
@@ -173,31 +172,15 @@ public class ContactList extends ListActivity {
 			break;
 		case ACTIVITY_PICK_CONTACT:
 			if (resultCode == RESULT_OK) {
-				// Intent i = new Intent(this, ContactEdit.class);
-				// startActivityForResult(i, ACTIVITY_CREATE);
-
-				Set<String> keys = extras.keySet();
-				Iterator<String> iterate = keys.iterator();
-				while (iterate.hasNext()) {
-					String key = iterate.next();
-					Log.v(DEBUG_TAG, key + "[" + extras.get(key) + "]");
-				}
+//				Set<String> keys = extras.keySet();
+//				Iterator<String> iterate = keys.iterator();
+//				while (iterate.hasNext()) {
+//					String key = iterate.next();
+//					Log.v(DEBUG_TAG, key + "[" + extras.get(key) + "]");
+//				}
 				Uri contactpath = data.getData();
-				// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
-				Log.v(DEBUG_TAG, "Got a result: " + contactpath.toString());
 				
-				// get the contact id from the Uri
-				String id = contactpath.getLastPathSegment();
-				
-				// get the permanent lookup key in case the id changes
-				List<String> resultSegments = contactpath.getPathSegments();
-				// hint, its the second to last segment
-				String lookup = resultSegments.get(resultSegments.size()-2);
-
-				// Actually create contact in DB
-				Contact newContact = ccm.getContact(Long.parseLong(id), lookup);
-				ccm.add(newContact);
-				editContact(newContact);
+				editEntity(ccm.createFromContactUri(contactpath));
 
 			} else {
 				// gracefully handle failure
@@ -227,18 +210,17 @@ public class ContactList extends ListActivity {
 
 	
 	private void newContact() {
-		// TODO First ask if we should be adding a service contact or actual
-		// contact
+		// TODO First ask if we should be adding a service group or other special contact
+		// or actual contact
 		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
 			ContactsContract.Contacts.CONTENT_URI);
 		startActivityForResult(contactPickerIntent, ACTIVITY_PICK_CONTACT);
 
 	}
-	private void editContact(Contact contact) {
+	private void editEntity(Entity contact) {
 		// Start contact edit activity
-		Intent i = new Intent(this, ContactEdit.class);
-		i.putExtra(CustomContactManager.KEY_CONTACT_ID, contact.getId());
-		i.putExtra(CustomContactManager.KEY_CONTACT_LOOKUP, contact.getLookupKey());
+		Intent i = new Intent(this, EditEntity.class);
+		i.putExtra(Manager.ENTITY_ID_KEY, contact.getId());
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 
@@ -276,25 +258,25 @@ public class ContactList extends ListActivity {
 			
 			
 			// Lets find some info about this contact
-			Contact contact = ccm.getContactFromCursor(c);
+			Entity entity = ccm.fromCursor(c);
 			
 			// Bind in contact name
 			TextView name_text = (TextView) v.findViewById(R.id.contactrow_name);
 			if (name_text != null) {
-				name_text.setText(contact.getDisplayName());
+				name_text.setText(ccm.getDisplayName(entity));
 			}
 			
 			// Bind in contact photo
 			ImageView pic = (ImageView) v.findViewById(R.id.contactrow_image);
 			if (pic != null) {
 				// grab contact pic as a Bitmap	
-				pic.setImageDrawable(Drawable.createFromStream(contact.openPhotoInputStream(), "contactphoto"));
+				pic.setImageDrawable(Drawable.createFromStream(ccm.getPhotoStream(entity), "contactphoto"));
 			}
 			
 			// Bind in default vibrate pattern
 			VibratePatternView pattern_view = (VibratePatternView) v.findViewById(R.id.contactrow_defaultpattern);
 			if (pattern_view != null) {
-				pattern_view.setPattern(contact.getDefaultPattern());
+				pattern_view.setPattern(ccm.getPattern(entity));
 			}
 			
 			// Bind in some top service specific patterns
