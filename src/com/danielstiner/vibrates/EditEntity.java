@@ -14,17 +14,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ContactEdit extends Activity {
+public class EditEntity extends Activity {
 
 	private static final int ACTIVITY_PATTERN_EDIT = 1;
 
 	private int mContactRowId;
 	
-	private CustomContactManager ccm;
+	private Manager _ccm;
 
 	private String mLookupKey;
 	
-	private Contact contact;
+	private Entity _entity;
 
 	private String mContactLookup;
 
@@ -39,7 +39,7 @@ public class ContactEdit extends Activity {
 		setTitle(R.string.contactedit_title);
 		
 		// setup database for saving changes / getting additional details
-		ccm = new CustomContactManager(this);
+		_ccm = new Manager(this);
 		
 		// Build a contact to represent who we are customizing
 		initContact(savedInstanceState);
@@ -65,11 +65,7 @@ public class ContactEdit extends Activity {
 
 		    public void onClick(View view) {
 		    	// Start pattern edit
-				editPattern(CustomContactManager.MIMETYPE_DEFAULT);
-		    	Intent i = new Intent(getBaseContext(), VibratePatternEdit.class);
-				i.putExtra(CustomContactManager.KEY_VIBRATE_MIMETYPE, CustomContactManager.MIMETYPE_DEFAULT);
-				i.putExtra(CustomContactManager.KEY_VIBRATE_PATTERN, contact.getDefaultPattern());
-				startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
+				editPattern(Notification.DEFAULT);
 		    }
 
 		});
@@ -130,10 +126,9 @@ public class ContactEdit extends Activity {
 		}
 	}
 	
-	private void editPattern(String mimetype) {
+	private void editPattern(String type) {
 		Intent i = new Intent(this, VibratePatternEdit.class);
-		i.putExtra(CustomContactManager.KEY_VIBRATE_MIMETYPE, mimetype);
-		i.putExtra(CustomContactManager.KEY_VIBRATE_PATTERN, contact.getDefaultPattern());
+		i.putExtra(Notification.PATTERN_KEY, _ccm.getPattern(_entity));
 		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
 	}
 	
@@ -141,8 +136,7 @@ public class ContactEdit extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(CustomContactManager.KEY_CONTACT_ID, mContactRowId);
-        outState.putSerializable(CustomContactManager.KEY_CONTACT_LOOKUP, mLookupKey);
+        outState.putSerializable(Manager.ENTITY_ID_KEY, _entity.getId());
     }
     @Override
     protected void onPause() {
@@ -171,23 +165,20 @@ public class ContactEdit extends Activity {
 	private void populateFields() {
 		TextView contact_name = (TextView) findViewById(R.id.edit_name);
 		if(contact_name != null)
-			contact_name.setText(contact.getDisplayName());
+			contact_name.setText(_ccm.getDisplayName(_entity));
 		
 		VibratePatternView pattern;
 		
 		pattern = (VibratePatternView) findViewById(R.id.edit_default_pattern);
 		if(pattern != null)
-			pattern.setPattern(contact.getDefaultPattern());
+			pattern.setPattern(_ccm.getPattern(_entity));
 	}
 	
 	private void initContact(Bundle savedInstanceState) {
 		if(savedInstanceState != null) {
-			mContactLookup = (String) savedInstanceState.getSerializable(CustomContactManager.KEY_CONTACT_LOOKUP);
-			mContactId = (Long) savedInstanceState.getSerializable(CustomContactManager.KEY_CONTACT_ID);
+			mContactId = (Long) savedInstanceState.getSerializable(Manager.ENTITY_ID_KEY);
 		} else if(getIntent().getExtras() != null) {
-			Bundle bundle = getIntent().getExtras();
-			mContactLookup = bundle.getString(CustomContactManager.KEY_CONTACT_LOOKUP);
-            mContactId = bundle.getLong(CustomContactManager.KEY_CONTACT_ROWID);
+            mContactId = getIntent().getExtras().getLong(Manager.ENTITY_ID_KEY);
 		} else {
 			// TODO, bad
 			//throw new Exception("Didn't get a row to edit.");
@@ -197,11 +188,11 @@ public class ContactEdit extends Activity {
 		}
 		
 		// Actually create contact
-		contact = new Contact(mContactLookup, mContactId, ccm);
+		_entity = _ccm.get(mContactId);
 	}
 	private void playDefaultPattern() {
 		// Play it off
-		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(contact.getDefaultPattern(), -1);
+		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(_ccm.getPattern(_entity), -1);
 		/*
 		 * // Play the appropriate vibrate pattern
 		Intent service = new Intent(context, VibratrService.class);
