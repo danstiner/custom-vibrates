@@ -32,7 +32,7 @@ public class VibratrService extends Service {
 
 	private Vibrator vibrator;
 	
-	private Manager ccm;
+	private EntityManager ccm;
 	
 	// receives interactions from clients activities
     private final IBinder mBinder = new LocalBinder();
@@ -47,7 +47,7 @@ public class VibratrService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		
-		ccm = new Manager(this);
+		ccm = new EntityManager(this);
 		
 		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 	}

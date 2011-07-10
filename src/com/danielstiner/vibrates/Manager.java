@@ -32,297 +32,38 @@ public class Manager {
 	
 	private static final int version = 2;
 	
-	private static final String DEBUG_TAG = "CustomVibratesContacts";
+	private static final String DEBUG_TAG = "VibratesManager";
 	
-	/** Identifies overall default vibrate patterns */
-	private static final int CONTACT_ID_DEFAULT = -2;
-	/** Identifies patterns not attached to a contact (yet parent-less) */
-	private static final int CONTACT_ID_NOBODY = -3;
-	
-	/** Pattern value meaning lookup default pattern instead */
-	private static final String PATTERN_DEFAULT = "default";
-	
-	private static final String KEY_ENTITY_ROWID = "_id";
-	private static final String KEY_ENTITY_ID = "id";
-	private static final String KEY_ENTITY_NAME = "name";
-	private static final String KEY_ENTITY_PATTERN = "pattern";
-	private static final String KEY_ENTITY_TIMES_CONTACTED = "times";
-	private static final String KEY_LOOKUP_ROWID = "_id";
-	private static final String KEY_LOOKUP_KIND = "kind";
-	private static final String KEY_LOOKUP_ENTITYID = "entity";
-	private static final String KEY_LOOKUP_IDENTIFIER = "identifier";
+	protected static final String KEY_ENTITY_ROWID = "_id";
+	protected static final String KEY_ENTITY_ID = "id";
+	protected static final String KEY_ENTITY_KIND = "kind";
+	protected static final String KEY_ENTITY_NAME = "name";
+	protected static final String KEY_ENTITY_PATTERN = "pattern";
+	protected static final String KEY_ENTITY_TIMES_CONTACTED = "times";
+	protected static final String KEY_LOOKUP_ROWID = "_id";
+	protected static final String KEY_LOOKUP_KIND = "kind";
+	protected static final String KEY_LOOKUP_ENTITYID = "entity";
+	protected static final String KEY_LOOKUP_IDENTIFIER = "identifier";
 
-	private static final String TABLE_ENTITIES = "entities";
-	private static final String TABLE_LOOKUP = "lookuptable";
+	protected static final String TABLE_ENTITIES = "entities";
+	protected static final String TABLE_LOOKUP = "lookuptable";
 
-	private static final String KEY_ENTITY_KIND = null;
-	
-	/**
-	 * 
-	 * @param c
-	 * @return
-	 */
-	public static Uri getLookupUri(Entity c) {
-		// FIXME: Don't assume the identier is the contact lookup, or the id even
-		return ContactsContract.Contacts.getLookupUri(c.getId(), c.getIdentifier());
-	}
-	
-	 
     public Manager(Context c) {
         _dbHelper = new CCMHelper(c, "vibrates", null, version);
         
         // TODO check c for nulls
         _context = c;
     }
-    public Entity create(String identifier) {
-    	return create(identifier, null);
+    protected SQLiteDatabase getWritableDatabase()
+    {
+    	return _dbHelper.getWritableDatabase();
     }
-    public Entity create(String identifier, String name) {
-    	return create(identifier, name, null);
+    protected SQLiteDatabase getReadableDatabase()
+    {
+    	return _dbHelper.getReadableDatabase();
     }
-    public Entity create(String identifier, String name, long[] pattern) {
-    	return create(identifier, name, pattern, null);
-    }
-    public Entity create(String identifier, String name, long[] pattern, String type) {
-    	return create(identifier, name, pattern, type, 0);
-    }
-    public Entity create(String identifier, String name, long[] pattern, String type, int times_contacted) {
-    	// First first see if such already exists
-    	Entity entity = get(identifier);
-    	if(entity != null) return entity;
-    	
-    	// First open a connection to the database
-    	SQLiteDatabase db = _dbHelper.getWritableDatabase();
-    	try {
-            // Perform insert of actual entity
-            ContentValues entity_values = new ContentValues(3);
-            entity_values.put(KEY_ENTITY_NAME, name);
-            entity_values.put(KEY_ENTITY_KIND, type);
-            entity_values.put(KEY_ENTITY_PATTERN, pattern.toString());
-            // FIXME: throw is temporary
-            long entityId = db.insertOrThrow(TABLE_ENTITIES, null, entity_values);
-            
-            // TODO: Check insertion here
-            
-            // Now map a lookup for the given identifier
-            ContentValues lookup_values = new ContentValues(2);
-            lookup_values.put(KEY_LOOKUP_IDENTIFIER, identifier);
-            lookup_values.put(KEY_LOOKUP_ENTITYID, entityId);
-            long lookupId = db.insertOrThrow(TABLE_LOOKUP, null, lookup_values);
-            
-            // TODO: Check lookup here and rollback entity insert if neccessary
-            
-            // Must have worked
-            return get(entityId);
-            
-    	} catch(Exception tr) {
-            Log.d(DEBUG_TAG, "Add entity failed.", tr);
-        } finally {
-            if (db != null)
-                db.close();
-        }
-        
-        // Must not have worked, maybe there was an entry in the db already?
-        return null;
-	}
-    public Entity createFromContactUri(Uri contact_uri) {
-    	// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
-		Log.v(DEBUG_TAG, "Got a result: " + contact_uri.toString());
-		// get the contact id from the Uri
-		Long origId = Long.parseLong(contact_uri.getLastPathSegment());
-		
-		// get the permanent lookup key in case the id changes
-		List<String> resultSegments = contact_uri.getPathSegments();
-		// hint, its the second to last segment
-		String origLookupKey = resultSegments.get(resultSegments.size()-2);
-		
-		// TODO fix identifier assumptions
-		// Grab some info from the system contact service
-		Cursor c = _context.getContentResolver().query(
-				ContactsContract.Contacts.getLookupUri(origId, origLookupKey),
-				new String[] {
-					ContactsContract.Contacts.DISPLAY_NAME,
-					ContactsContract.Contacts.LOOKUP_KEY,
-					ContactsContract.Contacts.TIMES_CONTACTED
-					},
-				null,
-				null,
-				null);
-		try {
-		    c.moveToFirst();
-		    // Grab some info
-		    String name = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
-		    String lookup = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
-		    int times_contacted = c.getInt(c.getColumnIndexOrThrow(ContactsContract.Contacts.TIMES_CONTACTED));
-		    
-		    // Generate a default contact pattern
-		    long[] pattern = generatePattern(name);
-		    
-		    return create(lookup, name, pattern, Entity.TYPE_CONTACTSCONTRACTCONTACT, times_contacted);
-		    
-		} finally {
-		    c.close();
-		}
-		
-    }
-    private long[] generatePattern(String name) {
-		// TODO Auto-generated method stub
-		return MorseCodePattern.morsify(name);
-	}
-
-
-	/**
-     * Adds a new pattern or replaces the existing one to a contact.
-     * @param mimetype
-     * @param identifier
-     * @param to If a no contact is given, pattern will be associated with CONTACT_ID_NOBODY
-     * @param pattern A null pattern means to use the contact's default pattern
-     */
-//    public void addPattern(String mimetype, String identifier, Contact to, long[] pattern) {
-//    	String where_clause = KEY_MIMETYPE + " == ? AND " + KEY_IDENTIFIER + " == ?";
-//    	String[] where_args = new String[]{mimetype, identifier};
-//    	// Check our parameters
-//    	if(mimetype == null) throw new IllegalArgumentException("Must give a mimetype");
-//    	if(identifier == null) throw new IllegalArgumentException("Must give an identifier");
-//    	// First open a connection to the database
-//    	SQLiteDatabase db = _dbHelper.getWritableDatabase();
-//    	try {
-//    		// Check if record already exists for this mimetype/identifier
-//    		Cursor existing = db.query(
-//    				TABLE_VIBRATES,
-//    				new String[]{KEY_CONTACT_ID},
-//    				where_clause,
-//    				where_args,
-//    				null,
-//    				null,
-//    				null,
-//    				"1");
-//    		
-//    		// Prep data for insertion
-//            ContentValues values = new ContentValues(4);
-//            values.put(KEY_CONTACT_ID, (to != null) ? to.getId() : CONTACT_ID_NOBODY);
-//            values.put(KEY_IDENTIFIER, identifier);
-//            values.put(KEY_MIMETYPE, mimetype);
-//            values.put(KEY_PATTERN, isValidPattern(pattern) ? pattern.toString() : "");
-//    		
-//    		if(existing.getCount() > 0) {
-//    			// Do an update
-//    			int updated = db.update(TABLE_VIBRATES, values, where_clause, where_args);
-//    			if(updated < 1) throw new Exception("No contact updated.");
-//    			if(updated > 1) throw new Exception("Many contacts updated.");
-//    		} else {
-//    			// Do an insert
-//    			db.insertOrThrow(TABLE_VIBRATES, null, values);
-//    		}
-//            
-//    	} catch(Exception tr) {
-//            Log.d(DEBUG_TAG, "Update contact failed.", tr);
-//        } finally {
-//            if (db != null)
-//                db.close();
-//        }
-//    }
-
-	public void remove(Entity entity) {
-		// First open a connection to the database
-    	SQLiteDatabase db = _dbHelper.getWritableDatabase();
-    	// Attempt the deletion of all relevant records
-    	try {
-    		
-    		// TODO Don't forget about assocatied lookups
-    		
-            // Perform removal
-            int deleteCount = db.delete(
-            		TABLE_ENTITIES,
-            		KEY_ENTITY_ID + " == ?",
-            		new String[] {entity.getId().toString()}
-            		);
-            
-            // Check if we actually removed a row
-            if( deleteCount == 0 ) {
-            	//Log.d(DEBUG_TAG, "Delete contact failed.", db.de);
-            }
-            
-    	} catch(Exception tr) {
-    		Log.d(DEBUG_TAG, "Delete contact failed.", tr);
-        } finally {
-            if (db != null)
-                db.close();
-            
-        }
-	}
-	public Entity get(Long id) {
-		return null;
-	}
-	public Entity get(String identifier) {
-		// First open a connection to the database
-    	SQLiteDatabase db = _dbHelper.getReadableDatabase();
-    	// Then attempt a search
-    	try {
-    		Cursor c = db.query(
-				TABLE_LOOKUP,
-				new String[]{KEY_LOOKUP_ENTITYID},
-				KEY_LOOKUP_IDENTIFIER + " == ?",
-				new String[]{identifier},
-				null, null, null,
-				"2");
-    		// No matches? Log it for the user to deal with
-    		if(c.getCount() < 1) {
-    			addIdentifier(null, identifier);
-    			return null;
-    		} else if (c.getCount() > 1) {
-    			// Multiple matches, also bad
-    			// TODO log it
-    			return null;
-    		}
-    		
-    		// We have enough information to init an entity
-    		c.moveToFirst();
-    		return new Entity(identifier, c.getLong(c.getColumnIndexOrThrow(KEY_LOOKUP_ENTITYID)));
-    		
-    	} catch(Exception tr) {
-            Log.d(DEBUG_TAG, "Search for entity failed.", tr);
-        } finally {
-            if (db != null)
-                db.close();
-        }
-        return null;
-	}
-	
-	private void addIdentifier(Entity to, String identifier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
-	 * Gives a photo for an entity if at all possible, otherwise returns null
-	 * @param entity Entity instance to grab a photostream for
-	 * @return
-	 */
-	public InputStream getPhotoStream(Entity entity) {
-		// FIXME: Hmm, more complicated, we need to change this depending on the entity type
-		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.getId());
-        InputStream input = Contacts.openContactPhotoInputStream(_context.getContentResolver(), uri);
-		return input;
-	}
-	
-	public Entity fromCursor(Cursor c) {
-		return get(c.getLong(c.getColumnIndexOrThrow(Manager.KEY_ENTITY_ID)));
-	}
-	public Cursor getServicesAndContacts() {
-		// Open a connection to the database
-    	SQLiteDatabase db = _dbHelper.getReadableDatabase();
-        try {
-        	// Grab all contacts 
-        	return db.query(TABLE_ENTITIES, null, null, null, null, null, null);
-        } finally {
-            if (db != null)
-                db.close();
-        }
-	}
-	
-	
-	public class CCMHelper extends SQLiteOpenHelper {
+    
+	private class CCMHelper extends SQLiteOpenHelper {
 
 		public CCMHelper(Context context, String name, CursorFactory factory,
 				int version) {
@@ -362,115 +103,6 @@ public class Manager {
 
 		}
 
-	}
-
-
-	public Map<String,long[]> getVibrates(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-		//c.moveToFirst();
-//		while(!c.isAfterLast()) {
-//			_vibrates.put(c.getColumnIndexOrThrow(CustomContactManager.KEY_IDENTIFIER), value)
-//		}
-//		}
-	}
-	
-	public void updateContact(Entity contact) {
-		ContentResolver cr = _context.getContentResolver();
-		// FIXME
-		// TODO
-		// Pull data from system contact service
-		
-		//updatePhoneNumbers(contact, cr);
-
-	}
-	
-//	private void updatePhoneNumbers(Contact contact, ContentResolver cr) {
-//		Cursor c = cr.query(
-//			ContactsContract.Data.CONTENT_URI,
-//			new String[] {
-//				ContactsContract.Data._ID,
-//				ContactsContract.CommonDataKinds.Phone.NUMBER,
-//				ContactsContract.CommonDataKinds.Phone.TYPE,
-//				ContactsContract.CommonDataKinds.Phone.LABEL
-//				},
-//			ContactsContract.Data.CONTACT_ID + " = ?" + " AND "
-//			+ ContactsContract.Data.MIMETYPE + " = ?",
-//			new String[] {
-//				contact.getId().toString(),
-//				ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE
-//				},
-//			null
-//			);
-//		
-//		if(c.getCount() < 1) return;
-//		
-//		// Open a connection to the database
-//    	SQLiteDatabase db = _dbHelper.getReadableDatabase();
-//		
-//		c.moveToFirst();
-//		
-//		while(!c.isAfterLast()) {
-//			// FIXME: Some fancy parsing of this number?
-//			String number = c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//			
-//			try {
-//			
-//				Cursor vibrates_cursor = db.query(
-//						TABLE_VIBRATES,
-//						new String[]{KEY_ROWID},
-//						KEY_CONTACT_ID + " == ? AND "
-//						+ KEY_IDENTIFIER + " == ?",
-//						new String[]{contact.getId().toString(), number},
-//						null,
-//						null,
-//						null,
-//						"1");
-//				
-//				if(vibrates_cursor.getCount() < 1) {
-//					// Need to add this new phone number
-//					// Prep data for insertion
-//		            ContentValues values = new ContentValues(3);
-//		            values.put(KEY_CONTACT_ID, contact.getId());
-//		            values.put(KEY_IDENTIFIER, contact.getLookupKey());
-//		            values.put(KEY_PATTERN, PATTERN_DEFAULT);
-//		 
-//		            // Perform insert
-//		            long insertId = db.insertOrThrow(TABLE_VIBRATES, null, values);
-//		            
-//		            // Check if we actually inserted a row
-//		            //if( insertId == -1 )
-//		            	// TODO bad stuff
-//			        
-//				}
-//			
-//			} finally {
-//	            if (db != null)
-//	                db.close();
-//	        }
-//			//c.getInt(c.getColumnIndexOrThrow(ContactsContract.Data._ID))
-//			//c.getInt(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE))
-//			//c.getString(c.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL))
-//			c.moveToNext();
-//		} // while(!c.isAfterLast())
-//	}
-	
-	private boolean isValidPattern(long[] pattern) {
-		if(pattern == null) return false;
-		// TODO Auto-generated method stub
-		return true;
-	}
-	
-	public long[] getPattern(Entity entity) {
-		return getPattern(entity, null);
-	}
-	public long[] getPattern(Entity entity, String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public String getDisplayName(Entity entity) {
-		// TODO Auto-generated method stub
-		return null;
 	}
     
 }

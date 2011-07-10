@@ -44,7 +44,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 
-public class ContactList extends ListActivity {
+public class IdentifierList extends ListActivity {
 
 	private static final int CONTEXTMENU_DELETE_ID = 1;
 
@@ -57,13 +57,12 @@ public class ContactList extends ListActivity {
 	private static final int ACTIVITY_PICK_CONTACT = 5;
 
 	private static final String DEBUG_TAG = "Vibrates";
-
 	
-	private EntityManager ccm;
+	private IdentifierManager ccm;
 
-	private Cursor mContactsCursor;
+	private Cursor mCursor;
 	
-	private EntityListCursorAdapter mContactsCursorAdapter;
+	private IdentifierListCursorAdapter mCursorAdapter;
 
 	// Called when the activity is first created.
 	@Override
@@ -71,8 +70,8 @@ public class ContactList extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contactlist);
 
-		// Setup the contact list back-end and populate list
-		ccm = new EntityManager(this);
+		// Setup the contact list backend and populate list
+		ccm = new IdentifierManager(this);
 		
 		fillContactList();
 
@@ -123,17 +122,17 @@ public class ContactList extends ListActivity {
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case CONTEXTMENU_DELETE_ID:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-					.getMenuInfo();
-			// TODO Not a great method for linking row in list to database delete
-			mContactsCursor.moveToPosition((int)info.position);
-			
-			ccm.remove(ccm.fromCursor(mContactsCursor));
-			fillContactList();
-			return true;
-		}
+//		switch (item.getItemId()) {
+//		case CONTEXTMENU_DELETE_ID:
+//			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+//					.getMenuInfo();
+//			// TODO Not a great method for linking row in list to database delete
+//			mCursor.moveToPosition((int)info.position);
+//			
+//			ccm.remove(ccm.fromCursor(mCursor));
+//			fillContactList();
+//			return true;
+//		}
 		return super.onContextItemSelected(item);
 	}
 
@@ -141,11 +140,11 @@ public class ContactList extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		mContactsCursor.moveToPosition(position);
-		
-		Entity entity = ccm.fromCursor(mContactsCursor);
-
-		editEntity(entity);
+//		mCursor.moveToPosition(position);
+//		
+//		Entity entity = ccm.fromCursor(mCursor);
+//
+//		editEntity(entity);
 	}
 
 	@Override
@@ -155,35 +154,35 @@ public class ContactList extends ListActivity {
 
 		Bundle extras = data.getExtras();
 
-		switch (requestCode) {
-		case ACTIVITY_EDIT:
-			// Refresh contact list
-			if (resultCode == RESULT_OK)
-				fillContactList();
-			break;
-		case ACTIVITY_PICK_CONTACT:
-			if (resultCode == RESULT_OK) {
-				Uri contactpath = data.getData();	
-				editEntity(ccm.createFromContactUri(contactpath));
-			} else {
-				// TODO: gracefully handle failure
-				Log.w(DEBUG_TAG, "Warning: activity result not ok");
-			}
-			break;
-		}
+//		switch (requestCode) {
+//		case ACTIVITY_EDIT:
+//			// Refresh contact list
+//			if (resultCode == RESULT_OK)
+//				fillContactList();
+//			break;
+//		case ACTIVITY_PICK_CONTACT:
+//			if (resultCode == RESULT_OK) {
+//				Uri contactpath = data.getData();	
+//				editEntity(ccm.createFromContactUri(contactpath));
+//			} else {
+//				// TODO: gracefully handle failure
+//				Log.w(DEBUG_TAG, "Warning: activity result not ok");
+//			}
+//			break;
+//		}
 	}
 
 	private void fillContactList() {
 		// TODO Auto-generated method stub
-		if(mContactsCursor != null)
-			mContactsCursor.close();
+		if(mCursor != null)
+			mCursor.close();
 		// Get all of the notes from the database and create the item list
-		mContactsCursor = ccm.getAll();
-		startManagingCursor(mContactsCursor);
+		mCursor = ccm.getAll();
+		startManagingCursor(mCursor);
 
 		// Now create an array adapter and set it to display using our row
-		mContactsCursorAdapter = new EntityListCursorAdapter(this, mContactsCursor);
-		setListAdapter(mContactsCursorAdapter);
+		mCursorAdapter = new IdentifierListCursorAdapter(this, mCursor);
+		setListAdapter(mCursorAdapter);
 
 	}
 
@@ -203,13 +202,13 @@ public class ContactList extends ListActivity {
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 
-	private class EntityListCursorAdapter extends CursorAdapter { // implements Filterable {
+	private class IdentifierListCursorAdapter extends CursorAdapter { // implements Filterable {
 
 		// For view management
 		private Context context;
-		private int layout = R.layout.contactrow;
+		private static final int layout = R.layout.identifier_row;
 
-		public EntityListCursorAdapter(Context context, Cursor c) {
+		public IdentifierListCursorAdapter(Context context, Cursor c) {
 			super(context, c);
 			this.context = context;
 		}
@@ -222,66 +221,28 @@ public class ContactList extends ListActivity {
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-
-			final LayoutInflater inflater = LayoutInflater.from(context);
-			View v = inflater.inflate(layout, parent, false);
-
-			return v;
+			return LayoutInflater.from(context).inflate(layout, parent, false);
 		}
-		
-		
 
 		@Override
 		public void bindView(View v, Context context, Cursor c) {
-
-			
-			
-			// Lets find some info about this contact
-			Entity entity = ccm.fromCursor(c);
+			// Lets find some info about this lookup
 			
 			// Bind in contact name
-			TextView name_text = (TextView) v.findViewById(R.id.contactrow_name);
-			if (name_text != null) {
-				name_text.setText(ccm.getDisplayName(entity));
-			}
+			// FIXME re-enable
+//			TextView ident_text = (TextView) v.findViewById(R.id.identifier_row_ident);
+//			if (ident_text != null) {
+//				ident_text.setText(IdentifierManager.identifierFromCursor(c));
+//			}
+//			
+//			// Bind in default vibrate pattern
+//			TextView pattern_view = (TextView) v.findViewById(R.id.identifier_row_kind);
+//			if (pattern_view != null) {
+//				name_text.setText(IdentifierManager.kindFromCursor(c));
+//			}
 			
-			// Bind in contact photo
-			ImageView pic = (ImageView) v.findViewById(R.id.contactrow_image);
-			if (pic != null) {
-				pic.setImageDrawable(Drawable.createFromStream(ccm.getPhotoStream(entity), "contactphoto"));
-			}
-			
-			// Bind in default vibrate pattern
-			VibratePatternView pattern_view = (VibratePatternView) v.findViewById(R.id.contactrow_defaultpattern);
-			if (pattern_view != null) {
-				pattern_view.setPattern(ccm.getPattern(entity));
-			}
-			
-			// Bind in some top service specific patterns
-			// TODO
 			
 		}
-/*
-		@Override
-		public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-			if (getFilterQueryProvider() != null) {
-				return getFilterQueryProvider().runQuery(constraint);
-			}
-
-			StringBuilder buffer = null;
-			String[] args = null;
-			if (constraint != null) {
-				buffer = new StringBuilder();
-				buffer.append("UPPER(");
-				buffer.append(People.NAME);
-				buffer.append(") GLOB ?");
-				args = new String[] { constraint.toString().toUpperCase() + "*" };
-			}
-
-			return context.getContentResolver().query(People.CONTENT_URI, null,
-					buffer == null ? null : buffer.toString(), args,
-					People.NAME + " ASC");
-		}*/
 	}
 
 }

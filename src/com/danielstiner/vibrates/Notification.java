@@ -27,7 +27,7 @@ public class Notification {
 
 	public static final String PATTERN_KEY = null;
 
-	public static final String DEFAULT = null;
+	public static final String DEFAULT = "";
 	
 	public static String particularizeType(String type, String specifier) {
 		return type + "/" + specifier;

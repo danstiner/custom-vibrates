@@ -20,7 +20,7 @@ public class EditEntity extends Activity {
 
 	private int mContactRowId;
 	
-	private Manager _ccm;
+	private EntityManager _ccm;
 
 	private String mLookupKey;
 	
@@ -39,10 +39,12 @@ public class EditEntity extends Activity {
 		setTitle(R.string.contactedit_title);
 		
 		// setup database for saving changes / getting additional details
-		_ccm = new Manager(this);
+		_ccm = new EntityManager(this);
 		
 		// Build a contact to represent who we are customizing
-		initContact(savedInstanceState);
+		_entity = getEntity(savedInstanceState);
+		// and update it
+		_ccm.update(_entity);
 		
 		// Time for some real work
 		playDefaultPattern();
@@ -78,51 +80,7 @@ public class EditEntity extends Activity {
 
 		Bundle extras = data.getExtras();
 
-		switch (requestCode) {/*
-		case ACTIVITY_EDIT:
-			//if(extras != null) {
-			//Long contactId = extras.getLong(CustomContactManager.KEY_CONTACT_ID);
-
-			// Refresh contact list if needed
-			if (resultCode == RESULT_OK) {
-				fillContactList();
-			}
-
-			//}
-			break;
-		case ACTIVITY_PICK_CONTACT:
-			if (resultCode == RESULT_OK) {
-				// Intent i = new Intent(this, ContactEdit.class);
-				// startActivityForResult(i, ACTIVITY_CREATE);
-
-				Set<String> keys = extras.keySet();
-				Iterator<String> iterate = keys.iterator();
-				while (iterate.hasNext()) {
-					String key = iterate.next();
-					Log.v(DEBUG_TAG, key + "[" + extras.get(key) + "]");
-				}
-				Uri contactpath = data.getData();
-				// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
-				Log.v(DEBUG_TAG, "Got a result: " + contactpath.toString());
-				
-				// get the contact id from the Uri
-				String id = contactpath.getLastPathSegment();
-				
-				// get the permanent lookup key in case the id changes
-				List<String> resultSegments = contactpath.getPathSegments();
-				// hint, its the second to last segment
-				String lookup = resultSegments.get(resultSegments.size()-2);
-
-				// Actually create contact in DB
-				Contact newContact = ccm.getContact(Long.parseLong(id), lookup);
-				ccm.add(newContact);
-				editContact(newContact);
-
-			} else {
-				// gracefully handle failure
-				Log.w(DEBUG_TAG, "Warning: activity result not ok");
-			}
-			break;*/
+		switch (requestCode) {
 		}
 	}
 	
@@ -174,7 +132,7 @@ public class EditEntity extends Activity {
 			pattern.setPattern(_ccm.getPattern(_entity));
 	}
 	
-	private void initContact(Bundle savedInstanceState) {
+	private Entity getEntity(Bundle savedInstanceState) {
 		if(savedInstanceState != null) {
 			mContactId = (Long) savedInstanceState.getSerializable(Manager.ENTITY_ID_KEY);
 		} else if(getIntent().getExtras() != null) {
@@ -188,7 +146,7 @@ public class EditEntity extends Activity {
 		}
 		
 		// Actually create contact
-		_entity = _ccm.get(mContactId);
+		return _ccm.get(mContactId);
 	}
 	private void playDefaultPattern() {
 		// Play it off
