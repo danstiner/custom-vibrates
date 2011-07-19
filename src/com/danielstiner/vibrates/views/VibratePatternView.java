@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.views;
 
 import java.util.ArrayList;
 import java.util.List;

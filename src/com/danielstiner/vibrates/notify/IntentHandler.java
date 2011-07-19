@@ -1,9 +1,10 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.notify;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import android.content.BroadcastReceiver;
+import com.google.inject.Provider;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -12,17 +13,18 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.telephony.SmsMessage;
 import android.telephony.TelephonyManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
-import android.widget.Toast;
 
-public class IntentReciever extends BroadcastReceiver {
-
+public class IntentHandler {
+	
+	private static final String NOTIFY_GMAIL = VibrateNotify.particularizeType(VibrateNotify.TYPE_EMAIL, "gmail");
+	private static final String NOTIFY_PHONE = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, "phone");
+	private static final String NOTIFY_SMS = VibrateNotify.TYPE_SMS;
+	
 	private static final String LOG_TAG = "CustomVibrates";
 
 	private static final String VIB_STATE = "android.media.VIBRATE_SETTING_CHANGED";
@@ -39,22 +41,19 @@ public class IntentReciever extends BroadcastReceiver {
 	// Gmail constants
     private static final Uri CONVERSATIONS_URI = Uri.parse("content://gmail-ls/conversations/");
 
-    private static final String[] CONVERSATION_PROJECTION = {
+    private static final String[] CONVERSATION_FIELDS = {
             "_id", "subject", "snippet", "fromAddress", "date"
     };
-	
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		// Check that we have some extra info to actually work with
-		Bundle bundle = intent.getExtras();
-		
-		//TODO temporary
-		Toast.makeText(context, intent.getAction()+intent.getDataString(), Toast.LENGTH_SHORT).show();
-		
-		if(bundle == null) return;
-		
-		// Figure out what kind of intent we have
-		String action = intent.getAction();
+    
+    private Provider<VibrateNotify> notify_provider;
+    
+    public IntentHandler(Provider<VibrateNotify> notify_provider)
+    {
+    	this.notify_provider = notify_provider;
+    }
+
+	public void handle(String action, Bundle bundle, Context context) {
+		// TODO Auto-generated method stub
 		if (action.equals(SMS_RECEIVED)) {
 			// retrieve the SMS message(s)
 			Object[] pdus = (Object[]) bundle.get("pdus");
@@ -64,45 +63,41 @@ public class IntentReciever extends BroadcastReceiver {
 		} else if(action.equals(PHONE_STATE)) {
 			handlePhoneState(bundle, context);
 		} else if(action.equals(Intent.ACTION_PROVIDER_CHANGED)) {
-			handleProviderChange(bundle, context).fire(context);
+			//handleProviderChange(bundle, context).fire(context);
 		}
 		// TODO Others
 	}
-
+	
+	
+	
 	private void handlePhoneState(Bundle bundle, Context context) {
 		// Check if we are currently ringing
 		if (bundle.getString(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 			// Hand off handling of this event
 			String number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
-			new Notification(number, Notification.particularizeType(Notification.VOICE, "phone")).fire(context);
+			String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, NOTIFY_PHONE);
+			notify_provider.get().identifier(number).type(type).fire(context);
 		}
 	}
 
 	private void handleSMS(SmsMessage msg, Context context) {
-
-		// Hand off handling of this event
-		// Start by creating a notifcation for the sender
-		Notification n = new Notification(msg.getDisplayOriginatingAddress());
-
-		if (msg.isEmail()) {
-			// Must have been an SMS from an email address
-			n.setType(Notification.particularizeType(Notification.SMS, "emailed"));
-		} else {
-			// Must have been a normal SMS
-			n.setType(Notification.SMS);
-		}
+		String ident = msg.getDisplayOriginatingAddress();
 		
+		String type = NOTIFY_SMS;
+		if (msg.isEmail())
+			// Must have been an SMS from an email address
+			type = VibrateNotify.particularizeType(type, "emailed");
+
 		// throw in the body of the message for good measure
-		n.setExtra(msg.getDisplayMessageBody());
+		String extra = msg.getDisplayMessageBody();
 
 		// Will tell the vibrator service to get busy
-		n.fire(context);
+		notify_provider.get().identifier(ident).type(type).extra(extra).fire(context);
 	}
-	private Notification handleProviderChange(Bundle bundle, Context context) {
-		
-		//TODO temp
-		if(bundle != null)
-		return new Notification("");
+	private void handleProviderChange(Bundle bundle, Context context) {
+		// TODO tmp
+		if(bundle == null || bundle != null)
+			return;
 		
 		// Assume its a gmail for now
 		String account = bundle.getString("account");
@@ -140,13 +135,13 @@ public class IntentReciever extends BroadcastReceiver {
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-					return new Notification("");
+					return;
 				}
 				 
 			} catch (NameNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				return new Notification("");
+				return;
 			}
            
         }
@@ -215,8 +210,10 @@ public class IntentReciever extends BroadcastReceiver {
         }
         
         
-        String type = Notification.particularizeType(Notification.EMAIL, "gmail");
-        type = Notification.particularizeType(type, tagLabel);
-        return new Notification(fromAddress).setType(type).setExtra(subject);
+        String type = NOTIFY_GMAIL;
+        type = VibrateNotify.particularizeType(type, tagLabel);
+        notify_provider.get().identifier(fromAddress).type(type).extra(subject).fire(context);
+        //return new VibrateNotify(fromAddress).setType(type).setExtra(subject);
 	}
+
 }

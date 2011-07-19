@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.utility;
 
 
 public class MorseCodePattern {
@@ -10,10 +10,6 @@ public class MorseCodePattern {
 	public static final long CHAR_GAP = DIT;
 	public static final long LETTER_GAP = DIT * 3;
 	public static final long WORD_GAP = DIT * 7;
-	
-
-	/* Default time length of a dit unit in milliseconds */
-	public static final long DEFAULT_DIT_TIME = 100;
 
 	private static final long g = CHAR_GAP;
 

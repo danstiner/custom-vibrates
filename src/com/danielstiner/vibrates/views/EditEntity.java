@@ -1,8 +1,16 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.views;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.R.id;
+import com.danielstiner.vibrates.R.layout;
+import com.danielstiner.vibrates.R.string;
+import com.danielstiner.vibrates.database.EntityManager;
+import com.danielstiner.vibrates.managers.Manager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -67,7 +75,7 @@ public class EditEntity extends Activity {
 
 		    public void onClick(View view) {
 		    	// Start pattern edit
-				editPattern(Notification.DEFAULT);
+				editPattern(INotification2.DEFAULT);
 		    }
 
 		});
@@ -86,7 +94,7 @@ public class EditEntity extends Activity {
 	
 	private void editPattern(String type) {
 		Intent i = new Intent(this, VibratePatternEdit.class);
-		i.putExtra(Notification.PATTERN_KEY, _ccm.getPattern(_entity));
+		i.putExtra(INotification2.PATTERN_KEY, _ccm.getPattern(_entity));
 		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
 	}
 	
@@ -94,7 +102,7 @@ public class EditEntity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(Manager.ENTITY_ID_KEY, _entity.getId());
+        outState.putSerializable(Manager.ENTITY_ID_KEY, _entity.entityid());
     }
     @Override
     protected void onPause() {

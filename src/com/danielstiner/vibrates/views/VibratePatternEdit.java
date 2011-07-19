@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.views;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -75,7 +75,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		saveState();
-		outState.putSerializable(Notification.PATTERN_KEY, _pattern.toArray());
+		outState.putSerializable(INotification2.PATTERN_KEY, _pattern.toArray());
 	}
 
 	@Override
@@ -203,7 +203,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 		// Recover saved state pattern if possible
 		if(savedState != null && _pattern.size() == 0) {
 			// It was stored as Long[]
-			Long[] pattern = (Long[]) savedState.getSerializable(Notification.PATTERN_KEY);
+			Long[] pattern = (Long[]) savedState.getSerializable(INotification2.PATTERN_KEY);
 			for(int i=0; i<pattern.length; i++)
 				_pattern.add(pattern[i]);
 		}
@@ -212,7 +212,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 			// Pull in pattern from passed intent if possible
 			Bundle extras = getIntent().getExtras();
 			if(extras != null) {
-				long[] pattern = extras.getLongArray(Notification.PATTERN_KEY);
+				long[] pattern = extras.getLongArray(INotification2.PATTERN_KEY);
 				for(int i=0; i<pattern.length; i++)
 					_pattern.add(pattern[i]);
 			}

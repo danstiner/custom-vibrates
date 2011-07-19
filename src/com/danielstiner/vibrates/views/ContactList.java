@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.views;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -7,6 +7,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+
+import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.R.id;
+import com.danielstiner.vibrates.R.layout;
+import com.danielstiner.vibrates.R.menu;
+import com.danielstiner.vibrates.R.string;
+import com.danielstiner.vibrates.database.EntityManager;
+import com.danielstiner.vibrates.managers.Manager;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -199,7 +208,7 @@ public class ContactList extends ListActivity {
 	private void editEntity(Entity contact) {
 		// Start contact edit activity
 		Intent i = new Intent(this, EditEntity.class);
-		i.putExtra(Manager.ENTITY_ID_KEY, contact.getId());
+		i.putExtra(Manager.ENTITY_ID_KEY, contact.entityid());
 		startActivityForResult(i, ACTIVITY_EDIT);
 	}
 

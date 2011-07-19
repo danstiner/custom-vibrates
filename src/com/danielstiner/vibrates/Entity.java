@@ -3,14 +3,24 @@
  */
 package com.danielstiner.vibrates;
 
+import com.danielstiner.vibrates.database.EntityManager;
+
 public class Entity {
+
+	public static final String TYPE_CONTACTSCONTRACTCONTACT = "contacts_contract_contact";
+
 	
-
-	public static final String TYPE_CONTACTSCONTRACTCONTACT = null;
-
 	private Long _id;
 	
 	private String _identifier;
+	
+	/**
+	 * Create default entity representing nobody in particular
+	 * @param identifier
+	 */
+	public Entity() {
+		this(null, new Long(EntityManager.ID_NOBODY));
+	}
 	
 	/**
 	 * Create entity from globally unique identifier string
@@ -35,13 +45,14 @@ public class Entity {
 		_identifier = identifier;
 		_id = id;
 	}
-	public String getIdentifier() {
+	public String identifier() {
 		return _identifier;
 	}
-	public Long getId() {
+	public Long entityid() {
 		return _id;
 	}
-	private void updateId(Long update_id) {
-		_id = update_id;
+	public Entity entityid(Long entityid) {
+		_id = entityid;
+		return this;
 	}
 }

@@ -1,10 +1,16 @@
-package com.danielstiner.vibrates;
+package com.danielstiner.vibrates.database;
 
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import roboguice.util.Ln;
+
+import com.danielstiner.vibrates.Entity;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -20,18 +26,28 @@ import android.provider.ContactsContract.Contacts;
 import android.util.Log;
 import android.util.Pair;
 
-public class EntityManager extends Manager {
+public class EntityManager implements IEntityManager {
 	
-	private static final String PREFIX = "com.danielstiner.vibrates.manager";
+	private static final int VERSION = VibratesDatabase.VERSION;
 	
-	public static final String ENTITY_ID_KEY = PREFIX + ".id";
+	protected static final String TABLE = "entities";
 	
-	private static final String DEBUG_TAG = "VibratesEntityManager";
+	protected static final String KEY_ROWID = "_id";
+	protected static final String KEY_ID = "id";
+	protected static final String KEY_KIND = "kind";
+	protected static final String KEY_NAME = "name";
+	protected static final String KEY_PATTERN = "pattern";
+	protected static final String KEY_TIMES_CONTACTED = "times";
+
 	
 	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
 	public static final int ID_NOBODY = -3;
 
 	private Context _context;
+
+	private VibratesDatabase _db;
+
+	private Provider<IdentifierManager> identifiermanager_provider;
 	
 	/**
 	 * 
@@ -40,13 +56,18 @@ public class EntityManager extends Manager {
 	 */
 	public static Uri getLookupUri(Entity c) {
 		// FIXME: Don't assume the identier is the contact lookup, or the id even
-		return ContactsContract.Contacts.getLookupUri(c.getId(), c.getIdentifier());
+		return ContactsContract.Contacts.getLookupUri(c.entityid(), c.identifier());
 	}
-		 
-    public EntityManager(Context c) {
-    	super(c);
-    	_context = c;
+	
+	@Inject
+    public EntityManager(VibratesDatabase db, Context c, Provider<IdentifierManager> identifiermanager_provider) {
+		this._db  = db;
+    	this._context = c;
+    	this.identifiermanager_provider = identifiermanager_provider;
     }
+    
+    
+    
     public Entity create(String identifier) {
     	return create(identifier, null);
     }
@@ -67,31 +88,30 @@ public class EntityManager extends Manager {
     	// TODO way more error checking on the parameters
     	
     	// First open a connection to the database
-    	SQLiteDatabase db = getWritableDatabase();
+    	SQLiteDatabase db = _db.getWritableDatabase();
     	try {
             // Perform insert of actual entity
             ContentValues entity_values = new ContentValues(3);
-            entity_values.put(KEY_ENTITY_NAME, name);
-            entity_values.put(KEY_ENTITY_KIND, type);
-            entity_values.put(KEY_ENTITY_PATTERN, pattern.toString());
+            entity_values.put(KEY_NAME, name);
+            entity_values.put(KEY_KIND, type);
+            entity_values.put(KEY_PATTERN, pattern.toString());
             // TODO: throw is temporary
-            long entityId = db.insertOrThrow(TABLE_ENTITIES, null, entity_values);
+            long entityId = db.insertOrThrow(TABLE, null, entity_values);
             
             // TODO: Check insertion here
             
             // Now map a lookup for the given identifier
-            ContentValues lookup_values = new ContentValues(2);
-            lookup_values.put(KEY_LOOKUP_IDENTIFIER, identifier);
-            lookup_values.put(KEY_LOOKUP_ENTITYID, entityId);
-            long lookupId = db.insertOrThrow(TABLE_LOOKUP, null, lookup_values);
-            
-            // TODO: Check lookup here and rollback entity insert if neccessary
+            identifiermanager_provider.get().add(entity, identifier);
+//            ContentValues lookup_values = new ContentValues(2);
+//            lookup_values.put(KEY_LOOKUP_IDENTIFIER, identifier);
+//            lookup_values.put(KEY_LOOKUP_ENTITYID, entityId);
+//            long lookupId = db.insertOrThrow(TABLE_LOOKUP, null, lookup_values);
             
             // Must have worked
             return get(entityId);
             
     	} catch(Exception tr) {
-            Log.d(DEBUG_TAG, "Add entity failed.", tr);
+            Ln.d(tr, "Add entity failed.");
         } finally {
             if (db != null)
                 db.close();
@@ -102,7 +122,7 @@ public class EntityManager extends Manager {
 	}
     public Entity createFromContactUri(Uri contact_uri) {
     	// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
-		Log.v(DEBUG_TAG, "Got a result: " + contact_uri.toString());
+		Log.v("Got a result: %s", contact_uri.toString());
 		// get the contact id from the Uri
 		Long origId = Long.parseLong(contact_uri.getLastPathSegment());
 		
@@ -131,7 +151,7 @@ public class EntityManager extends Manager {
 		    int times_contacted = c.getInt(c.getColumnIndexOrThrow(ContactsContract.Contacts.TIMES_CONTACTED));
 		    
 		    // Generate a default contact pattern
-		    long[] pattern = generatePattern(name);
+		    long[] pattern = PatternManager.generate(name);
 		    
 		    return create(lookup, name, pattern, Entity.TYPE_CONTACTSCONTRACTCONTACT, times_contacted);
 		    
@@ -140,77 +160,20 @@ public class EntityManager extends Manager {
 		}
 		
     }
-    private long[] generatePattern(String name) {
-		// TODO Auto-generated method stub
-		return MorseCodePattern.morsify(name);
-	}
-
-
-	/**
-     * Adds a new pattern or replaces the existing one to a contact.
-     * @param mimetype
-     * @param identifier
-     * @param to If a no contact is given, pattern will be associated with CONTACT_ID_NOBODY
-     * @param pattern A null pattern means to use the contact's default pattern
-     */
-//    public void addPattern(String mimetype, String identifier, Contact to, long[] pattern) {
-//    	String where_clause = KEY_MIMETYPE + " == ? AND " + KEY_IDENTIFIER + " == ?";
-//    	String[] where_args = new String[]{mimetype, identifier};
-//    	// Check our parameters
-//    	if(mimetype == null) throw new IllegalArgumentException("Must give a mimetype");
-//    	if(identifier == null) throw new IllegalArgumentException("Must give an identifier");
-//    	// First open a connection to the database
-//    	SQLiteDatabase db = _dbHelper.getWritableDatabase();
-//    	try {
-//    		// Check if record already exists for this mimetype/identifier
-//    		Cursor existing = db.query(
-//    				TABLE_VIBRATES,
-//    				new String[]{KEY_CONTACT_ID},
-//    				where_clause,
-//    				where_args,
-//    				null,
-//    				null,
-//    				null,
-//    				"1");
-//    		
-//    		// Prep data for insertion
-//            ContentValues values = new ContentValues(4);
-//            values.put(KEY_CONTACT_ID, (to != null) ? to.getId() : CONTACT_ID_NOBODY);
-//            values.put(KEY_IDENTIFIER, identifier);
-//            values.put(KEY_MIMETYPE, mimetype);
-//            values.put(KEY_PATTERN, isValidPattern(pattern) ? pattern.toString() : "");
-//    		
-//    		if(existing.getCount() > 0) {
-//    			// Do an update
-//    			int updated = db.update(TABLE_VIBRATES, values, where_clause, where_args);
-//    			if(updated < 1) throw new Exception("No contact updated.");
-//    			if(updated > 1) throw new Exception("Many contacts updated.");
-//    		} else {
-//    			// Do an insert
-//    			db.insertOrThrow(TABLE_VIBRATES, null, values);
-//    		}
-//            
-//    	} catch(Exception tr) {
-//            Log.d(DEBUG_TAG, "Update contact failed.", tr);
-//        } finally {
-//            if (db != null)
-//                db.close();
-//        }
-//    }
 
 	public void remove(Entity entity) {
 		// First open a connection to the database
-    	SQLiteDatabase db = getWritableDatabase();
+    	SQLiteDatabase db = _db.getWritableDatabase();
     	// Attempt the deletion of all relevant records
     	try {
     		
-    		// TODO Don't forget about assocatied lookups
+    		// TODO Don't forget about associated lookups
     		
             // Perform removal
             int deleteCount = db.delete(
-            		TABLE_ENTITIES,
-            		KEY_ENTITY_ID + " == ?",
-            		new String[] {entity.getId().toString()}
+            		TABLE,
+            		KEY_ID + " == ?",
+            		new String[] {entity.entityid().toString()}
             		);
             
             // Check if we actually removed a row
@@ -219,7 +182,7 @@ public class EntityManager extends Manager {
             }
             
     	} catch(Exception tr) {
-    		Log.d(DEBUG_TAG, "Delete contact failed.", tr);
+    		Ln.e(tr, "Delete contact failed.");
         } finally {
             if (db != null)
                 db.close();
@@ -235,16 +198,10 @@ public class EntityManager extends Manager {
     	SQLiteDatabase db = getReadableDatabase();
     	// Then attempt a search
     	try {
-    		Cursor c = db.query(
-				TABLE_LOOKUP,
-				new String[]{KEY_LOOKUP_ENTITYID},
-				KEY_LOOKUP_IDENTIFIER + " == ?",
-				new String[]{identifier},
-				null, null, null,
-				"2");
+    		Cursor c = makeIdentifierManager().get(identifier);
     		// No matches? Log it for the user to deal with
     		if(c.getCount() < 1) {
-    			addIdentifier(null, identifier);
+    			makeIdentifierManager().add(null, identifier);
     			return null;
     		} else if (c.getCount() > 1) {
     			// Multiple matches, also bad
@@ -254,7 +211,7 @@ public class EntityManager extends Manager {
     		
     		// We have enough information to init an entity
     		c.moveToFirst();
-    		return new Entity(identifier, c.getLong(c.getColumnIndexOrThrow(KEY_LOOKUP_ENTITYID)));
+    		return IdentifierManager.entityFromCursor(c);
     		
     	} catch(Exception tr) {
             Log.d(DEBUG_TAG, "Search for entity failed.", tr);
@@ -272,13 +229,13 @@ public class EntityManager extends Manager {
 	 */
 	public InputStream getPhotoStream(Entity entity) {
 		// FIXME: Hmm, more complicated, we need to change this depending on the entity type
-		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.getId());
+		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.entityid());
         InputStream input = Contacts.openContactPhotoInputStream(_context.getContentResolver(), uri);
 		return input;
 	}
 	
 	public Entity fromCursor(Cursor c) {
-		return get(c.getLong(c.getColumnIndexOrThrow(EntityManager.KEY_ENTITY_ID)));
+		return get(c.getLong(c.getColumnIndexOrThrow(com.danielstiner.vibrates.managers.KEY_ENTITY_ID)));
 	}
 	
 	public Cursor getAll() {
@@ -293,88 +250,6 @@ public class EntityManager extends Manager {
         }
 	}
 	
-	private void addIdentifier(Entity to, String identifier) {
-		if(identifier == null)
-			throw new IllegalArgumentException("Cannot add a null identifier");
-		Long owner_id = to == null ? EntityManager.ID_NOBODY : to.getId();
-		// Open a connection to the database
-    	SQLiteDatabase db = getReadableDatabase();
-        try {
-            ContentValues ident_values = new ContentValues(3);
-            ident_values.put(KEY_LOOKUP_ENTITYID, owner_id.toString());
-            ident_values.put(KEY_LOOKUP_IDENTIFIER, identifier);
-            ident_values.put(KEY_LOOKUP_KIND, IdentifierManager.DEFAULT_KIND);
-            // TODO: throw is temporary
-            long identifierId = db.insertOrThrow(TABLE_LOOKUP, null, ident_values);
-        } finally {
-            if (db != null)
-                db.close();
-        }
-	}
-
-	public Cursor getIdentifiers(Entity owner)
-	{
-		Long id = owner == null ? EntityManager.ID_NOBODY : owner.getId();
-		// Open a connection to the database
-    	SQLiteDatabase db = getReadableDatabase();
-        try {
-        	// Grab all contacts 
-        	return db.query(
-        			TABLE_LOOKUP,
-        			null,
-        			KEY_LOOKUP_ENTITYID + " = ?",
-        			new String[]{ id.toString() },
-        			null,
-        			null,
-        			null
-        			);
-        } finally {
-            if (db != null)
-                db.close();
-        }
-	}
-	
-	public class CCMHelper extends SQLiteOpenHelper {
-
-		public CCMHelper(Context context, String name, CursorFactory factory,
-				int version) {
-			super(context, name, factory, version);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			// Create entity table
-			String entity_sql = "CREATE TABLE "
-			+ TABLE_ENTITIES + " ( "
-			+ KEY_ENTITY_ROWID + " integer PRIMARY KEY AUTOINCREMENT, "
-			+ KEY_ENTITY_ID + " integer KEY AUTOINCREMENT, "
-			+ KEY_ENTITY_KIND + " string, "
-			+ KEY_ENTITY_NAME + " string, "
-			+ KEY_ENTITY_PATTERN + " string, "
-			+ KEY_ENTITY_TIMES_CONTACTED + " integer "
-			+ ");";
-			db.execSQL(entity_sql);
-			
-			// Create lookup table
-			String lookup_sql = "CREATE TABLE "
-			+ TABLE_LOOKUP + " ( "
-			+ KEY_LOOKUP_ROWID + " integer PRIMARY KEY AUTOINCREMENT, "
-			+ KEY_LOOKUP_IDENTIFIER + " string KEY, "
-			+ KEY_LOOKUP_ENTITYID + " integer, "
-			+ KEY_LOOKUP_KIND + " string, "
-			+ ");";
-			db.execSQL(lookup_sql);
-
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			// TODO Auto-generated method stub
-
-		}
-
-	}
 	
 	public void update(Entity entity) {
 		ContentResolver cr = _context.getContentResolver();
@@ -456,22 +331,54 @@ public class EntityManager extends Manager {
 //		} // while(!c.isAfterLast())
 //	}
 	
-	private boolean isValidPattern(long[] pattern) {
-		if(pattern == null) return false;
+	public String getDisplayName(Entity entity) {
 		// TODO Auto-generated method stub
-		return true;
+		return null;
 	}
 	
 	public long[] getPattern(Entity entity) {
 		return getPattern(entity, null);
 	}
-	public long[] getPattern(Entity entity, String type) {
-		// TODO Auto-generated method stub
-		return null;
+	public long[] getPattern(Entity entity, String type)
+	{
+		try {
+			return makePatternManager().get(entity, type);
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
-	public String getDisplayName(Entity entity) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	
+	static class Helper implements IDatabaseHelper
+	{
+		@Override
+		public void onCreate(SQLiteDatabase db) {
+			// Create entity table
+			String entity_sql = "CREATE TABLE "
+			+ TABLE + " ( "
+			+ KEY_ROWID + " integer PRIMARY KEY AUTOINCREMENT, "
+			+ KEY_ID + " integer KEY AUTOINCREMENT, "
+			+ KEY_KIND + " string, "
+			+ KEY_NAME + " string, "
+			+ KEY_PATTERN + " string, "
+			//+ KEY_TIMES_CONTACTED + " integer "
+			+ ");";
+			db.execSQL(entity_sql);
+		}
+	
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			// TODO Auto-generated method stub
+			
+		}
+	
+		@Override
+		public int version() {
+			return VERSION;
+		}
+	
 	}
-    
+	
 }
