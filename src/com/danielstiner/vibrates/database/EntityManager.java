@@ -45,9 +45,17 @@ public class EntityManager implements IEntityManager {
 
 	private Context _context;
 
-	private VibratesDatabase _db;
-
 	private Provider<IdentifierManager> identifiermanager_provider;
+	
+	private IDatabase _db;
+
+	private Provider<Entity> entity_provider;
+	
+	@Inject
+    public EntityManager(IDatabase db, Provider<Entity> entity_provider) {
+    	this._db = db;
+    	this.entity_provider = entity_provider;
+    }
 	
 	/**
 	 * 
@@ -60,7 +68,7 @@ public class EntityManager implements IEntityManager {
 	}
 	
 	@Inject
-    public EntityManager(VibratesDatabase db, Context c, Provider<IdentifierManager> identifiermanager_provider) {
+    public EntityManager(IDatabase db, Context c, Provider<IdentifierManager> identifiermanager_provider) {
 		this._db  = db;
     	this._context = c;
     	this.identifiermanager_provider = identifiermanager_provider;

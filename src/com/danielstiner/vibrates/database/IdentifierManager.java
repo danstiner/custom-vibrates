@@ -23,12 +23,12 @@ public class IdentifierManager implements IIdentifierManager {
 	
 	//protected static final String DEFAULT_KIND = "";
 
-	private VibratesDatabase db;
+	private IDatabase db;
 
 	private Provider<Entity> entity_provider;
 	
 	@Inject
-    public IdentifierManager(VibratesDatabase db, Provider<Entity> entity_provider) {
+    public IdentifierManager(IDatabase db, Provider<Entity> entity_provider) {
     	this.db = db;
     	this.entity_provider = entity_provider;
     }

@@ -12,7 +12,7 @@ import com.google.inject.name.Named;
 import roboguice.inject.ContextScoped;
 
 @ContextScoped
-public class VibratesDatabase {
+public class VibratesDatabase implements IDatabase {
 
 	static final int VERSION = 5;
 
@@ -59,10 +59,16 @@ public class VibratesDatabase {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.danielstiner.vibrates.database.IDatabase#getReadableDatabase()
+	 */
 	public SQLiteDatabase getReadableDatabase() {
 		return _dbHelper.getReadableDatabase();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.danielstiner.vibrates.database.IDatabase#getWritableDatabase()
+	 */
 	public SQLiteDatabase getWritableDatabase() {
 		return _dbHelper.getWritableDatabase();
 	}
