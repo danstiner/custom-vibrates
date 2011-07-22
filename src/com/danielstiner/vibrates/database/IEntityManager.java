@@ -6,6 +6,8 @@ public interface IEntityManager {
 
 	public abstract String getDisplayName(Entity entity);
 
-	public abstract Entity get(String identifier);
+	public abstract Entity get(Long id);
+	
+	public abstract void remove(Entity entity);
 
 }
