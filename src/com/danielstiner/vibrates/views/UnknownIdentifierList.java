@@ -31,31 +31,6 @@ public class UnknownIdentifierList extends CoreListActivity {
 	private Cursor mCursor;
 	
 	private IdentifierListCursorAdapter mCursorAdapter;
-	
-	
-
-	// Called when the activity is first created.
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setContentView(CONTENT_VIEW);
-		
-		fillList();
-		
-		initEmptyView();
-		
-	}
-	
-	private void initEmptyView() {
-//		final Button newContactBtn = (Button) findViewById(R.id.empty_add_contact_button);
-//		newContactBtn.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				newContact();
-//			}
-//		});
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,22 +105,35 @@ public class UnknownIdentifierList extends CoreListActivity {
 //		}
 	}
 
-	private void fillList() {
-		// TODO Auto-generated method stub
+	
+	private void associate() {
+		// Show a selectable list of entities (contacts?) to associate this identifier with
+		// FIXME 
+	}
+
+	@Override
+	protected void fillList() {
 		if(mCursor != null)
 			mCursor.close();
+		
 		// Get all of the notes from the database and create the item list
 		mCursor = identifier_manager.getOrphans();
 		startManagingCursor(mCursor);
 
 		// Now create an array adapter and set it to display using our row
 		setListAdapter(mCursorAdapter = new IdentifierListCursorAdapter(this, mCursor));
+
 	}
 
-	
-	private void associate() {
-		// Show a selectable list of entities (contacts?) to associate this identifier with
-		// FIXME 
+	@Override
+	protected int getContentView() {
+		return CONTENT_VIEW;
+	}
+
+	@Override
+	protected void initEmptyView() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

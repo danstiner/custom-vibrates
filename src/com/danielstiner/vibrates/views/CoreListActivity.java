@@ -6,15 +6,27 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import roboguice.activity.RoboListActivity;
 
-public class CoreListActivity extends RoboListActivity {
+public abstract class CoreListActivity extends RoboListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		setContentView(getContentView());
+		
 		// Register for context events from the list
 		registerForContextMenu(getListView());
+		
+		fillList();
+		
+		initEmptyView();
 	}
+	
+	protected abstract int getContentView();
+	
+	protected abstract void initEmptyView();
+	
+	protected abstract void fillList();
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

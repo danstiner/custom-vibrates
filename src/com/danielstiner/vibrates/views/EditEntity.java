@@ -9,8 +9,10 @@ import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.R.id;
 import com.danielstiner.vibrates.R.layout;
 import com.danielstiner.vibrates.R.string;
-import com.danielstiner.vibrates.database.EntityManager;
-import com.danielstiner.vibrates.managers.Manager;
+import com.danielstiner.vibrates.database.IEntityManager;
+import com.danielstiner.vibrates.database.IIdentifierManager;
+import com.danielstiner.vibrates.database.IPatternManager;
+import com.google.inject.Inject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,10 +27,14 @@ import android.widget.TextView;
 public class EditEntity extends Activity {
 
 	private static final int ACTIVITY_PATTERN_EDIT = 1;
+	
+	@Inject IEntityManager entity_manager;
+	
+	@Inject IPatternManager pattern_manager;
+	
+	@Inject IIdentifierManager identifier_manager;
 
 	private int mContactRowId;
-	
-	private EntityManager _ccm;
 
 	private String mLookupKey;
 	
@@ -46,13 +52,12 @@ public class EditEntity extends Activity {
 		setContentView(R.layout.contactedit);
 		setTitle(R.string.contactedit_title);
 		
-		// setup database for saving changes / getting additional details
-		_ccm = new EntityManager(this);
-		
 		// Build a contact to represent who we are customizing
 		_entity = getEntity(savedInstanceState);
 		// and update it
-		_ccm.update(_entity);
+		entity_manager.update(_entity);
+		// and its identifiers
+		identifier_manager.update(_entity);
 		
 		// Time for some real work
 		playDefaultPattern();
@@ -75,7 +80,7 @@ public class EditEntity extends Activity {
 
 		    public void onClick(View view) {
 		    	// Start pattern edit
-				editPattern(INotification2.DEFAULT);
+				editPattern(null);
 		    }
 
 		});
@@ -94,7 +99,7 @@ public class EditEntity extends Activity {
 	
 	private void editPattern(String type) {
 		Intent i = new Intent(this, VibratePatternEdit.class);
-		i.putExtra(INotification2.PATTERN_KEY, _ccm.getPattern(_entity));
+		i.putExtra(VibratePatternEdit.PATTERN_BUNDLE_KEY, pattern_manager.get(_entity, type));
 		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
 	}
 	
@@ -102,7 +107,7 @@ public class EditEntity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(Manager.ENTITY_ID_KEY, _entity.entityid());
+        outState.putSerializable(Entity.ID_BUNDLE_KEY, _entity.entityid());
     }
     @Override
     protected void onPause() {
@@ -131,20 +136,20 @@ public class EditEntity extends Activity {
 	private void populateFields() {
 		TextView contact_name = (TextView) findViewById(R.id.edit_name);
 		if(contact_name != null)
-			contact_name.setText(_ccm.getDisplayName(_entity));
+			contact_name.setText(entity_manager.getDisplayName(_entity));
 		
 		VibratePatternView pattern;
 		
 		pattern = (VibratePatternView) findViewById(R.id.edit_default_pattern);
 		if(pattern != null)
-			pattern.setPattern(_ccm.getPattern(_entity));
+			pattern.setPattern(pattern_manager.get(_entity));
 	}
 	
 	private Entity getEntity(Bundle savedInstanceState) {
 		if(savedInstanceState != null) {
-			mContactId = (Long) savedInstanceState.getSerializable(Manager.ENTITY_ID_KEY);
+			mContactId = (Long) savedInstanceState.getSerializable(Entity.ID_BUNDLE_KEY);
 		} else if(getIntent().getExtras() != null) {
-            mContactId = getIntent().getExtras().getLong(Manager.ENTITY_ID_KEY);
+            mContactId = getIntent().getExtras().getLong(Entity.ID_BUNDLE_KEY);
 		} else {
 			// TODO, bad
 			//throw new Exception("Didn't get a row to edit.");
@@ -154,11 +159,11 @@ public class EditEntity extends Activity {
 		}
 		
 		// Actually create contact
-		return _ccm.get(mContactId);
+		return entity_manager.get(mContactId);
 	}
 	private void playDefaultPattern() {
 		// Play it off
-		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(_ccm.getPattern(_entity), -1);
+		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(pattern_manager.get(_entity), -1);
 		/*
 		 * // Play the appropriate vibrate pattern
 		Intent service = new Intent(context, VibratrService.class);

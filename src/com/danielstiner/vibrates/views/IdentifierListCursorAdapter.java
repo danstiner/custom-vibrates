@@ -11,10 +11,12 @@ import android.widget.CursorAdapter;
 import android.widget.Filter;
 
 public class IdentifierListCursorAdapter extends CursorAdapter {
-
+	
+	private static final int layout = R.layout.identifier_row;
+	
 	// For view management
 	private Context context;
-	private static final int layout = R.layout.identifier_row;
+	
 
 	public IdentifierListCursorAdapter(Context context, Cursor c) {
 		super(context, c);

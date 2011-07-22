@@ -4,17 +4,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 public class VibratePatternEdit extends Activity implements OnTouchListener {
 
+	private static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + "." + "VibratePatternEdit";
+	
+	public static final String PATTERN_BUNDLE_KEY = CLASSNAME + "." + "pattern";
+	
 	private static final int STATE_EDITING_DOWN = 1;
 
 	private static final int STATE_WAITING = 0;
@@ -24,6 +26,8 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 	private static final long EDITING_WATCHER_DELAY = 0;
 
 	private static final long EDITING_MAX_UP = 4*1000;
+
+	
 
 	private Vibrator _vibratr;
 
@@ -75,7 +79,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		saveState();
-		outState.putSerializable(INotification2.PATTERN_KEY, _pattern.toArray());
+		outState.putSerializable(PATTERN_BUNDLE_KEY, _pattern.toArray());
 	}
 
 	@Override
@@ -203,7 +207,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 		// Recover saved state pattern if possible
 		if(savedState != null && _pattern.size() == 0) {
 			// It was stored as Long[]
-			Long[] pattern = (Long[]) savedState.getSerializable(INotification2.PATTERN_KEY);
+			Long[] pattern = (Long[]) savedState.getSerializable(PATTERN_BUNDLE_KEY);
 			for(int i=0; i<pattern.length; i++)
 				_pattern.add(pattern[i]);
 		}
@@ -212,7 +216,7 @@ public class VibratePatternEdit extends Activity implements OnTouchListener {
 			// Pull in pattern from passed intent if possible
 			Bundle extras = getIntent().getExtras();
 			if(extras != null) {
-				long[] pattern = extras.getLongArray(INotification2.PATTERN_KEY);
+				long[] pattern = extras.getLongArray(PATTERN_BUNDLE_KEY);
 				for(int i=0; i<pattern.length; i++)
 					_pattern.add(pattern[i]);
 			}
