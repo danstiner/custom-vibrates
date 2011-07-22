@@ -6,6 +6,10 @@ package com.danielstiner.vibrates;
 import com.danielstiner.vibrates.database.EntityManager;
 
 public class Entity {
+	
+	private static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + "." + "Entity";
+	
+	public static final String ID_BUNDLE_KEY = CLASSNAME + "." + "id";
 
 	public static final String TYPE_CONTACTSCONTRACTCONTACT = "contacts_contract_contact";
 
