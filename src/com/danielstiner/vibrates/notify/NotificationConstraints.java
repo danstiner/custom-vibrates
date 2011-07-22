@@ -3,8 +3,8 @@ package com.danielstiner.vibrates.notify;
 import android.hardware.Sensor;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.IUserSettings;
-import com.danielstiner.vibrates.UserSettings;
+import com.danielstiner.vibrates.settings.IUserSettings;
+import com.danielstiner.vibrates.settings.UserSettings;
 import com.google.inject.Inject;
 
 public class NotificationConstraints implements INotificationConstraints {
