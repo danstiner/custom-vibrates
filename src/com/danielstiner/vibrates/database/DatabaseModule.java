@@ -15,7 +15,7 @@ public class DatabaseModule extends AbstractModule {
 	protected void configure() {
 		bind(IDatabase.class).to(VibratesDatabase.class);
 		bindConstant().annotatedWith(Names.named(DATABASE_NAME_KEY)).to(DATABASE_NAME);
-		bind(IDatabaseHelper[].class);
+		//bind(IDatabaseHelper[].class);
 	}
 	
 	@Provides
