@@ -4,6 +4,10 @@ import com.danielstiner.vibrates.Entity;
 
 public interface IPatternManager {
 
-	long[] get(Entity entity, String notificationType);
+	public abstract long[] get(Entity entity);
+	
+	public abstract long[] get(Entity entity, String notificationType);
+	
+	public abstract void set(Entity entity, long[] pattern);
 
 }

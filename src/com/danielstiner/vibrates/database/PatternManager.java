@@ -90,5 +90,16 @@ public class PatternManager implements IPatternManager {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	@Override
+	public long[] get(Entity entity) {
+		return get(entity, null);
+	}
+
+	@Override
+	public void set(Entity entity, long[] pattern) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }
