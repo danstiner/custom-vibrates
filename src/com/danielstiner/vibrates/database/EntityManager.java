@@ -122,6 +122,8 @@ public class EntityManager implements IEntityManager {
         // Must not have worked, maybe there was an entry in the db already?
         return null;
 	}
+    
+    @Override
     public Entity createFromContactUri(Uri contact_uri) {
     	// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
 		Log.v("Got a result: %s", contact_uri.toString());
@@ -188,19 +190,15 @@ public class EntityManager implements IEntityManager {
         } finally {
             if (db != null)
                 db.close();
-            
         }
 	}
 	
+	@Override
 	public Entity get(Long id) {
 		return null;
 	}
 	
-	/**
-	 * Gives a photo for an entity if at all possible, otherwise returns null
-	 * @param entity Entity instance to grab a photostream for
-	 * @return
-	 */
+	@Override
 	public InputStream getPhotoStream(Entity entity) {
 		// TODO: Hmm, more complicated, we need to change this depending on the entity type
 		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.entityid());
@@ -208,10 +206,12 @@ public class EntityManager implements IEntityManager {
 		return input;
 	}
 	
+	@Override
 	public Entity fromCursor(Cursor c) {
 		return get(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
 	}
 	
+	@Override
 	public Cursor getAll() {
 		// Open a connection to the database
     	SQLiteDatabase db = _db.getReadableDatabase();
@@ -272,6 +272,12 @@ public class EntityManager implements IEntityManager {
 			return VERSION;
 		}
 	
+	}
+
+	@Override
+	public void update(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
