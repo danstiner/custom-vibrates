@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionName="0.1"
       android:installLocation="auto"
-      package="com.danielstiner.vibrates" android:versionCode="6">
+      package="com.danielstiner.vibrates" android:versionCode="7">
 <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
 <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 <uses-permission android:name="android.permission.RECEIVE_MMS"></uses-permission>
@@ -22,13 +22,13 @@
 
 
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:name="Vibrates">
-        <activity android:label="@string/app_name" android:name="views.ContactList">
+        <activity android:label="@string/app_name" android:name="com.danielstiner.vibrates.views.EntityList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name="IntentReciever"><intent-filter>
+        <receiver android:name="com.danielstiner.vibrates.notify.IntentReciever"><intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
                 <action android:name="android.bluetooth.headset.action.AUDIO_STATE_CHANGED"></action>
                 <action android:name="android.net.wifi.supplicant.STATE_CHANGE"></action>
@@ -59,13 +59,13 @@
             </intent-filter>
 		</receiver>
         
-        <service android:name="AccessibilityListener" android:description="@string/accessiblity_listener_desc">
+        <service android:description="@string/accessiblity_listener_desc" android:name="com.danielstiner.vibrates.notify.AccessibilityListener">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService"></action>
             </intent-filter>
         </service>
-        <activity android:name="views.VibratePatternEdit"></activity>
-        <service android:name="VibratrService">
+        <activity android:name="com.danielstiner.vibrates.views.VibratePatternEdit"></activity>
+        <service android:name="com.danielstiner.vibrates.notify.VibratrService">
             <intent-filter>
                 <action android:name="com.danielstiner.vibrates.VIBRATE"></action>
             </intent-filter>
