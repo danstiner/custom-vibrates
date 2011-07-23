@@ -237,8 +237,7 @@ public class EntityManager implements IEntityManager {
 			// Create entity table
 			String entity_sql = "CREATE TABLE "
 			+ TABLE + " ( "
-			+ KEY_ROWID + " integer PRIMARY KEY AUTOINCREMENT, "
-			+ KEY_ID + " integer KEY AUTOINCREMENT, "
+			+ KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_KIND + " string, "
 			+ KEY_NAME + " string, "
 			+ KEY_PATTERN + " string "

@@ -150,7 +150,7 @@ public class IdentifierManager implements IIdentifierManager {
 			// Create lookup table
 			String lookup_sql = "CREATE TABLE "
 			+ TABLE + " ( "
-			+ KEY_ROWID + " integer PRIMARY KEY AUTOINCREMENT, "
+			+ KEY_ROWID + " INTEGER PRIMARY KEY, "
 			+ KEY_IDENTIFIER + " string KEY, "
 			+ KEY_ENTITYID + " integer, "
 			+ KEY_KIND + " string, "
