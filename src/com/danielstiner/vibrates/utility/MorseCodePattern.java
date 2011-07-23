@@ -1,5 +1,7 @@
 package com.danielstiner.vibrates.utility;
 
+import java.util.ArrayList;
+
 
 public class MorseCodePattern {
 
@@ -93,7 +95,11 @@ public class MorseCodePattern {
 
 
 	public static long[] morsify(String string) {
-		java.util.ArrayList<Long> pattern = new java.util.ArrayList<Long>();
+		if(string == null)
+			return new long[0];
+		
+		ArrayList<Long> pattern = new ArrayList<Long>();
+		
 		// Loop each letter
 		for(int char_index=0; char_index<string.length(); char_index++) {
 			long[] char_pattern = morsify(string.charAt(char_index));
