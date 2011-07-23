@@ -73,7 +73,7 @@ public class Manager implements IManager {
 	@Override
     public Entity createFromContactUri(Uri contact_uri) {
     	// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
-		Log.v("Got a result: %s", contact_uri.toString());
+		Ln.v("Got a result: %s", contact_uri.toString());
 		// get the contact id from the Uri
 		Long origId = Long.parseLong(contact_uri.getLastPathSegment());
 		

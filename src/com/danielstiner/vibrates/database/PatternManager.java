@@ -1,29 +1,9 @@
 package com.danielstiner.vibrates.database;
 
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.utility.MorseCodePattern;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
-import android.util.Log;
-import android.util.Pair;
 
 public class PatternManager implements IPatternManager {
 	
@@ -31,20 +11,17 @@ public class PatternManager implements IPatternManager {
 	
 	public static final String ENTITY_ID_KEY = PREFIX + ".id";
 	
-	private static final String DEBUG_TAG = "VibratesEntityManager";
-	
 	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
 	public static final int ID_NOBODY = -3;
 
-	private IDatabase db;
-
-	private Provider<Entity> entity_provider;
-	
-	@Inject
-    public PatternManager(IDatabase db, Provider<Entity> entity_provider) {
-    	this.db = db;
-    	this.entity_provider = entity_provider;
-    }
+//	@Inject private IDatabase db;
+//
+//	private Provider<Entity> entity_provider;
+//	
+//	@Inject
+//    public PatternManager(Provider<Entity> entity_provider) {
+//    	this.entity_provider = entity_provider;
+//    }
     
     public static long[] generate(String text) {
 		// TODO Auto-generated method stub

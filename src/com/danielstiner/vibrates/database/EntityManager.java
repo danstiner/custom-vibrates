@@ -133,7 +133,26 @@ public class EntityManager implements IEntityManager {
 	
 	@Override
 	public Entity get(Long id) {
-		return null;
+		return fromCursor(getCursor(id));
+	}
+	private Cursor getCursor(Long id) {
+		// Open a connection to the database
+    	SQLiteDatabase sql_db = _db.getReadableDatabase();
+        try {
+        	// Grab all contacts 
+        	return sql_db.query(
+        			TABLE,
+        			null,
+        			KEY_ID + " = ?",
+        			new String[]{ id.toString() },
+        			null,
+        			null,
+        			null
+        			);
+        } finally {
+            if (sql_db != null)
+            	sql_db.close();
+        }
 	}
 	
 	@Override
