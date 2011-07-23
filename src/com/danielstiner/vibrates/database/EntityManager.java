@@ -74,7 +74,7 @@ public class EntityManager implements IEntityManager {
     	SQLiteDatabase db = _db.getWritableDatabase();
     	try {
             // Perform insert of actual entity
-            ContentValues entity_values = new ContentValues(3);
+            ContentValues entity_values = new ContentValues(4);
             entity_values.put(KEY_NAME, name);
             entity_values.put(KEY_KIND, type);
             entity_values.put(KEY_PATTERN, pattern.toString());
