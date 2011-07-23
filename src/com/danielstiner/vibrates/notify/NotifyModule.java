@@ -7,6 +7,7 @@ public class NotifyModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(INotificationConstraints.class).to(NotificationConstraints.class);
+		bind(IIntentHandler.class).to(IntentHandler.class);
 	}
 
 }

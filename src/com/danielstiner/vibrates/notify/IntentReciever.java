@@ -9,7 +9,7 @@ import android.content.Intent;
 
 public class IntentReciever extends BroadcastReceiver {
     
-    @Inject IntentHandler handler;
+    @Inject IIntentHandler handler;
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {

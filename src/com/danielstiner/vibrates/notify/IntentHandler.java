@@ -3,6 +3,7 @@ package com.danielstiner.vibrates.notify;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import android.content.Context;
@@ -19,7 +20,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
-public class IntentHandler {
+public class IntentHandler implements IIntentHandler {
 	
 	private static final String NOTIFY_GMAIL = VibrateNotify.particularizeType(VibrateNotify.TYPE_EMAIL, "gmail");
 	private static final String NOTIFY_PHONE = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, "phone");
@@ -47,11 +48,15 @@ public class IntentHandler {
     
     private Provider<VibrateNotify> notify_provider;
     
+    @Inject
     public IntentHandler(Provider<VibrateNotify> notify_provider)
     {
     	this.notify_provider = notify_provider;
     }
 
+	/* (non-Javadoc)
+	 * @see com.danielstiner.vibrates.notify.IIntentHandler#handle(java.lang.String, android.os.Bundle, android.content.Context)
+	 */
 	public void handle(String action, Bundle bundle, Context context) {
 		// TODO Auto-generated method stub
 		if (action.equals(SMS_RECEIVED)) {
