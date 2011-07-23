@@ -49,12 +49,12 @@ public class EntityManager implements IEntityManager {
 
 	private Provider<Entity> entity_provider;
 	
-	private Activity activity;
+	@Inject private Activity activity;
 	
 	@Inject
-    public EntityManager(Provider<Entity> entity_provider, Activity activity) {
+    public EntityManager(Provider<Entity> entity_provider) {
     	this.entity_provider = entity_provider;
-    	this.activity = activity;
+//    	/this.activity = activity;
     }
 	
 //	/**

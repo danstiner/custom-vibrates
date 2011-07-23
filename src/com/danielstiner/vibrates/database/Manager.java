@@ -5,12 +5,9 @@ import java.util.List;
 import roboguice.util.Ln;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.danielstiner.vibrates.Entity;
 import com.google.inject.Inject;
@@ -24,22 +21,23 @@ public class Manager implements IManager {
 	private Provider<IIdentifierManager> identifiermanager_provider;
 	private Provider<IPatternManager> patternmanager_provider;
 	
-	private IEntityManager entity_manager;
-	private IIdentifierManager identifier_manager;
-	private IPatternManager pattern_manager;
+	@Inject private IEntityManager entity_manager;
+	@Inject private IIdentifierManager identifier_manager;
+	@Inject private IPatternManager pattern_manager;
 	
 	@Inject
     public Manager(
     		Provider<Entity> entity_provider,
-    		Activity activity,
-    		Provider<IEntityManager> entitymanager_provider,
-    		Provider<IIdentifierManager> identifiermanager_provider,
-    		Provider<IPatternManager> patternmanager_provider) {
+    		Activity activity
+    		//Provider<IEntityManager> entitymanager_provider,
+    		//Provider<IIdentifierManager> identifiermanager_provider,
+    		//Provider<IPatternManager> patternmanager_provider) {
+    		) {
     	this.entity_provider = entity_provider;
     	this.activity = activity;
-    	this.entitymanager_provider = entitymanager_provider;
-    	this.identifiermanager_provider = identifiermanager_provider;
-    	this.patternmanager_provider = patternmanager_provider;
+    	//this.entitymanager_provider = entitymanager_provider;
+    	//this.identifiermanager_provider = identifiermanager_provider;
+    	//this.patternmanager_provider = patternmanager_provider;
     }
 	
 	
