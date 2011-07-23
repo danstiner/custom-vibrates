@@ -1,60 +1,28 @@
 package com.danielstiner.vibrates.views;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-
 import roboguice.inject.InjectView;
 import roboguice.util.Ln;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.R.id;
-import com.danielstiner.vibrates.R.layout;
-import com.danielstiner.vibrates.R.menu;
-import com.danielstiner.vibrates.R.string;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.google.inject.Inject;
 
 import android.app.Activity;
-import android.app.ListActivity;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Contacts;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.provider.ContactsContract.CommonDataKinds.Email;
 
 public class EntityList extends CoreListActivity {
 	
@@ -79,9 +47,6 @@ public class EntityList extends CoreListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
-		
 	}
 	
 	@Override

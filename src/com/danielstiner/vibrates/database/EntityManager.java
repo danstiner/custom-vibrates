@@ -29,7 +29,7 @@ import android.util.Pair;
 
 public class EntityManager implements IEntityManager {
 	
-	private static final int VERSION = VibratesDatabase.VERSION;
+	private static final int VERSION = Database.VERSION;
 	
 	protected static final String TABLE = "entities";
 	
@@ -44,17 +44,16 @@ public class EntityManager implements IEntityManager {
 	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
 	public static final int ID_NOBODY = -3;
 
-	private Provider<IdentifierManager> identifiermanager_provider;
+	//private Provider<IdentifierManager> identifiermanager_provider;
 	
-	private IDatabase _db;
+	@Inject private IDatabase _db;
 
 	private Provider<Entity> entity_provider;
 	
 	private Activity activity;
 	
 	@Inject
-    public EntityManager(IDatabase db, Provider<Entity> entity_provider, Activity activity) {
-    	this._db = db;
+    public EntityManager(Provider<Entity> entity_provider, Activity activity) {
     	this.entity_provider = entity_provider;
     	this.activity = activity;
     }
@@ -217,7 +216,9 @@ public class EntityManager implements IEntityManager {
     	SQLiteDatabase db = _db.getReadableDatabase();
         try {
         	// Grab all contacts 
-        	return db.query(TABLE, null, null, null, null, null, null);
+        	return db.query(TABLE,
+        			new String[] { KEY_ID, KEY_ROWID },
+        			null, null, null, null, null);
         } finally {
             if (db != null)
                 db.close();
@@ -228,21 +229,6 @@ public class EntityManager implements IEntityManager {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-//	public long[] getPattern(Entity entity) {
-//		return getPattern(entity, null);
-//	}
-//	public long[] getPattern(Entity entity, String type)
-//	{
-//		try {
-//			return makePatternManager().get(entity, type);
-//		} catch (CloneNotSupportedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
-	
 	
 	static class Helper implements IDatabaseHelper
 	{
@@ -255,7 +241,7 @@ public class EntityManager implements IEntityManager {
 			+ KEY_ID + " integer KEY AUTOINCREMENT, "
 			+ KEY_KIND + " string, "
 			+ KEY_NAME + " string, "
-			+ KEY_PATTERN + " string, "
+			+ KEY_PATTERN + " string "
 			//+ KEY_TIMES_CONTACTED + " integer "
 			+ ");";
 			db.execSQL(entity_sql);

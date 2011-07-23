@@ -8,12 +8,11 @@ public class DatabaseModule extends AbstractModule {
 	
 	private static final String DATABASE_NAME = "vibrates";
 	
-	
 	static final String DATABASE_NAME_KEY = "database_name";
 
 	@Override
 	protected void configure() {
-		bind(IDatabase.class).to(VibratesDatabase.class);
+		bind(IDatabase.class).to(Database.class);
 		bindConstant().annotatedWith(Names.named(DATABASE_NAME_KEY)).to(DATABASE_NAME);
 		//bind(IDatabaseHelper[].class);
 	}

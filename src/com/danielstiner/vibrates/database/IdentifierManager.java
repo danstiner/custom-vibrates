@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 public class IdentifierManager implements IIdentifierManager {
 	
-	private static final int VERSION = VibratesDatabase.VERSION;
+	private static final int VERSION = Database.VERSION;
 	
 	protected static final String TABLE = "lookups";
 	
