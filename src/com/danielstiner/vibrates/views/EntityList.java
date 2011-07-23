@@ -6,6 +6,7 @@ import roboguice.util.Ln;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
+import com.danielstiner.vibrates.database.IManager;
 import com.google.inject.Inject;
 
 import android.app.Activity;
@@ -25,6 +26,8 @@ import android.widget.ListView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class EntityList extends CoreListActivity {
+	
+	@Inject IManager manager;
 	
 	@Inject IEntityManager entity_manager;
 	
@@ -116,7 +119,6 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Bundle extras = data.getExtras();
@@ -130,7 +132,7 @@ public class EntityList extends CoreListActivity {
 		case ACTIVITY_PICK_CONTACT:
 			if (resultCode == RESULT_OK) {
 				Uri contactpath = data.getData();	
-				editEntity(entity_manager.createFromContactUri(contactpath));
+				editEntity(manager.createFromContactUri(contactpath));
 			} else {
 				// TODO: gracefully handle failure
 				Ln.d("Warning: activity result not ok");
@@ -146,12 +148,11 @@ public class EntityList extends CoreListActivity {
 			mContactsCursor.close();
 		// Get all of the notes from the database and create the item list
 		mContactsCursor = entity_manager.getAll();
-		startManagingCursor(mContactsCursor);
+		//startManagingCursor(mContactsCursor);
 
 		// Now create an array adapter and set it to display using our row
 		mContactsCursorAdapter = new EntityListCursorAdapter(this, mContactsCursor);
 		setListAdapter(mContactsCursorAdapter);
-
 	}
 
 	

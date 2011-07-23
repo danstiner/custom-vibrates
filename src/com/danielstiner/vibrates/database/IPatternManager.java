@@ -10,4 +10,10 @@ public interface IPatternManager {
 	
 	public abstract void set(Entity entity, long[] pattern);
 
+	/**
+	 * 
+	 * @param pattern
+	 * @return
+	 */
+	public abstract boolean isValid(long[] pattern);
 }

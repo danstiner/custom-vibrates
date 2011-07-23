@@ -16,7 +16,7 @@ public class IdentifierManager implements IIdentifierManager {
 	
 	protected static final String TABLE = "lookups";
 	
-	protected static final String KEY_ROWID = "_id";
+	protected static final String KEY_ID = "_id";
 	protected static final String KEY_KIND = "kind";
 	protected static final String KEY_ENTITYID = "entity";
 	protected static final String KEY_IDENTIFIER = "identifier";
@@ -150,10 +150,10 @@ public class IdentifierManager implements IIdentifierManager {
 			// Create lookup table
 			String lookup_sql = "CREATE TABLE "
 			+ TABLE + " ( "
-			+ KEY_ROWID + " INTEGER PRIMARY KEY, "
+			+ KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_IDENTIFIER + " string KEY, "
 			+ KEY_ENTITYID + " integer, "
-			+ KEY_KIND + " string, "
+			+ KEY_KIND + " string "
 			+ ");";
 			db.execSQL(lookup_sql);
 		}

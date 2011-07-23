@@ -13,9 +13,16 @@ public interface IEntityManager {
 	
 	public abstract Cursor getAll();
 	
-	public abstract Entity createFromContactUri(Uri contact_uri);
-	
 	public abstract Entity fromCursor(Cursor c);
+	
+	/**
+	 * 
+	 * @param name
+	 * @param pattern
+	 * @param type
+	 * @return
+	 */
+	public abstract Entity create(String name, long[] pattern, String type);
 	
 	public abstract void update(Entity entity);
 	

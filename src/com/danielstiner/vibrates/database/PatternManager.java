@@ -85,7 +85,9 @@ public class PatternManager implements IPatternManager {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	private static boolean isValidPattern(long[] pattern) {
+	
+	@Override
+	public boolean isValid(long[] pattern) {
 		if(pattern == null) return false;
 		// TODO Auto-generated method stub
 		return true;

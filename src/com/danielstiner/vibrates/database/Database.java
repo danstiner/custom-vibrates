@@ -14,7 +14,7 @@ import roboguice.inject.ContextScoped;
 // @ContextScoped
 public class Database implements IDatabase {
 
-	static final int VERSION = 6;
+	static final int VERSION = 7;
 
 	// Need a context to create the database connection on
 	private Activity activity;
