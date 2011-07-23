@@ -101,8 +101,10 @@ public class IdentifierManager implements IIdentifierManager {
 	}
 
 	public void add(Entity owner, String identifier) {
-		if(identifier == null)
-			throw new IllegalArgumentException("Cannot add a null identifier");
+		if(identifier == null) {
+			Ln.e("Will not add a null identifier");
+			return;
+		}
 		Long owner_id = (owner == null) ? EntityManager.ID_NOBODY : owner.entityid();
 		// Open a connection to the database
     	SQLiteDatabase sql_db = db.getWritableDatabase();
