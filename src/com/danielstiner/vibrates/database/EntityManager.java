@@ -133,7 +133,16 @@ public class EntityManager implements IEntityManager {
 	
 	@Override
 	public Entity get(Long id) {
-		return fromCursor(getCursor(id));
+		Cursor c = getCursor(id);
+		
+		if(!c.moveToFirst()) {
+			Ln.d("Could not find entity %d", id);
+			return null;
+		}
+		
+		Entity e = entity_provider.get();
+		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
+		return e;
 	}
 	private Cursor getCursor(Long id) {
 		// Open a connection to the database
@@ -147,7 +156,7 @@ public class EntityManager implements IEntityManager {
         			new String[]{ id.toString() },
         			null,
         			null,
-        			null
+        			"1"
         			);
         } finally {
             if (sql_db != null)
