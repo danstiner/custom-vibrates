@@ -10,6 +10,7 @@
     <string name="menu_add_shortitle">Add...</string>
     <string name="menu_add_title">Add New Customization...</string>
     <string name="menu_settings_title">Settings</string>
-    <string name="message_welcome_no_entities">To have customized vibrate patterns for common services and your top contacts, simply click the automajic button below. Otherwise use the menu button to manually customize vibrate patterns.</string>
+    <string name="entitylist_message_preauto">To have customized vibrate patterns for common services and your top contacts, simply click the automajic button below.</string>
+    <string name="entitylist_message_postauto">Otherwise, please use the menu button to manually customize vibrate patterns.</string>
     <string name="message_identifierlist_empty">No unknown identifiers. All recent phone numbers, email addresses, etc belonged to a contact on this phone.</string>
 </resources>

@@ -28,16 +28,34 @@
 		        android:orientation="vertical"
 		        >
 	            <TextView
-	            	android:text="@string/message_welcome_no_entities"
+	            	android:text="@string/entitylist_message_preauto"
 	            	android:id="@+id/textView1"
 	            	android:layout_width="wrap_content"
 	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:layout_margin="50px"
+	            	android:layout_marginBottom="40px"
 	            	/>
 	            <Button
 	            	android:text="@string/buttonlabel_automajic_setup"
 	            	android:id="@+id/entitylist_empty_automajic"
 	            	android:layout_width="wrap_content"
 	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:paddingLeft="23px"
+	            	android:paddingTop="3px"
+	            	android:paddingRight="23px"
+	            	android:paddingBottom="3px"
+	            	android:layout_margin="10px"
+	            	/>
+	            <TextView
+	            	android:text="@string/entitylist_message_postauto"
+	            	android:id="@+id/textView1"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:layout_margin="50px"
+	            	android:layout_marginTop="30px"
 	            	/>
 	        </LinearLayout>
 	    </FrameLayout>
