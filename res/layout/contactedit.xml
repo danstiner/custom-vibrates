@@ -10,7 +10,7 @@
     	android:layout_height="wrap_content"
     	/>
     <com.danielstiner.vibrates.VibratePatternView
-    	android:id="@+id/edit_default_pattern"
+    	android:id="@+id/entityedit_pattern"
     	android:layout_width="80px"
 	    android:layout_height="18px"
     	/>

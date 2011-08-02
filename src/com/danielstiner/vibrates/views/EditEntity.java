@@ -38,11 +38,13 @@ public class EditEntity extends RoboActivity {
 	@Inject IIdentifierManager identifier_manager;
 	
 	@InjectView(R.id.entityedit_delete_button) Button delete_button;
+	
+	@InjectView(R.id.entityedit_pattern) VibratePatternView entity_pattern_view;
 
 	private int mContactRowId;
 
 	private String mLookupKey;
-	
+
 	private Entity _entity;
 
 	private String mContactLookup;
@@ -76,15 +78,14 @@ public class EditEntity extends RoboActivity {
 //		    }
 //
 //		});
-//		
-//		editDefaultButton.setOnClickListener(new View.OnClickListener() {
-//
-//		    public void onClick(View view) {
-//		    	// Start pattern edit
-//				editPattern(null);
-//		    }
-//
-//		});
+
+		entity_pattern_view.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// start pattern edit
+				editPattern(null);
+			}
+		});
 		
 	}
 	
@@ -139,11 +140,8 @@ public class EditEntity extends RoboActivity {
 		if(contact_name != null)
 			contact_name.setText(entity_manager.getDisplayName(_entity));
 		
-		VibratePatternView pattern;
-		
-		pattern = (VibratePatternView) findViewById(R.id.edit_default_pattern);
-		if(pattern != null)
-			pattern.setPattern(pattern_manager.get(_entity));
+		if(entity_pattern_view != null)
+			entity_pattern_view.setPattern(pattern_manager.get(_entity));
 	}
 	
 	private Entity getEntity(Bundle savedInstanceState) {
