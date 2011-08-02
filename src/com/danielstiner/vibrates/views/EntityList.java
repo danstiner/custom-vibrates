@@ -31,14 +31,14 @@ public class EntityList extends CoreListActivity {
 	
 	@Inject IEntityManager entity_manager;
 	
-	@InjectView(R.id.empty_add_contact_button) Button newContactBtn;
+	@InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
 
 	private static final int CONTEXTMENU_DELETE_ID = 1;
 	private static final int OPTIONS_INSERT_ID = 2;
 	//private static final int ACTIVITY_CREATE = 3;
 	private static final int ACTIVITY_EDIT = 4;
 	
-	private static final int CONTENT_VIEW = R.layout.contactlist;
+	private static final int CONTENT_VIEW = R.layout.entitylist;
 	
 	private static final int ACTIVITY_PICK_CONTACT = 5;
 
@@ -54,10 +54,11 @@ public class EntityList extends CoreListActivity {
 	
 	@Override
 	protected void initEmptyView() {
-		newContactBtn.setOnClickListener(new View.OnClickListener() {
+		automajicButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				newContact();
+				//newContact();
+				// TODO FIXME Need to do some majic here
 			}
 		});
 	}

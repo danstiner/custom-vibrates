@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
+
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.R.id;
@@ -24,7 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class EditEntity extends Activity {
+public class EditEntity extends RoboActivity {
 
 	private static final int ACTIVITY_PATTERN_EDIT = 1;
 	
@@ -33,6 +36,8 @@ public class EditEntity extends Activity {
 	@Inject IPatternManager pattern_manager;
 	
 	@Inject IIdentifierManager identifier_manager;
+	
+	@InjectView(R.id.entityedit_delete_button) Button delete_button;
 
 	private int mContactRowId;
 
@@ -50,7 +55,7 @@ public class EditEntity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.contactedit);
-		setTitle(R.string.contactedit_title);
+		setTitle(R.string.entityedit_title);
 		
 		// Build a contact to represent who we are customizing
 		_entity = getEntity(savedInstanceState);
@@ -63,27 +68,23 @@ public class EditEntity extends Activity {
 		playDefaultPattern();
 		populateFields();
 		
-		Button editDefaultButton = (Button) findViewById(R.id.edit_default_button);
-		//Button deleteButton = (Button) findViewById(R.id.edit_delete_button);
-		Button saveButton = (Button) findViewById(R.id.edit_save_button);
-		
-		saveButton.setOnClickListener(new View.OnClickListener() {
-
-		    public void onClick(View view) {
-		    	setResult(RESULT_OK, new Intent());
-		    	finish();
-		    }
-
-		});
-		
-		editDefaultButton.setOnClickListener(new View.OnClickListener() {
-
-		    public void onClick(View view) {
-		    	// Start pattern edit
-				editPattern(null);
-		    }
-
-		});
+//		saveButton.setOnClickListener(new View.OnClickListener() {
+//
+//		    public void onClick(View view) {
+//		    	setResult(RESULT_OK, new Intent());
+//		    	finish();
+//		    }
+//
+//		});
+//		
+//		editDefaultButton.setOnClickListener(new View.OnClickListener() {
+//
+//		    public void onClick(View view) {
+//		    	// Start pattern edit
+//				editPattern(null);
+//		    }
+//
+//		});
 		
 	}
 	

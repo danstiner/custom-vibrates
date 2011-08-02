@@ -1,7 +1,5 @@
 package com.danielstiner.vibrates.views;
 
-import roboguice.inject.InjectView;
-
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IIdentifierManager;
 import com.google.inject.Inject;
@@ -16,15 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class UnknownIdentifierList extends CoreListActivity {
 	
 	@Inject IIdentifierManager identifier_manager;
 	
-	@InjectView(R.id.no_contacts_message) TextView asrt;
-	
-	private static final int CONTENT_VIEW = R.layout.contactlist;
+	private static final int CONTENT_VIEW = R.layout.identifier_list;
 
 	private static final int CONTEXTMENU_DELETE_ID = 0;
 

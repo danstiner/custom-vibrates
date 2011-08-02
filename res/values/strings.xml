@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, Vibrates User!</string>
-    <string name="app_name">Custom Vibrates</string>
-    <string name="no_contacts_message">No custom contacts, please add some to get started.</string>
-    <string name="add_contact_buttonlabel">Add Contact...</string>
-    <string name="or">or</string>
-    <string name="menu_delete">Delete</string>
-    <string name="contactedit_title">Customize Vibrates for Contact</string>
-    <string name="edit_delete_button">Remove Customization</string>
-    <string name="edit_save_button">Save Changes</string>
-    <string name="menu_insert">Add New</string>
     <string name="accessiblity_listener_desc">Tie in for vibrating on accessibility events</string>
-    <string name="menu_add_title">Add new Contact or Service</string>
+    <string name="app_name">Custom Vibrates</string>
+    <string name="buttonlabel_automajic_setup">Automajic Setup</string>
+    <string name="entityedit_delete_button">Remove Customizations</string>
+    <string name="entityedit_title">Customize Vibration Pattern</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_insert">Add New</string>
     <string name="menu_add_shortitle">Add...</string>
+    <string name="menu_add_title">Add New Customization...</string>
     <string name="menu_settings_title">Settings</string>
+    <string name="message_welcome_no_entities">To have customized vibrate patterns for common services and your top contacts, simply click the automajic button below. Otherwise use the menu button to manually customize vibrate patterns.</string>
+    <string name="message_identifierlist_empty">No unknown identifiers. All recent phone numbers, email addresses, etc belonged to a contact on this phone.</string>
 </resources>
