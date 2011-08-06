@@ -34,7 +34,7 @@ public class IdentifierManager implements IIdentifierManager {
 	
 	@Override
 	public Cursor getOrphans() {
-		return getByEntityId(new Long(EntityManager.ID_NOBODY));
+		return getByEntityId(new Long(Entity.ID_NOBODY));
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class IdentifierManager implements IIdentifierManager {
 			Ln.e("Will not add a null identifier");
 			return;
 		}
-		Long owner_id = (owner == null) ? EntityManager.ID_NOBODY : owner.entityid();
+		Long owner_id = (owner == null) ? Entity.ID_NOBODY : owner.entityid();
 		// Open a connection to the database
     	SQLiteDatabase sql_db = db.getWritableDatabase();
         try {

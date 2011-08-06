@@ -3,60 +3,50 @@
  */
 package com.danielstiner.vibrates;
 
-import com.danielstiner.vibrates.database.EntityManager;
+import android.os.Bundle;
 
 public class Entity {
 	
-	private static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + "." + "Entity";
+	static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + "." + "Entity";
 	
-	public static final String ID_BUNDLE_KEY = CLASSNAME + "." + "id";
+	public static final String EXTRA_KEY_ID = CLASSNAME + "." + "id";
 
 	public static final String TYPE_CONTACTSCONTRACTCONTACT = "contacts_contract_contact";
+	
+	/**  */
+	public static final int ID_NOBODY = -3;
 
-	
 	private Long _id;
-	
-	private String _identifier;
+
+	private Bundle _extras;
 	
 	/**
 	 * Create default entity representing nobody in particular
 	 * @param identifier
 	 */
 	public Entity() {
-		this(null, new Long(EntityManager.ID_NOBODY));
+		entityid(new Long(ID_NOBODY));
 	}
 	
-	/**
-	 * Create entity from globally unique identifier string
-	 * @param identifier
-	 */
-	public Entity(String identifier) {
-		this(identifier, null);
-	}
-	/**
-	 * Create entity from id unique for every entity in this app
-	 * @param id
-	 */
-	public Entity(Long id) {
-		this(null, id);
-	}
-	/**
-	 * Better, two ways to lookup the entity
-	 * @param identifier
-	 * @param id
-	 */
-	public Entity(String identifier, Long id) {
-		_identifier = identifier;
-		_id = id;
-	}
-	public String identifier() {
-		return _identifier;
-	}
 	public Long entityid() {
 		return _id;
 	}
 	public Entity entityid(Long entityid) {
 		_id = entityid;
+		getExtras().putLong(EXTRA_KEY_ID, entityid);
 		return this;
+	}
+	
+	/**
+	 * Get a map of extra data about the entity, generally used by EntityManager to cache information
+	 * 
+	 * @return Bundle of extra information describing the entity
+	 */
+	public Bundle getExtras()
+	{
+		if(_extras == null)
+			_extras = new Bundle();
+		
+		return _extras;
 	}
 }

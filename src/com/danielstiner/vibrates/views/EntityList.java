@@ -170,7 +170,7 @@ public class EntityList extends CoreListActivity {
 		{
 			// Start contact edit activity
 			Intent i = new Intent(this, EditEntity.class);
-			i.putExtra(Entity.ID_BUNDLE_KEY, contact.entityid());
+			i.putExtra(Entity.EXTRA_KEY_ID, contact.entityid());
 			startActivityForResult(i, ACTIVITY_EDIT);
 		}
 	}

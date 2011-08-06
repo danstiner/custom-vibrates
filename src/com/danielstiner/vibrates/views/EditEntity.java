@@ -6,6 +6,7 @@ import java.util.Set;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import roboguice.util.Ln;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
@@ -109,7 +110,7 @@ public class EditEntity extends RoboActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         saveState();
-        outState.putSerializable(Entity.ID_BUNDLE_KEY, _entity.entityid());
+        outState.putSerializable(Entity.EXTRA_KEY_ID, _entity.entityid());
     }
     @Override
     protected void onPause() {
@@ -146,12 +147,13 @@ public class EditEntity extends RoboActivity {
 	
 	private Entity getEntity(Bundle savedInstanceState) {
 		if(savedInstanceState != null) {
-			mContactId = (Long) savedInstanceState.getSerializable(Entity.ID_BUNDLE_KEY);
+			mContactId = (Long) savedInstanceState.getSerializable(Entity.EXTRA_KEY_ID);
 		} else if(getIntent().getExtras() != null) {
-            mContactId = getIntent().getExtras().getLong(Entity.ID_BUNDLE_KEY);
+            mContactId = getIntent().getExtras().getLong(Entity.EXTRA_KEY_ID);
 		} else {
 			// TODO, bad
 			//throw new Exception("Didn't get a row to edit.");
+			Ln.d("No entity id given to edit, canceling activity");
 			Intent mIntent = new Intent();
 	    	setResult(RESULT_CANCELED, mIntent);
 	    	finish();

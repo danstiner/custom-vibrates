@@ -16,10 +16,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 
 public class EntityManager implements IEntityManager {
+	
+	static final String NS = com.danielstiner.vibrates.Vibrates.NS + "." + "database";
+	static final String CLASSNAME = NS + "." + "EntityManager";
 	
 	private static final int VERSION = Database.VERSION;
 	
@@ -30,10 +34,11 @@ public class EntityManager implements IEntityManager {
 	protected static final String KEY_NAME = "name";
 	protected static final String KEY_PATTERN = "pattern";
 	protected static final String KEY_NOTIFY_COUNT = "notified";
-
 	
-	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
-	public static final int ID_NOBODY = -3;
+	protected static final String EXTRA_CACHE_KEY_NAME = CLASSNAME + "." + KEY_NAME;
+	protected static final String EXTRA_CACHE_KEY_KIND = CLASSNAME + "." + KEY_KIND;
+	protected static final String EXTRA_CACHE_KEY_PATTERN = CLASSNAME + "." + KEY_PATTERN;
+	protected static final String EXTRA_CACHE_KEY_NOTIFY_COUNT = CLASSNAME + "." + KEY_NOTIFY_COUNT;
 
 	//private Provider<IdentifierManager> identifiermanager_provider;
 	
@@ -82,10 +87,16 @@ public class EntityManager implements IEntityManager {
                 db.close();
         }
         
-        // Check insertion
-        if(created_id > 0)
-        	return get(created_id);
-    
+        // Get an entity instance to represent this new entity
+        Entity e = entity_provider.get();
+		e.entityid(created_id);
+		
+		Bundle created_extras = e.getExtras();
+		created_extras.putString(EXTRA_CACHE_KEY_NAME, name);
+		created_extras.putString(EXTRA_CACHE_KEY_KIND, type);
+		created_extras.putString(EXTRA_CACHE_KEY_PATTERN, pattern.toString());
+		created_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT, 0);
+		
     	// TODO error handling
     	return new Entity();
     }
@@ -123,14 +134,13 @@ public class EntityManager implements IEntityManager {
 		Cursor c = getCursor(id);
 		
 		try {
-		if(!c.moveToFirst()) {
-			Ln.d("Could not find entity %d", id);
-			return null;
-		}
+			if(!c.moveToFirst()) {
+				Ln.d("Could not find entity %d", id);
+				return null;
+			}
+			
+			return fromCursor(c);
 		
-		Entity e = entity_provider.get();
-		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
-		return e;
 		} finally {
 			c.close();
 		}
@@ -143,7 +153,7 @@ public class EntityManager implements IEntityManager {
         	// Grab all contacts 
         	c = sql_db.query(
         			TABLE,
-        			null,
+        			new String[]{ KEY_ID, KEY_NAME, KEY_KIND, KEY_PATTERN, KEY_NOTIFY_COUNT },
         			KEY_ID + " = ?",
         			new String[]{ id.toString() },
         			null,
@@ -160,7 +170,7 @@ public class EntityManager implements IEntityManager {
 	
 	@Override
 	public InputStream getPhotoStream(Entity entity) {
-		// TODO: Hmm, more complicated, we need to change this depending on the entity type
+		// TODO: Hmm, will need to be more complicated, we need to change this depending on the entity type
 		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.entityid());
         InputStream input = Contacts.openContactPhotoInputStream(activity.getContentResolver(), uri);
 		return input;
@@ -168,7 +178,21 @@ public class EntityManager implements IEntityManager {
 	
 	@Override
 	public Entity fromCursor(Cursor c) {
-		return get(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
+		
+		Entity e = entity_provider.get();
+		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
+		
+		Bundle got_extras = e.getExtras();
+		got_extras.putString(EXTRA_CACHE_KEY_NAME, c.getString(c.getColumnIndexOrThrow(KEY_NAME)));
+		got_extras.putString(EXTRA_CACHE_KEY_KIND, c.getString(c.getColumnIndexOrThrow(KEY_KIND)));
+		got_extras.putString(EXTRA_CACHE_KEY_PATTERN, c.getString(c.getColumnIndexOrThrow(KEY_PATTERN)));
+		got_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT, c.getInt(c.getColumnIndexOrThrow(KEY_NOTIFY_COUNT)));
+		
+    	// TODO error handling
+    	return e;
+		
+		// old way
+		//return get(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
 	}
 	
 	@Override
@@ -180,6 +204,7 @@ public class EntityManager implements IEntityManager {
 //        	return db.query(TABLE,
 //        			null, //new String[] { KEY_ID },
 //        			null, null, null, null, null, null);
+        	// TODO FIx
         	Cursor c = db.query(TABLE, null, null, null, null, null, null);
         	int test = c.getCount();
         	return c;
@@ -191,7 +216,14 @@ public class EntityManager implements IEntityManager {
 	
 	public String getDisplayName(Entity entity) {
 		// TODO Auto-generated method stub
-		return null;
+		Bundle extras = entity.getExtras();
+		if(extras.containsKey(EXTRA_CACHE_KEY_NAME))
+		{
+			return extras.getString(EXTRA_CACHE_KEY_NAME);
+		} else {
+			// TODO database fetch
+			return null;
+		}
 	}
 	
 	static class Helper implements IDatabaseHelper
