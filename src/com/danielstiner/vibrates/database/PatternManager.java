@@ -60,7 +60,7 @@ public class PatternManager implements IPatternManager {
 
 	public long[] get(Entity entity, String type) {
 		// TODO Auto-generated method stub
-		return null;
+		return new long[] { 0, 300, 400, 500, 600 };
 	}
 	
 	@Override

@@ -1,29 +1,19 @@
 package com.danielstiner.vibrates.views;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import roboguice.util.Ln;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.R.id;
-import com.danielstiner.vibrates.R.layout;
-import com.danielstiner.vibrates.R.string;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.danielstiner.vibrates.database.IIdentifierManager;
 import com.danielstiner.vibrates.database.IPatternManager;
 import com.google.inject.Inject;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -42,13 +32,7 @@ public class EditEntity extends RoboActivity {
 	
 	@InjectView(R.id.entityedit_pattern) VibratePatternView entity_pattern_view;
 
-	private int mContactRowId;
-
-	private String mLookupKey;
-
 	private Entity _entity;
-
-	private String mContactLookup;
 
 	private long mContactId;
 

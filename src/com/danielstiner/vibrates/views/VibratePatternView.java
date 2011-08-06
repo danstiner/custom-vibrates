@@ -79,11 +79,10 @@ public class VibratePatternView extends View {
 		// Null check
 		if(new_pattern == null) return;
 		
-		_pattern_length = new Long(0);
+		ArrayList<Long> tmp = new ArrayList<Long>(new_pattern.length);
 		// copy pattern over
 		for(int i=0; i<new_pattern.length; i++) {
-			_pattern.add(new_pattern[i]);
-			_pattern_length += new_pattern[i];
+			tmp.add(new_pattern[i]);
 		}
 		invalidate();
 	}
