@@ -41,7 +41,7 @@ public class EntityList extends CoreListActivity {
 	
 	private static final int CONTENT_VIEW = R.layout.entitylist;
 	
-	private static final int ACTIVITY_PICK_CONTACT = 5;
+	private static final int ACTIVITY_ADD_CONTACT_CHOOSE = 5;
 
 	private Cursor mContactsCursor;
 	
@@ -77,9 +77,12 @@ public class EntityList extends CoreListActivity {
 			openPreferences();
 			//return true;
 			break;
-		case R.id.menu_add:
+		case R.id.entitylist_menu_add_contact:
 			newContact();
 			break;
+//		case R.id.entitylist_menu_add:
+//			newContact();
+//			break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -121,9 +124,7 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		Bundle extras = data.getExtras();
+		//super.onActivityResult(requestCode, resultCode, data);
 
 		switch (requestCode) {
 		case ACTIVITY_EDIT:
@@ -131,13 +132,10 @@ public class EntityList extends CoreListActivity {
 			if (resultCode == RESULT_OK)
 				fillList();
 			break;
-		case ACTIVITY_PICK_CONTACT:
-			if (resultCode == RESULT_OK) {
+		case ACTIVITY_ADD_CONTACT_CHOOSE:
+			if (resultCode == RESULT_OK && data != null && data.getData() != null) {
 				Uri contactpath = data.getData();	
 				editEntity(manager.createFromContactUri(contactpath));
-			} else {
-				// TODO: gracefully handle failure
-				Ln.d("Warning: activity result not ok");
 			}
 			break;
 		}
@@ -153,17 +151,14 @@ public class EntityList extends CoreListActivity {
 		//startManagingCursor(mContactsCursor);
 
 		// Now create an array adapter and set it to display using our row
-		mContactsCursorAdapter = new EntityListCursorAdapter(this, mContactsCursor);
+		mContactsCursorAdapter = new EntityListCursorAdapter(this, mContactsCursor, manager, getInjector());
 		setListAdapter(mContactsCursorAdapter);
 	}
 
 	
 	private void newContact() {
-		// TODO First ask if we should be adding a service group or other special contact
-		// or actual contact
-		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-			ContactsContract.Contacts.CONTENT_URI);
-		startActivityForResult(contactPickerIntent, ACTIVITY_PICK_CONTACT);
+		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		startActivityForResult(contactPickerIntent, ACTIVITY_ADD_CONTACT_CHOOSE);
 	}
 	
 	private void openPreferences() {
@@ -171,10 +166,13 @@ public class EntityList extends CoreListActivity {
 	}
 	
 	private void editEntity(Entity contact) {
-		// Start contact edit activity
-		Intent i = new Intent(this, EditEntity.class);
-		i.putExtra(Entity.ID_BUNDLE_KEY, contact.entityid());
-		startActivityForResult(i, ACTIVITY_EDIT);
+		if(contact != null)
+		{
+			// Start contact edit activity
+			Intent i = new Intent(this, EditEntity.class);
+			i.putExtra(Entity.ID_BUNDLE_KEY, contact.entityid());
+			startActivityForResult(i, ACTIVITY_EDIT);
+		}
 	}
 
 	@Override

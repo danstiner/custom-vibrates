@@ -90,9 +90,9 @@ public class IdentifierManager implements IIdentifierManager {
         	// Grab all contacts 
         	return sql_db.query(
     				TABLE,
-    				new String[]{KEY_ENTITYID},
-    				KEY_IDENTIFIER + " == ?",
-    				new String[]{identifier},
+    				new String[] { KEY_ENTITYID },
+    				KEY_IDENTIFIER + " = ?",
+    				new String[] { identifier },
     				null, null, null, null);
         } finally {
             if (sql_db != null)

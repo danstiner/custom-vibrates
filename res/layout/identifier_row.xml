@@ -18,7 +18,7 @@
     	android:layout_height="wrap_content"
     	android:textSize="11pt"
     	/>
-    <com.danielstiner.vibrates.VibratePatternView
+    <com.danielstiner.vibrates.views.VibratePatternView
     	android:id="@+id/contactrow_defaultpattern"
     	android:layout_width="80px"
     	android:layout_height="18px"

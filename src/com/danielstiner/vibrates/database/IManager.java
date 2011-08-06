@@ -1,5 +1,6 @@
 package com.danielstiner.vibrates.database;
 
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.danielstiner.vibrates.Entity;
@@ -19,5 +20,11 @@ public interface IManager {
 	 * @return
 	 */
 	public abstract Entity getEntity(String identifier);
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract Cursor getEntities();
 
 }

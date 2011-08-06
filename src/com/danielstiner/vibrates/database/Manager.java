@@ -126,4 +126,10 @@ public class Manager implements IManager {
 			pattern_manager = patternmanager_provider.get();
 		return pattern_manager;
 	}
+
+
+	@Override
+	public Cursor getEntities() {
+		return getEntityManager().getAll();
+	}
 }

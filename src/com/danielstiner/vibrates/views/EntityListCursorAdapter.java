@@ -1,12 +1,12 @@
 package com.danielstiner.vibrates.views;
 
-import roboguice.inject.InjectView;
-
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
+import com.danielstiner.vibrates.database.IManager;
 import com.danielstiner.vibrates.database.IPatternManager;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -21,18 +21,22 @@ import android.widget.TextView;
 
 public class EntityListCursorAdapter extends CursorAdapter { // implements Filterable {
 
-	@Inject IEntityManager entity_manager;
-	@Inject IPatternManager pattern_manager;
+	protected IEntityManager entity_manager;
+	protected IPatternManager pattern_manager;
 	
-	@InjectView(R.id.contactrow_name) TextView name_text;
-	@InjectView(R.id.contactrow_image) ImageView entity_pic;
-	@InjectView(R.id.contactrow_defaultpattern) VibratePatternView pattern_view;
+	//@InjectView(R.id.entitylist_row_name) TextView name_text;
+	//@InjectView(R.id.entitylist_row_image) ImageView entity_pic;
+	//@InjectView(R.id.entitylist_row_defaultpattern) VibratePatternView pattern_view;
 	
 	// For view management
-	private int layout = R.layout.contactrow;
+	private int layout = R.layout.entitylist_row;
 
-	public EntityListCursorAdapter(Context context, Cursor c) {
+	public EntityListCursorAdapter(Context context, Cursor c, IManager manager, Injector injector) {
 		super(context, c);
+		
+		// Inject manually
+		entity_manager = injector.getInstance(IEntityManager.class);
+		pattern_manager = injector.getInstance(IPatternManager.class);
 	}
 
 	@Override
@@ -59,16 +63,19 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 		Entity entity = entity_manager.fromCursor(c);
 		
 		// Bind in contact name
+		TextView name_text = (TextView)v.findViewById(R.id.entitylist_row_name);
 		if (name_text != null) {
 			name_text.setText(entity_manager.getDisplayName(entity));
 		}
 		
 		// Bind in contact photo
+		ImageView entity_pic = (ImageView)v.findViewById(R.id.entitylist_row_image);
 		if (entity_pic != null) {
 			entity_pic.setImageDrawable(Drawable.createFromStream(entity_manager.getPhotoStream(entity), "contactphoto"));
 		}
 		
 		// Bind in default vibrate pattern
+		VibratePatternView pattern_view = (VibratePatternView)v.findViewById(R.id.entitylist_row_pattern);
 		if (pattern_view != null) {
 			pattern_view.setPattern(pattern_manager.get(entity));
 		}

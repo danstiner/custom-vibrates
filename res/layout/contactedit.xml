@@ -9,7 +9,7 @@
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	/>
-    <com.danielstiner.vibrates.VibratePatternView
+    <com.danielstiner.vibrates.views.VibratePatternView
     	android:id="@+id/entityedit_pattern"
     	android:layout_width="80px"
 	    android:layout_height="18px"

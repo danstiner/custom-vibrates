@@ -1,10 +1,6 @@
 package com.danielstiner.vibrates.database;
 
 import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import roboguice.util.Ln;
 
@@ -19,13 +15,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import android.util.Log;
-import android.util.Pair;
 
 public class EntityManager implements IEntityManager {
 	
@@ -70,6 +62,7 @@ public class EntityManager implements IEntityManager {
 	@Override
     public Entity create(String name, long[] pattern, String type)
     {
+		long created_id = -2;
     	// First open a connection to the database
     	SQLiteDatabase db = _db.getWritableDatabase();
     	try {
@@ -80,27 +73,21 @@ public class EntityManager implements IEntityManager {
             entity_values.put(KEY_PATTERN, pattern.toString());
             entity_values.put(KEY_NOTIFY_COUNT, 0);
             
-            long entityId = db.insertOrThrow(TABLE, null, entity_values);
-            
-            // TODO: Check insertion here
-            
-            // Now map a lookup for the given identifier
-            //identifiermanager_provider.get().add(entity, identifier);
-//            ContentValues lookup_values = new ContentValues(2);
-//            lookup_values.put(KEY_LOOKUP_IDENTIFIER, identifier);
-//            lookup_values.put(KEY_LOOKUP_ENTITYID, entityId);
-//            long lookupId = db.insertOrThrow(TABLE_LOOKUP, null, lookup_values);
-            
-            // Must have worked
-            return get(entityId);
+            created_id = db.insertOrThrow(TABLE, null, entity_values);
             
     	} catch(Exception tr) {
             Ln.d(tr, "Create entity failed.");
-            return null;
         } finally {
             if (db != null)
                 db.close();
         }
+        
+        // Check insertion
+        if(created_id > 0)
+        	return get(created_id);
+    
+    	// TODO error handling
+    	return new Entity();
     }
 
 	public void remove(Entity entity) {
@@ -135,6 +122,7 @@ public class EntityManager implements IEntityManager {
 	public Entity get(Long id) {
 		Cursor c = getCursor(id);
 		
+		try {
 		if(!c.moveToFirst()) {
 			Ln.d("Could not find entity %d", id);
 			return null;
@@ -143,25 +131,31 @@ public class EntityManager implements IEntityManager {
 		Entity e = entity_provider.get();
 		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
 		return e;
+		} finally {
+			c.close();
+		}
 	}
 	private Cursor getCursor(Long id) {
+		Cursor c;
 		// Open a connection to the database
     	SQLiteDatabase sql_db = _db.getReadableDatabase();
         try {
         	// Grab all contacts 
-        	return sql_db.query(
+        	c = sql_db.query(
         			TABLE,
         			null,
         			KEY_ID + " = ?",
         			new String[]{ id.toString() },
         			null,
         			null,
-        			"1"
+        			null // TODO Limit this somehow
         			);
+        	int test = c.getCount();
         } finally {
             if (sql_db != null)
             	sql_db.close();
         }
+        return c;
 	}
 	
 	@Override
@@ -183,9 +177,12 @@ public class EntityManager implements IEntityManager {
     	SQLiteDatabase db = _db.getReadableDatabase();
         try {
         	// Grab all contacts 
-        	return db.query(TABLE,
-        			new String[] { KEY_ID },
-        			null, null, null, null, null);
+//        	return db.query(TABLE,
+//        			null, //new String[] { KEY_ID },
+//        			null, null, null, null, null, null);
+        	Cursor c = db.query(TABLE, null, null, null, null, null, null);
+        	int test = c.getCount();
+        	return c;
         } finally {
             if (db != null)
                 db.close();
@@ -207,7 +204,7 @@ public class EntityManager implements IEntityManager {
 			+ KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_KIND + " string, "
 			+ KEY_NAME + " string, "
-			+ KEY_PATTERN + " string "
+			+ KEY_PATTERN + " string, "
 			+ KEY_NOTIFY_COUNT + " integer "
 			+ ");";
 			db.execSQL(entity_sql);
@@ -215,12 +212,7 @@ public class EntityManager implements IEntityManager {
 	
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			if(oldVersion < 6) {
-				Ln.e("Database version %d is far out of date.", oldVersion);
-				return;
-			}
-			if(oldVersion == 6)
-				db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN " + KEY_NOTIFY_COUNT + " INTEGER;");
+			
 		}
 	
 		@Override
