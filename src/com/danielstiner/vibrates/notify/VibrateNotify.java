@@ -10,6 +10,20 @@ import android.os.Parcelable;
 
 public class VibrateNotify extends AbstractHappening {
 	
+	// Very common types, throwing them in here for convenience
+	public static final String TYPE_EMAIL     = particularizeType(TYPE_MESSAGE, "email");
+	public static final String TYPE_SMS       = particularizeType(TYPE_CHAT, "Status Updates");
+	public static final String TYPE_STATUS_UPDATE = particularizeType(TYPE_UPDATE, "Status Updates");
+	
+	/** List of root types for generating a tree of notification types */
+	public static final String[] COMMON_TYPES = {
+		TYPE_CHAT,
+		TYPE_HARDWARE,
+		TYPE_MESSAGE,
+		TYPE_UPDATE,
+		TYPE_VOICE
+		};
+	
 	private static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + ".VibrateNotify";
 	
 	public static final String BUNDLE_KEY = CLASSNAME;
@@ -37,20 +51,6 @@ public class VibrateNotify extends AbstractHappening {
 		super(in);
 		_extra = in.readString();
 	}
-
-	// Very common types, throwing them in here for convenience
-	public static final String TYPE_EMAIL     = particularizeType(TYPE_MESSAGE, "chat");
-	public static final String TYPE_SMS = particularizeType(TYPE_CHAT, "Status Updates");
-	public static final String TYPE_STATUS_UPDATE = particularizeType(TYPE_UPDATE, "Status Updates");
-	
-	/** List of root types for generating a tree of notification types */
-	public static final String[] COMMON_TYPES = {
-		TYPE_CHAT,
-		TYPE_HARDWARE,
-		TYPE_MESSAGE,
-		TYPE_UPDATE,
-		TYPE_VOICE
-		};
 	
 	private String _extra;
 

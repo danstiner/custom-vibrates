@@ -7,6 +7,7 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.danielstiner.vibrates.database.IManager;
+import com.danielstiner.vibrates.settings.Preferences;
 import com.google.inject.Inject;
 
 import android.app.Activity;
@@ -72,8 +73,8 @@ public class EntityList extends CoreListActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case OPTIONS_INSERT_ID:
-			newContact();
+		case R.id.menu_settings:
+			openPreferences();
 			//return true;
 			break;
 		case R.id.menu_add:
@@ -163,8 +164,12 @@ public class EntityList extends CoreListActivity {
 		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
 			ContactsContract.Contacts.CONTENT_URI);
 		startActivityForResult(contactPickerIntent, ACTIVITY_PICK_CONTACT);
-
 	}
+	
+	private void openPreferences() {
+		startActivity(new Intent(this, Preferences.class));
+	}
+	
 	private void editEntity(Entity contact) {
 		// Start contact edit activity
 		Intent i = new Intent(this, EditEntity.class);

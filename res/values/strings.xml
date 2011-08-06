@@ -3,6 +3,7 @@
     <string name="accessiblity_listener_desc">Tie in for vibrating on accessibility events</string>
     <string name="app_name">Custom Vibrates</string>
     <string name="buttonlabel_automajic_setup">Automajic Setup</string>
+    <string name="buttonlabel_help">Help.</string>
     <string name="entityedit_delete_button">Remove Customizations</string>
     <string name="entityedit_title">Customize Vibration Pattern</string>
     <string name="menu_delete">Delete</string>
@@ -13,4 +14,5 @@
     <string name="entitylist_message_preauto">To have customized vibrate patterns for common services and your top contacts, simply click the automajic button below.</string>
     <string name="entitylist_message_postauto">Otherwise, please use the menu button to manually customize vibrate patterns.</string>
     <string name="message_identifierlist_empty">No unknown identifiers. All recent phone numbers, email addresses, etc belonged to a contact on this phone.</string>
+	<string name="toast_forcesilent">Custom Vibrates: Kept phone in silent mode based on your preferences.</string>
 </resources>

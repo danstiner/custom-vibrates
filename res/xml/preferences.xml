@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference android:summaryOff="No custom vibration patterns" android:key="enabled" android:title="Enabled" android:summaryOn="Custom vibration patterns enabled"></CheckBoxPreference>
+    <CheckBoxPreference android:summaryOn="Phone kept in vibrate only mode" android:key="forcesilent" android:title="Force silent mode" android:summaryOff="Phone may be switched to ringer mode"></CheckBoxPreference>
+    <PreferenceCategory android:key="servicepatterns" android:title="Service-specific">
+        <ListPreference android:title="Pattern" android:key="servicepatternconcat"></ListPreference>
+        <PreferenceScreen android:key="chatservices" android:title="Chat">
+        	<intent android:data="settings://vibrates.danielstiner.com/services" android:action="android.intent.action.VIEW" />
+        </PreferenceScreen>
+        <PreferenceScreen android:key="hardwareservices" android:title="Hardware">
+        	<intent android:data="settings://vibrates.danielstiner.com/services/hardware" android:action="android.intent.action.VIEW" />
+        </PreferenceScreen>
+        <PreferenceScreen android:key="messagingservices" android:title="Messaging">
+        	<intent android:data="settings://vibrates.danielstiner.com/services/messaging" android:action="android.intent.action.VIEW" />
+        </PreferenceScreen>
+        <PreferenceScreen android:key="updateservices" android:title="Updates">
+        	<intent android:data="settings://vibrates.danielstiner.com/services/updates" android:action="android.intent.action.VIEW" />
+        </PreferenceScreen>
+        <PreferenceScreen android:key="voiceservices" android:title="Voice">
+        	<intent android:data="settings://vibrates.danielstiner.com/services/voice" android:action="android.intent.action.VIEW" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+    
+</PreferenceScreen>

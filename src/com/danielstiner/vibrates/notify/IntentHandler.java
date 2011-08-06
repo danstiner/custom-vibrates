@@ -3,6 +3,8 @@ package com.danielstiner.vibrates.notify;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.settings.UserSettings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -12,6 +14,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -19,6 +22,7 @@ import android.telephony.TelephonyManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.widget.Toast;
 
 public class IntentHandler implements IIntentHandler {
 	
@@ -29,6 +33,7 @@ public class IntentHandler implements IIntentHandler {
 	private static final String LOG_TAG = "CustomVibrates";
 
 	private static final String VIB_STATE = "android.media.VIBRATE_SETTING_CHANGED";
+	private static final String RINGER_MODE = "android.media.RINGER_MODE_CHANGED";
 	private static final String WIFI_STATE = "android.net.wifi.supplicant.STATE_CHANGE";
 	private static final String PHONE_STATE = "android.intent.action.PHONE_STATE";
 	private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
@@ -36,8 +41,6 @@ public class IntentHandler implements IIntentHandler {
 	private static final String DATA_SMS_STATE = "android.intent.action.DATA_SMS_RECEIVED";
 	private static final String HEADSET_BT_STATE = "android.bluetooth.headset.action.AUDIO_STATE_CHANGED";
 	private static final String HEADSET_PLUG_STATE = "android.intent.action.HEADSET_PLUG";
-	
-	
 	
 	// Gmail constants
     private static final Uri CONVERSATIONS_URI = Uri.parse("content://gmail-ls/conversations/");
@@ -48,10 +51,13 @@ public class IntentHandler implements IIntentHandler {
     
     private Provider<VibrateNotify> notify_provider;
     
+    private Provider<UserSettings> settings_provider;
+    
     @Inject
-    public IntentHandler(Provider<VibrateNotify> notify_provider)
+    public IntentHandler(Provider<VibrateNotify> notify_provider, Provider<UserSettings> settings_provider)
     {
     	this.notify_provider = notify_provider;
+    	this.settings_provider = settings_provider;
     }
 
 	/* (non-Javadoc)
@@ -69,12 +75,45 @@ public class IntentHandler implements IIntentHandler {
 			handlePhoneState(bundle, context);
 		} else if(action.equals(Intent.ACTION_PROVIDER_CHANGED)) {
 			//handleProviderChange(bundle, context).fire(context);
+		} else if(action.equals(VIB_STATE)) {
+			handleVibrateState(bundle, context);
+		} else if(action.equals(RINGER_MODE)) {
+			handleRingerMode(bundle, context);
+		} else if(action.equals(HEADSET_PLUG_STATE)) {
+			handleHeadsetPlugState(bundle, context);
+		} else if(action.equals("android.media.VOLUME_CHANGED_ACTION")) {
+			
 		}
 		// TODO Others
 	}
 	
+	private void handleHeadsetPlugState(Bundle bundle, Context context) {
+		// TODO Auto-generated method stub
+		
+	}
 	
-	
+	private void handleRingerMode(Bundle bundle, Context context) {
+		// Keep in vibrate mode if switched to normal ring mode
+		if(settings_provider.get().keepInSilentMode()
+				&& bundle.getInt(AudioManager.EXTRA_RINGER_MODE) == AudioManager.RINGER_MODE_NORMAL) {
+			AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE); 
+			am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+			Toast.makeText(context, R.string.toast_forcesilent, Toast.LENGTH_SHORT).show();
+			
+			//bundle.get
+			//String identifier = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+			String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_HARDWARE, NOTIFY_PHONE);
+			//notify_provider.get().identifier(identifier).type(type).fire(context);
+		}
+	}
+
+	private void handleVibrateState(Bundle bundle, Context context) {
+		// TODO Auto-generated method stub
+		//String number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+		//String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, NOTIFY_PHONE);
+		//notify_provider.get().identifier(number).type(type).fire(context);
+	}
+
 	private void handlePhoneState(Bundle bundle, Context context) {
 		// Check if we are currently ringing
 		if (bundle.getString(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
