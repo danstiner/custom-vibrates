@@ -25,7 +25,15 @@ public class PatternManager implements IPatternManager {
     
     public static long[] generate(String text) {
 		// TODO Auto-generated method stub
-		return MorseCodePattern.morsify(text);
+    	long[] morse = MorseCodePattern.morsify(text);
+    	long[] ret = new long[morse.length + 1];
+    	
+    	ret[0] = 0;
+    	for(int i=0; i<morse.length; i++) {
+    		ret[i+1] = morse[i];
+    	}
+    	
+		return ret;
 	}
 
 	public void clear(Entity entity) {

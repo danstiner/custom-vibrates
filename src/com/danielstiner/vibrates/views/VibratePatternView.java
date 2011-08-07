@@ -20,7 +20,7 @@ public class VibratePatternView extends View {
 	Paint pattern_vibrate_paint;
 	Paint pattern_wait_paint;
 	
-	float pattern_drawlength_multiplier = (float) 0.02;
+	float pattern_drawlength_multiplier = (float) 0.15;
 
 	public VibratePatternView(Context context) {
 		super(context);
@@ -43,11 +43,12 @@ public class VibratePatternView extends View {
 		pattern_vibrate_paint = new Paint();
 		pattern_wait_paint = new Paint();
 		
-		pattern_border_paint.setColor(Color.GRAY);
+		pattern_border_paint.setColor(Color.DKGRAY);
 		pattern_border_paint.setStrokeWidth((float) 1.1);
 		pattern_border_paint.setStyle(Paint.Style.STROKE);
+		pattern_border_paint.setAlpha(50);
 		pattern_vibrate_paint.setColor(Color.LTGRAY);
-		pattern_wait_paint.setColor(Color.DKGRAY);
+		pattern_wait_paint.setColor(Color.BLACK);
 	}
 	
 	public void setPattern(String new_pattern) {
@@ -142,16 +143,18 @@ public class VibratePatternView extends View {
 			if(is_wait_period == true) {
 				// Draw wait time box
 				draw_paint = pattern_wait_paint;
+				is_wait_period = false;
 			} else {
 				// Draw vibrate time box
 				draw_paint = pattern_vibrate_paint;
+				is_wait_period = true;
 			}
 			
 			// Actually draw correctly colored box
-			canvas.drawRect(last_draw_pos, 0, last_draw_pos+draw_width, h, draw_paint);
+			canvas.drawRect(last_draw_pos, 0, Math.min(last_draw_pos+draw_width, w), h, draw_paint);
 			
 			// Increment where we last drew on the screen
-			last_draw_pos += last_draw_pos+draw_width;
+			last_draw_pos += draw_width;
 			
 			// Check we are still inside the width of this control
 			if(last_draw_pos > w) break;

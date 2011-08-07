@@ -31,6 +31,8 @@ public class EditEntity extends RoboActivity {
 	@InjectView(R.id.entityedit_delete_button) Button delete_button;
 	
 	@InjectView(R.id.entityedit_pattern) VibratePatternView entity_pattern_view;
+	
+	private static final int CONTENT_VIEW = R.layout.entityedit;
 
 	private Entity _entity;
 
@@ -41,7 +43,7 @@ public class EditEntity extends RoboActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.contactedit);
+		setContentView(CONTENT_VIEW);
 		setTitle(R.string.entityedit_title);
 		
 		// Build a contact to represent who we are customizing
@@ -78,9 +80,14 @@ public class EditEntity extends RoboActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Bundle extras = data.getExtras();
-
 		switch (requestCode) {
+		case ACTIVITY_PATTERN_EDIT:
+			// Refresh contact list
+			if (resultCode == RESULT_OK && data != null)
+			{
+				pattern_manager.set(_entity, data.getLongArrayExtra(VibratePatternEdit.PATTERN_BUNDLE_KEY));
+			}
+			break;
 		}
 	}
 	
