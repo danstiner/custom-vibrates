@@ -13,6 +13,8 @@ public class PatternManager implements IPatternManager {
 	
 	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
 	public static final int ID_NOBODY = -3;
+	
+	private static final long MORSE_MULTIPLIER = 100;
 
 //	@Inject private IDatabase db;
 //
@@ -30,7 +32,7 @@ public class PatternManager implements IPatternManager {
     	
     	ret[0] = 0;
     	for(int i=0; i<morse.length; i++) {
-    		ret[i+1] = morse[i];
+    		ret[i+1] = morse[i] * MORSE_MULTIPLIER;
     	}
     	
 		return ret;

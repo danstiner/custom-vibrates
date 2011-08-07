@@ -5,7 +5,6 @@ import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.danielstiner.vibrates.database.IManager;
 import com.danielstiner.vibrates.database.IPatternManager;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import android.content.Context;
@@ -21,22 +20,23 @@ import android.widget.TextView;
 
 public class EntityListCursorAdapter extends CursorAdapter { // implements Filterable {
 
+	protected IManager manager;
 	protected IEntityManager entity_manager;
-	protected IPatternManager pattern_manager;
 	
 	//@InjectView(R.id.entitylist_row_name) TextView name_text;
 	//@InjectView(R.id.entitylist_row_image) ImageView entity_pic;
 	//@InjectView(R.id.entitylist_row_defaultpattern) VibratePatternView pattern_view;
 	
 	// For view management
-	private int layout = R.layout.entitylist_row;
+	private int layout = R.layout.entity_list_row;
 
 	public EntityListCursorAdapter(Context context, Cursor c, IManager manager, Injector injector) {
 		super(context, c);
 		
+		this.manager = manager;
+		
 		// Inject manually
-		entity_manager = injector.getInstance(IEntityManager.class);
-		pattern_manager = injector.getInstance(IPatternManager.class);
+		this.entity_manager = injector.getInstance(IEntityManager.class);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 		// Bind in default vibrate pattern
 		VibratePatternView pattern_view = (VibratePatternView)v.findViewById(R.id.entitylist_row_pattern);
 		if (pattern_view != null) {
-			pattern_view.setPattern(pattern_manager.get(entity));
+			pattern_view.setPattern(manager.getPattern(entity, null));
 		}
 		
 		// Bind in some top service specific patterns

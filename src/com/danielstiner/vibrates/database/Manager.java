@@ -108,6 +108,22 @@ public class Manager implements IManager {
 		
     }
 	
+	@Override
+	public Cursor getEntities() {
+		return getEntityManager().getAll();
+	}
+
+	@Override
+	public long[] getPattern(Entity entity, String type) {
+		// TODO type based pattern appending
+		return getEntityManager().getPattern(entity);
+	}
+	
+	@Override
+	public void setPattern(Entity entity, long[] pattern) {
+		getEntityManager().setPattern(entity, pattern);
+	}
+	
 	private IEntityManager getEntityManager()
 	{
 		if(entity_manager == null)
@@ -129,7 +145,8 @@ public class Manager implements IManager {
 
 
 	@Override
-	public Cursor getEntities() {
-		return getEntityManager().getAll();
+	public void update(Entity entity) {
+		// TODO Auto-generated method stub
+		
 	}
 }

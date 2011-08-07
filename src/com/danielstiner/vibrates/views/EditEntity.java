@@ -8,6 +8,7 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.danielstiner.vibrates.database.IIdentifierManager;
+import com.danielstiner.vibrates.database.IManager;
 import com.danielstiner.vibrates.database.IPatternManager;
 import com.google.inject.Inject;
 
@@ -22,6 +23,8 @@ public class EditEntity extends RoboActivity {
 
 	private static final int ACTIVITY_PATTERN_EDIT = 1;
 	
+	@Inject IManager manager;
+	
 	@Inject IEntityManager entity_manager;
 	
 	@Inject IPatternManager pattern_manager;
@@ -32,7 +35,7 @@ public class EditEntity extends RoboActivity {
 	
 	@InjectView(R.id.entityedit_pattern) VibratePatternView entity_pattern_view;
 	
-	private static final int CONTENT_VIEW = R.layout.entityedit;
+	private static final int CONTENT_VIEW = R.layout.entity_edit;
 
 	private Entity _entity;
 
@@ -49,9 +52,7 @@ public class EditEntity extends RoboActivity {
 		// Build a contact to represent who we are customizing
 		_entity = getEntity(savedInstanceState);
 		// and update it
-		entity_manager.update(_entity);
-		// and its identifiers
-		identifier_manager.update(_entity);
+		manager.update(_entity);
 		
 		// Time for some real work
 		playDefaultPattern();
@@ -85,7 +86,7 @@ public class EditEntity extends RoboActivity {
 			// Refresh contact list
 			if (resultCode == RESULT_OK && data != null)
 			{
-				pattern_manager.set(_entity, data.getLongArrayExtra(VibratePatternEdit.PATTERN_BUNDLE_KEY));
+				manager.setPattern(_entity, data.getLongArrayExtra(VibratePatternEdit.EXTRA_KEY_PATTERN));
 			}
 			break;
 		}
@@ -93,7 +94,7 @@ public class EditEntity extends RoboActivity {
 	
 	private void editPattern(String type) {
 		Intent i = new Intent(this, VibratePatternEdit.class);
-		i.putExtra(VibratePatternEdit.PATTERN_BUNDLE_KEY, pattern_manager.get(_entity, type));
+		i.putExtra(VibratePatternEdit.EXTRA_KEY_PATTERN, manager.getPattern(_entity, null));
 		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
 	}
 	
@@ -133,13 +134,13 @@ public class EditEntity extends RoboActivity {
 			contact_name.setText(entity_manager.getDisplayName(_entity));
 		
 		if(entity_pattern_view != null)
-			entity_pattern_view.setPattern(pattern_manager.get(_entity));
+			entity_pattern_view.setPattern(manager.getPattern(_entity, null));
 	}
 	
 	private Entity getEntity(Bundle savedInstanceState) {
 		if(savedInstanceState != null) {
 			mContactId = (Long) savedInstanceState.getSerializable(Entity.EXTRA_KEY_ID);
-		} else if(getIntent().getExtras() != null) {
+		} else if(getIntent() != null && getIntent().getExtras() != null) {
             mContactId = getIntent().getExtras().getLong(Entity.EXTRA_KEY_ID);
 		} else {
 			// TODO, bad
@@ -155,7 +156,7 @@ public class EditEntity extends RoboActivity {
 	}
 	private void playDefaultPattern() {
 		// Play it off
-		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(pattern_manager.get(_entity), -1);
+		((Vibrator)this.getSystemService(VIBRATOR_SERVICE)).vibrate(manager.getPattern(_entity, null), -1);
 		/*
 		 * // Play the appropriate vibrate pattern
 		Intent service = new Intent(context, VibratrService.class);

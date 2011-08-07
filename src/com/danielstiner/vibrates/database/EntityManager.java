@@ -1,6 +1,7 @@
 package com.danielstiner.vibrates.database;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 import roboguice.util.Ln;
 
@@ -75,7 +76,7 @@ public class EntityManager implements IEntityManager {
             ContentValues entity_values = new ContentValues(4);
             entity_values.put(KEY_NAME, name);
             entity_values.put(KEY_KIND, type);
-            entity_values.put(KEY_PATTERN, pattern.toString());
+            entity_values.put(KEY_PATTERN, stringify(pattern));
             entity_values.put(KEY_NOTIFY_COUNT, 0);
             
             created_id = db.insertOrThrow(TABLE, null, entity_values);
@@ -259,5 +260,63 @@ public class EntityManager implements IEntityManager {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setPattern(Entity entity, long[] pattern) {		
+		// Open a connection to the database
+    	SQLiteDatabase db = _db.getReadableDatabase();
+        try {
+        	String stringified_pattern = stringify(pattern);
+        	
+        	ContentValues values = new ContentValues(1);
+        	values.put(KEY_PATTERN, stringified_pattern);
+        	
+        	db.update(
+        			TABLE,
+        			values,
+        			KEY_ID + " = ?",
+        			new String[] { entity.entityid().toString() }
+        			);
+        	
+        	// update cache as well
+        	entity.getExtras().putString(EXTRA_CACHE_KEY_PATTERN, stringified_pattern);
+        	
+        } finally {
+            if (db != null)
+                db.close();
+        }
+	}
+
+	@Override
+	public long[] getPattern(Entity entity) {
+		// update cache first if needed
+		if(!entity.getExtras().containsKey(EXTRA_CACHE_KEY_PATTERN))
+			entity = get(entity.entityid());
+		
+		// Unpack pattern from database
+		// should be a comma separated list of longs
+		String pattern_packed = entity.getExtras().getString(EXTRA_CACHE_KEY_PATTERN);
+		if(pattern_packed == null)
+			return new long[] { 0 };
+		String[] pattern_parts = pattern_packed.split(",");
+		long[] pattern = new long[pattern_parts.length];
+		
+		try {
+			for(int i=0; i<pattern.length; i++)
+				pattern[i] = Long.parseLong(pattern_parts[i].trim());
+		} catch(Exception e) {
+			Ln.d(e, "Could not parse pattern '%s' from database.", pattern_packed);
+		}
+		
+		return pattern;
+	}
 	
+	private String stringify(long[] pattern) {
+		if(pattern == null)
+			return "";
+		
+		String pattern_str = Arrays.toString(pattern);
+		
+		return pattern_str.substring(1, pattern_str.length() - 1);
+	}
 }

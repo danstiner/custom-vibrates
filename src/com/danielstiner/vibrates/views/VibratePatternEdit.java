@@ -10,28 +10,32 @@ import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 
-public class VibratePatternEdit extends RoboActivity { //implements OnTouchListener {
+public class VibratePatternEdit extends RoboActivity {
 
 	private static final String NS = com.danielstiner.vibrates.Vibrates.NS + "." + "views";
 	private static final String CLASSNAME = NS + "." + "VibratePatternEdit";
 	
-	public static final String PATTERN_BUNDLE_KEY = CLASSNAME + "." + "pattern";
+	public static final String EXTRA_KEY_PATTERN = CLASSNAME + "." + "pattern";
 
 	private static final long EDITING_WATCHER_DELAY = 10;
-	private static final long EDITING_MAX_UP = 2 * 1000;
-	// One day, just to be sure
+	private static final long EDITING_MAX_UP = 1500;
+	// One whole day, just to be sure
 	private static final long EDITING_MAX_DOWN = 24 * 60 * 60 * 1000;
 	
 	private static final int CONTENT_VIEW = R.layout.pattern_edit;
 
 	@InjectView(R.id.pattern_edit_patternview) private VibratePatternView pattern_view;
+	
+	@InjectView(R.id.pattern_edit_finish_button) private Button finish_button;
 	
 	@Inject private Vibrator _vibratr;
 
@@ -70,26 +74,32 @@ public class VibratePatternEdit extends RoboActivity { //implements OnTouchListe
 		// Preview the current pattern
 		playPattern();
 		
+		// Content stuff
+		finish_button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				endEdit();
+				finish();
+			}
+		});
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		saveState();
-		outState.putSerializable(PATTERN_BUNDLE_KEY, _pattern.toArray());
+		outState.putSerializable(EXTRA_KEY_PATTERN, _pattern.toArray());
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		endEdit();
-		saveState();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		endEdit();
+		//endEdit();
 	}
 	
 	@Override
@@ -149,9 +159,14 @@ public class VibratePatternEdit extends RoboActivity { //implements OnTouchListe
 		_editHandler.removeCallbacks(_editWatcher);
 		_editing = false;
 		
+		// Save result for the calling activity to handle
+		Intent i = new Intent();
+		i.putExtra(EXTRA_KEY_PATTERN, asLongArray(_pattern));
+		setResult(Activity.RESULT_OK, i);
+		
 		// Play back if needed
 		// TODO if(playback_pattern == true)
-			playPattern();
+		playPattern();
 	}
 	
 	private void editWatcherTick() {
@@ -166,13 +181,14 @@ public class VibratePatternEdit extends RoboActivity { //implements OnTouchListe
 	}
 
 	private void saveState() {
+		
 	}
 
 	private void getVibratePattern(Bundle savedState) {
 		// Recover saved state pattern if possible
 		if(savedState != null && _pattern.size() == 0) {
 			// It was stored as Long[]
-			Long[] pattern = (Long[]) savedState.getSerializable(PATTERN_BUNDLE_KEY);
+			Long[] pattern = (Long[]) savedState.getSerializable(EXTRA_KEY_PATTERN);
 			for(int i=0; i<pattern.length; i++)
 				_pattern.add(pattern[i]);
 		}
@@ -181,7 +197,7 @@ public class VibratePatternEdit extends RoboActivity { //implements OnTouchListe
 			// Pull in pattern from passed intent if possible
 			Bundle extras = getIntent().getExtras();
 			if(extras != null) {
-				long[] pattern = extras.getLongArray(PATTERN_BUNDLE_KEY);
+				long[] pattern = extras.getLongArray(EXTRA_KEY_PATTERN);
 				for(int i=0; i<pattern.length; i++)
 					_pattern.add(pattern[i]);
 			}
@@ -190,10 +206,18 @@ public class VibratePatternEdit extends RoboActivity { //implements OnTouchListe
 	
 	private void playPattern() {
 		// Make a copy of the pattern for playing
-		long[] pattern = new long[_pattern.size()];
-		for(int i=0; i<_pattern.size(); i++)
-			pattern[i] = _pattern.get(i).longValue();
+		
 		// Play it off
-		_vibratr.vibrate(pattern, -1);
+		_vibratr.vibrate(asLongArray(_pattern), -1);
+	}
+	
+	private long[] asLongArray(List<Long> list)
+	{
+		long[] array = new long[list.size()];
+		
+		for(int i=0; i<list.size(); i++)
+			array[i] = list.get(i).longValue();
+		
+		return array;
 	}
 }

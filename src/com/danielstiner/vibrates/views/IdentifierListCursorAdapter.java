@@ -12,7 +12,7 @@ import android.widget.Filter;
 
 public class IdentifierListCursorAdapter extends CursorAdapter {
 	
-	private static final int layout = R.layout.identifier_row;
+	private static final int layout = R.layout.identifier_list_row;
 	
 	// For view management
 	private Context context;

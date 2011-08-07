@@ -4,8 +4,7 @@ import roboguice.service.RoboService;
 import roboguice.util.Ln;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.database.IIdentifierManager;
-import com.danielstiner.vibrates.database.IPatternManager;
+import com.danielstiner.vibrates.database.IManager;
 import com.google.inject.Inject;
 
 import android.content.Intent;
@@ -17,13 +16,11 @@ public class VibratrService extends RoboService {
 	
 	@Inject INotificationConstraints notify_constraints;
 	
-	@Inject IIdentifierManager identifier_manager;
-	
-	@Inject IPatternManager pattern_manager;
+	@Inject IManager manager;
 	
 	@Inject Vibrator vibrator;
 	
-	public static final String KEY_VIBRATE_DESCRIPTION = "com.danielstiner.vibrates.VibratrService.description";
+	public static final String EXTRA_KEY_VIBRATE_DESCRIPTION = "com.danielstiner.vibrates.VibratrService.description";
 
 	public static final String ACTION = "com.danielstiner.vibrates.VIBRATE";
 
@@ -35,7 +32,7 @@ public class VibratrService extends RoboService {
 		VibrateNotify n = bundle.getParcelable(VibrateNotify.BUNDLE_KEY);
 		
 		// Try an find the associated entity
-		Entity e = identifier_manager.get(n.identifier());
+		Entity e = manager.getEntity(n.identifier());
 		
 		Ln.d(
 			"VibratrService Notify: got entity #%s for %s because %s",
@@ -46,7 +43,7 @@ public class VibratrService extends RoboService {
 		// If we have something, then vibrate away!
 		if(notify_constraints.vibrate(e, n.type()))
 		{
-			vibrator.vibrate(pattern_manager.get(e, n.type()), -1);
+			vibrator.vibrate(manager.getPattern(e, n.type()), -1);
 		}
 		
 //		// Fancy toast notifications
@@ -68,9 +65,11 @@ public class VibratrService extends RoboService {
 		vibrator.cancel();
 	}
 
+	/**
+	 * No need to bind to this service, it is a consumer only
+	 */
 	@Override
 	public IBinder onBind(Intent intent) {
-		// No need to bind to this service, it is a consumer only
 		return null;
 	}
 	

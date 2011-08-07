@@ -39,7 +39,7 @@ public class EntityList extends CoreListActivity {
 	//private static final int ACTIVITY_CREATE = 3;
 	private static final int ACTIVITY_EDIT = 4;
 	
-	private static final int CONTENT_VIEW = R.layout.entitylist;
+	private static final int CONTENT_VIEW = R.layout.entity_list;
 	
 	private static final int ACTIVITY_ADD_CONTACT_CHOOSE = 5;
 
@@ -75,14 +75,10 @@ public class EntityList extends CoreListActivity {
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
 			openPreferences();
-			//return true;
 			break;
 		case R.id.entitylist_menu_add_contact:
 			newContact();
 			break;
-//		case R.id.entitylist_menu_add:
-//			newContact();
-//			break;
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -124,7 +120,6 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//super.onActivityResult(requestCode, resultCode, data);
 
 		switch (requestCode) {
 		case ACTIVITY_EDIT:
@@ -170,7 +165,7 @@ public class EntityList extends CoreListActivity {
 		{
 			// Start contact edit activity
 			Intent i = new Intent(this, EditEntity.class);
-			i.putExtra(Entity.EXTRA_KEY_ID, contact.entityid());
+			i.putExtra(Entity.EXTRA_KEY_ID, contact.entityid().longValue());
 			startActivityForResult(i, ACTIVITY_EDIT);
 		}
 	}

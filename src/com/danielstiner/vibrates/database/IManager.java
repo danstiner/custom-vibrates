@@ -27,4 +27,22 @@ public interface IManager {
 	 */
 	public abstract Cursor getEntities();
 
+	/**
+	 * 
+	 * @return
+	 */
+	public abstract long[] getPattern(Entity entity, String type);
+
+	/**
+	 * 
+	 * @param entity
+	 * @param longArrayExtra
+	 */
+	public abstract void setPattern(Entity entity, long[] pattern);
+
+	/**
+	 * 
+	 * @param entity
+	 */
+	public abstract void update(Entity entity);
 }
