@@ -71,7 +71,7 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 		// Bind in contact photo
 		ImageView entity_pic = (ImageView)v.findViewById(R.id.entitylist_row_image);
 		if (entity_pic != null) {
-			entity_pic.setImageDrawable(Drawable.createFromStream(entity_manager.getPhotoStream(entity), "contactphoto"));
+			entity_pic.setImageDrawable(Drawable.createFromStream(manager.getPhotoStream(entity), "contactphoto"));
 		}
 		
 		// Bind in default vibrate pattern

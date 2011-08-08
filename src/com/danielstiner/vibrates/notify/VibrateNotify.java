@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -62,9 +63,16 @@ public class VibrateNotify extends AbstractHappening {
 	@Inject
 	public void fire(Context context) {
 		// Tell the vibrator service to get busy
-		context.startService(intent_provider.get().setAction(VibratrService.ACTION).putExtra(CLASSNAME, this));
+		context.startService(intent_provider.get().setAction(VibratrService.ACTION).putExtra(BUNDLE_KEY, this));
 	}
 
+	public static VibrateNotify fromBundle(Bundle bundle) {
+		// Extract an instance from the bundle if possible
+		if(!bundle.containsKey(BUNDLE_KEY))
+			return null;
+		else
+			return bundle.getParcelable(BUNDLE_KEY);
+	}
 
 	@Override
 	public int describeContents() {

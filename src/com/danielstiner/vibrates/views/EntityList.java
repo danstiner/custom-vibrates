@@ -128,9 +128,10 @@ public class EntityList extends CoreListActivity {
 				fillList();
 			break;
 		case ACTIVITY_ADD_CONTACT_CHOOSE:
-			if (resultCode == RESULT_OK && data != null && data.getData() != null) {
+			if (resultCode == RESULT_OK && data != null) {
 				Uri contactpath = data.getData();	
 				editEntity(manager.createFromContactUri(contactpath));
+				fillList();
 			}
 			break;
 		}

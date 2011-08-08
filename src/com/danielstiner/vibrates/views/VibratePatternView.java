@@ -49,6 +49,7 @@ public class VibratePatternView extends View {
 		pattern_border_paint.setAlpha(50);
 		pattern_vibrate_paint.setColor(Color.LTGRAY);
 		pattern_wait_paint.setColor(Color.BLACK);
+		pattern_wait_paint.setAlpha(0);
 	}
 	
 	public void setPattern(List<Long> new_pattern) {

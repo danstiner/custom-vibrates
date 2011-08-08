@@ -4,7 +4,6 @@ import android.hardware.Sensor;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.settings.IUserSettings;
-import com.danielstiner.vibrates.settings.UserSettings;
 import com.google.inject.Inject;
 
 public class NotificationConstraints implements INotificationConstraints {
@@ -21,6 +20,8 @@ public class NotificationConstraints implements INotificationConstraints {
 	@Override
 	public boolean vibrate(Entity entity, String notificationType) {
 		// TODO Auto-generated method stub
+		if(entity == null)
+			return false;
 		
 		// check enabled user preference
 		if(!this.userSettings.enabled())

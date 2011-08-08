@@ -2,8 +2,6 @@ package com.danielstiner.vibrates.database;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.utility.MorseCodePattern;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class PatternManager implements IPatternManager {
 	
@@ -14,7 +12,9 @@ public class PatternManager implements IPatternManager {
 	/** Identifies patterns/lookups not attached to a contact (yet parent-less) */
 	public static final int ID_NOBODY = -3;
 	
-	private static final long MORSE_MULTIPLIER = 100;
+	private static final long MORSE_MULTIPLIER = 75;
+	
+	private static final int MAX_MORSE = 3;
 
 //	@Inject private IDatabase db;
 //
@@ -27,6 +27,10 @@ public class PatternManager implements IPatternManager {
     
     public static long[] generate(String text) {
 		// TODO Auto-generated method stub
+    	
+    	// pare down the text to the first few words
+    	text = text.substring(0, Math.min(MAX_MORSE, text.length()));
+    	
     	long[] morse = MorseCodePattern.morsify(text);
     	long[] ret = new long[morse.length + 1];
     	

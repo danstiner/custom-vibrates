@@ -73,6 +73,7 @@ public class VibratePatternEdit extends RoboActivity {
 
 		// Preview the current pattern
 		playPattern();
+		pattern_view.setPattern(_pattern);
 		
 		// Content stuff
 		finish_button.setOnClickListener(new View.OnClickListener() {

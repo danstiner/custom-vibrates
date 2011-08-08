@@ -29,7 +29,7 @@ public class VibratrService extends RoboService {
 		Bundle bundle = intent.getExtras();
 		
 		// Extract what just happened
-		VibrateNotify n = bundle.getParcelable(VibrateNotify.BUNDLE_KEY);
+		VibrateNotify n = VibrateNotify.fromBundle(bundle);
 		
 		// Try an find the associated entity
 		Entity e = manager.getEntity(n.identifier());

@@ -47,7 +47,7 @@ public class EntityManager implements IEntityManager {
 
 	private Provider<Entity> entity_provider;
 	
-	@Inject private Activity activity;
+	@Inject private Context activity;
 	
 	@Inject
     public EntityManager(Provider<Entity> entity_provider) {
@@ -99,7 +99,7 @@ public class EntityManager implements IEntityManager {
 		created_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT, 0);
 		
     	// TODO error handling
-    	return new Entity();
+    	return e;
     }
 
 	public void remove(Entity entity) {
@@ -170,14 +170,6 @@ public class EntityManager implements IEntityManager {
 	}
 	
 	@Override
-	public InputStream getPhotoStream(Entity entity) {
-		// TODO: Hmm, will need to be more complicated, we need to change this depending on the entity type
-		Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, entity.entityid());
-        InputStream input = Contacts.openContactPhotoInputStream(activity.getContentResolver(), uri);
-		return input;
-	}
-	
-	@Override
 	public Entity fromCursor(Cursor c) {
 		
 		Entity e = entity_provider.get();
@@ -216,15 +208,11 @@ public class EntityManager implements IEntityManager {
 	}
 	
 	public String getDisplayName(Entity entity) {
-		// TODO Auto-generated method stub
-		Bundle extras = entity.getExtras();
-		if(extras.containsKey(EXTRA_CACHE_KEY_NAME))
-		{
-			return extras.getString(EXTRA_CACHE_KEY_NAME);
-		} else {
-			// TODO database fetch
-			return null;
-		}
+		// update cache first if needed
+		if(!entity.getExtras().containsKey(EXTRA_CACHE_KEY_NAME))
+			entity = get(entity.entityid());
+		
+		return entity.getExtras().getString(EXTRA_CACHE_KEY_NAME);
 	}
 	
 	static class Helper implements IDatabaseHelper
@@ -318,5 +306,14 @@ public class EntityManager implements IEntityManager {
 		String pattern_str = Arrays.toString(pattern);
 		
 		return pattern_str.substring(1, pattern_str.length() - 1);
+	}
+
+	@Override
+	public String getKind(Entity entity) {
+		// update cache first if needed
+		if(!entity.getExtras().containsKey(EXTRA_CACHE_KEY_KIND))
+			entity = get(entity.entityid());
+		
+		return entity.getExtras().getString(EXTRA_CACHE_KEY_KIND);
 	}
 }

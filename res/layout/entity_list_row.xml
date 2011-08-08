@@ -15,6 +15,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
+		android:layout_marginLeft="5px"
 		>
 	    <TextView
 	    	android:id="@+id/entitylist_row_name"

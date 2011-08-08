@@ -20,6 +20,11 @@ public class IdentifierManager implements IIdentifierManager {
 	protected static final String KEY_KIND = "kind";
 	protected static final String KEY_ENTITYID = "entity";
 	protected static final String KEY_IDENTIFIER = "identifier";
+
+	public static final String KIND_DEFAULT = "unknown";
+	public static final String KIND_CONTACTS_CONTRACT_ID = "generated.contacts_contract_id";
+	public static final String KIND_CONTACTS_CONTRACT_NAME = "generated.contacts_contract_name";
+	public static final String KIND_CONTACTS_CONTRACT_LOOKUP = "generated.contacts_contract_lookup";
 	
 	//protected static final String DEFAULT_KIND = "";
 
@@ -68,6 +73,9 @@ public class IdentifierManager implements IIdentifierManager {
 	 * @see com.danielstiner.vibrates.IIdentifierManager#get(java.lang.String)
 	 */
 	public Entity get(String identifier) {
+		if(identifier == null)
+			return null;
+		
 		Cursor matches = getByEntityIdentifier(identifier);
 		// Make sure we only have one entity match
 		if(matches.getCount() > 1)
@@ -99,8 +107,30 @@ public class IdentifierManager implements IIdentifierManager {
             	sql_db.close();
         }
 	}
+	
+	@Override
+	public Cursor get(Entity owner, String kind) {
+		// Open a connection to the database
+    	SQLiteDatabase sql_db = db.getReadableDatabase();
+        try {
+        	// Grab all matching lookups
+        	Cursor c = sql_db.query(
+    				TABLE,
+    				null,
+    				KEY_ENTITYID + " = ? AND " + KEY_KIND + " = ?",
+    				new String[] { owner.entityid().toString(), kind },
+    				null, null, null, null);
+        	int test = c.getCount();
+        	return c;
+        	
+        } finally {
+            if (sql_db != null)
+            	sql_db.close();
+        }
+	}
 
-	public void add(Entity owner, String identifier) {
+	@Override
+	public void add(Entity owner, String identifier, String kind) {
 		if(identifier == null) {
 			Ln.e("Will not add a null identifier");
 			return;
@@ -109,10 +139,10 @@ public class IdentifierManager implements IIdentifierManager {
 		// Open a connection to the database
     	SQLiteDatabase sql_db = db.getWritableDatabase();
         try {
-            ContentValues ident_values = new ContentValues();
+            ContentValues ident_values = new ContentValues(3);
             ident_values.put(KEY_ENTITYID, owner_id.toString());
             ident_values.put(KEY_IDENTIFIER, identifier);
-            //ident_values.put(KEY_KIND, DEFAULT_KIND);
+            ident_values.put(KEY_KIND, kind);
             // TODO: throw is temporary
             long identifierId = sql_db.insertOrThrow(TABLE, null, ident_values);
         } finally {
@@ -121,17 +151,15 @@ public class IdentifierManager implements IIdentifierManager {
         }
 	}
 	
-	
-	
-//	@Override
-//	public String identifierFromCursor(Cursor c) {
-//		return c.getString(c.getColumnIndexOrThrow(KEY_IDENTIFIER));
-//	}
+	@Override
+	public String identifierFromCursor(Cursor c) {
+		return c.getString(c.getColumnIndexOrThrow(KEY_IDENTIFIER));
+	}
 
-//	@Override
-//	public String kindFromCursor(Cursor c) {
-//		return c.getString(c.getColumnIndexOrThrow(KEY_KIND));
-//	}
+	@Override
+	public String kindFromCursor(Cursor c) {
+		return c.getString(c.getColumnIndexOrThrow(KEY_KIND));
+	}
 	
 //	@Override
 //	public Entity entityFromCursor(Cursor c) {
