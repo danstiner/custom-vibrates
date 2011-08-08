@@ -51,20 +51,6 @@ public class VibratePatternView extends View {
 		pattern_wait_paint.setColor(Color.BLACK);
 	}
 	
-	public void setPattern(String new_pattern) {
-		// Null check
-		if(new_pattern == null) return;
-		// Do some fancy parsing
-		String[] string_pattern = new_pattern.split("[,.]", 100);
-		_pattern_length = new Long(0);
-		_pattern = new ArrayList<Long>(string_pattern.length);
-		for(int i=0; i<string_pattern.length; i++) {
-			Long part = Long.parseLong(string_pattern[i]);
-			_pattern.set(i, part);
-			_pattern_length += part;
-		}
-		invalidate();
-	}
 	public void setPattern(List<Long> new_pattern) {
 		// Null check
 		if(new_pattern == null) return;
@@ -85,7 +71,8 @@ public class VibratePatternView extends View {
 		for(int i=0; i<new_pattern.length; i++) {
 			tmp.add(new_pattern[i]);
 		}
-		invalidate();
+		// pass off work
+		setPattern(tmp);
 	}
 	
 	public List<Long> getPattern() {

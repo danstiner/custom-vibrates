@@ -15,21 +15,17 @@ import roboguice.inject.ContextScoped;
 public class Database implements IDatabase {
 
 	static final int VERSION = 7;
-
-	// Need a context to create the database connection on
-	private Activity activity;
 	
 	private IDatabaseHelper[] database_helpers;
 	private SQLiteOpenHelper _dbHelper;
 	
 	@Inject
 	public Database(
-		Activity activity,
+		Context activity,
 		@Named(DatabaseModule.DATABASE_NAME_KEY) String database_name,
 		IDatabaseHelper[] database_helpers
 		)
 	{
-		this.activity = activity;
 		this.database_helpers = database_helpers;
 		_dbHelper = new DBHelper(activity, database_name, null, VERSION);
 	}

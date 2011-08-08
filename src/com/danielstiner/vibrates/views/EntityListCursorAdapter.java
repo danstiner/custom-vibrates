@@ -79,10 +79,6 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 		if (pattern_view != null) {
 			pattern_view.setPattern(manager.getPattern(entity, null));
 		}
-		
-		// Bind in some top service specific patterns
-		// TODO
-		
 	}
 /*
 	@Override
