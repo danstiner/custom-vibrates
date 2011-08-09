@@ -1,5 +1,7 @@
 package com.danielstiner.vibrates.notify;
 
+import roboguice.inject.InjectorProvider;
+
 import com.google.inject.Inject;
 
 import android.accessibilityservice.AccessibilityService;
@@ -15,12 +17,14 @@ public class AccessibilityListener extends AccessibilityService {
 		info.feedbackType = AccessibilityServiceInfo.FEEDBACK_HAPTIC;
 		info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
 		setServiceInfo(info);
+		
+		// Setup injection manaually since we do not extend a Robo class
+		((InjectorProvider)getApplicationContext()).getInjector().injectMembers(this);
 	};
 
 	@Override
 	public void onAccessibilityEvent(AccessibilityEvent event) {
 		handler.handle(event, getApplicationContext());
-
 	}
 
 	@Override

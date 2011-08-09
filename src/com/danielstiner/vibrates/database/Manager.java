@@ -19,8 +19,9 @@ import com.google.inject.Provider;
 
 public class Manager implements IManager {
 
-	//private Provider<Entity> entity_provider;
-	private Context activity;
+	private static final long[] DEFAULT_PATTERN = { 0, 500, 500, 500 };
+
+	private Context context;
 	private Provider<IEntityManager> entitymanager_provider;
 	private Provider<IIdentifierManager> identifiermanager_provider;
 	private Provider<IPatternManager> patternmanager_provider;
@@ -38,7 +39,7 @@ public class Manager implements IManager {
     		//Provider<IPatternManager> patternmanager_provider) {
     		) {
     	//this.entity_provider = entity_provider;
-    	this.activity = activity;
+    	this.context = activity;
     	//this.entitymanager_provider = entitymanager_provider;
     	//this.identifiermanager_provider = identifiermanager_provider;
     	//this.patternmanager_provider = patternmanager_provider;
@@ -87,7 +88,7 @@ public class Manager implements IManager {
 		
 		// TODO fix identifier assumptions
 		// Grab some info from the system contact service
-		Cursor c = activity.getContentResolver().query(
+		Cursor c = context.getContentResolver().query(
 				ContactsContract.Contacts.getLookupUri(origId, origLookupKey),
 				new String[] {
 					ContactsContract.Contacts.DISPLAY_NAME,
@@ -157,7 +158,7 @@ public class Manager implements IManager {
 			Long contacts_contract_id = Long.parseLong(contacts_contract_idstring);
 			
 			Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contacts_contract_id);
-			InputStream input = Contacts.openContactPhotoInputStream(activity.getContentResolver(), uri);
+			InputStream input = Contacts.openContactPhotoInputStream(context.getContentResolver(), uri);
 			return input;
 		} catch(NumberFormatException e) {
 			return null;
@@ -166,8 +167,13 @@ public class Manager implements IManager {
 	
 	@Override
 	public long[] getPattern(Entity entity, String type) {
+		long[] entity_pattern = getEntityManager().getPattern(entity);
+		
 		// TODO type based pattern appending
-		return getEntityManager().getPattern(entity);
+		if(entity_pattern != null)
+			return entity_pattern;
+		else
+			return DEFAULT_PATTERN;
 	}
 	
 	@Override
@@ -194,10 +200,9 @@ public class Manager implements IManager {
 		return pattern_manager;
 	}
 
-
 	@Override
 	public void update(Entity entity) {
-		// TODO Auto-generated method stub
-		
+		getEntityManager().update(entity);
+		getIdentifierManager().update(entity);
 	}
 }

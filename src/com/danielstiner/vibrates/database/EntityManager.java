@@ -41,18 +41,15 @@ public class EntityManager implements IEntityManager {
 	protected static final String EXTRA_CACHE_KEY_PATTERN = CLASSNAME + "." + KEY_PATTERN;
 	protected static final String EXTRA_CACHE_KEY_NOTIFY_COUNT = CLASSNAME + "." + KEY_NOTIFY_COUNT;
 
-	//private Provider<IdentifierManager> identifiermanager_provider;
-	
 	@Inject private IDatabase _db;
 
 	private Provider<Entity> entity_provider;
 	
-	@Inject private Context activity;
+	@Inject private Context context;
 	
 	@Inject
     public EntityManager(Provider<Entity> entity_provider) {
     	this.entity_provider = entity_provider;
-//    	/this.activity = activity;
     }
 	
 //	/**
@@ -285,7 +282,7 @@ public class EntityManager implements IEntityManager {
 		// should be a comma separated list of longs
 		String pattern_packed = entity.getExtras().getString(EXTRA_CACHE_KEY_PATTERN);
 		if(pattern_packed == null)
-			return new long[] { 0 };
+			return null;
 		String[] pattern_parts = pattern_packed.split(",");
 		long[] pattern = new long[pattern_parts.length];
 		

@@ -120,7 +120,9 @@ public class IntentHandler implements IIntentHandler {
 			// Hand off handling of this event
 			String number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
 			String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, NOTIFY_PHONE);
-			notify_provider.get().identifier(number).type(type).fire(context);
+			VibrateNotify n = notify_provider.get();
+			n.identifier(number).type(type);
+			n.fire(context);
 		}
 	}
 

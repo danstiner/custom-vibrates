@@ -6,6 +6,7 @@ import roboguice.util.Ln;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.database.IManager;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.os.IBinder;
 import android.os.Vibrator;
 
 public class VibratrService extends RoboService {
+	
+	@Inject Provider<VibrateNotify> notify_provider;
 	
 	@Inject INotificationConstraints notify_constraints;
 	
@@ -29,16 +32,21 @@ public class VibratrService extends RoboService {
 		Bundle bundle = intent.getExtras();
 		
 		// Extract what just happened
-		VibrateNotify n = VibrateNotify.fromBundle(bundle);
+		VibrateNotify n = notify_provider.get();
+		n.loadBundle(bundle);
 		
 		// Try an find the associated entity
 		Entity e = manager.getEntity(n.identifier());
 		
-		Ln.d(
-			"VibratrService Notify: got entity #%s for %s because %s",
-			e.entityid().toString(),
-			n.identifier(),
-			n.type());
+		if(e == null)
+			Ln.d("Got a null notification");
+		else
+			Ln.v(
+				"VibratrService Notify: got entity #%s for %s because %s",
+				e.entityid().toString(),
+				n.identifier(),
+				n.type()
+				);
 		
 		// If we have something, then vibrate away!
 		if(notify_constraints.vibrate(e, n.type()))

@@ -9,7 +9,21 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class VibrateNotify extends AbstractHappening {
+public class VibrateNotify {
+	
+	private static final String NS = com.danielstiner.vibrates.Vibrates.NS + ".notify";
+	private static final String CLASSNAME = NS + ".VibrateNotify";
+	
+	public static String particularizeType(String type, String specifier) {
+		return type + "/" + specifier;
+	}
+	
+	public static final String TYPE_DEFAULT  = "";
+	public static final String TYPE_CHAT     = particularizeType(TYPE_DEFAULT, "Chat");
+	public static final String TYPE_HARDWARE = particularizeType(TYPE_DEFAULT, "Hardware");
+	public static final String TYPE_MESSAGE  = particularizeType(TYPE_DEFAULT, "Messaging");
+	public static final String TYPE_UPDATE   = particularizeType(TYPE_DEFAULT, "Updates");
+	public static final String TYPE_VOICE    = particularizeType(TYPE_DEFAULT, "Voice");
 	
 	// Very common types, throwing them in here for convenience
 	public static final String TYPE_EMAIL     = particularizeType(TYPE_MESSAGE, "email");
@@ -25,20 +39,13 @@ public class VibrateNotify extends AbstractHappening {
 		TYPE_VOICE
 		};
 	
-	private static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + ".VibrateNotify";
+	private static final String BUNDLE_KEY_EXTRA = CLASSNAME + ".extra";
+	private static final String BUNDLE_KEY_IDENTIFIER = CLASSNAME + ".identifier";
+	private static final String BUNDLE_KEY_TYPE = CLASSNAME + ".type";	
 	
-	public static final String BUNDLE_KEY = CLASSNAME;
-	
-	public static final Parcelable.Creator<VibrateNotify> CREATOR = new Parcelable.Creator<VibrateNotify>()
-	{
-		public VibrateNotify createFromParcel(Parcel in) {
-		    return new VibrateNotify(in);
-		}
-		
-		public VibrateNotify[] newArray(int size) {
-		    return new VibrateNotify[size];
-		}
-	};
+	private String _identifier;
+	private String _type;
+	private String _extra;
 	
 	private Provider<Intent> intent_provider;
 	
@@ -47,54 +54,44 @@ public class VibrateNotify extends AbstractHappening {
 		super();
 		this.intent_provider = intent_provider;
 	}
-
-	public VibrateNotify(Parcel in) {
-		super(in);
-		_extra = in.readString();
+	
+	public void loadBundle(Bundle bundle)
+	{
+		this._identifier = bundle.getString(BUNDLE_KEY_IDENTIFIER);
+		this._type = bundle.getString(BUNDLE_KEY_TYPE);
+		this._extra = bundle.getString(BUNDLE_KEY_EXTRA);
 	}
 	
-	private String _extra;
+	public void fire(Context context) {
+		Intent i = intent_provider.get();
+		i.setAction(VibratrService.ACTION);
+		i.putExtra(BUNDLE_KEY_IDENTIFIER, this._identifier);
+		i.putExtra(BUNDLE_KEY_TYPE, this._type);
+		i.putExtra(BUNDLE_KEY_EXTRA, this._extra);
+		// Tell the vibrator service to get busy
+		context.startService(i);
+	}
 
 	public VibrateNotify extra(String extra) {
 		_extra = extra;
 		return this;
 	}
 
-	@Inject
-	public void fire(Context context) {
-		// Tell the vibrator service to get busy
-		context.startService(intent_provider.get().setAction(VibratrService.ACTION).putExtra(BUNDLE_KEY, this));
+	public String identifier() {
+		return _identifier;
 	}
-
-	public static VibrateNotify fromBundle(Bundle bundle) {
-		// Extract an instance from the bundle if possible
-		if(!bundle.containsKey(BUNDLE_KEY))
-			return null;
-		else
-			return bundle.getParcelable(BUNDLE_KEY);
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		super.writeToParcel(dest, flags);
-		
-		dest.writeString(_extra);
-	}
-
+	
 	public VibrateNotify identifier(String identifier) {
-		super.identifier(identifier);
+		_identifier = identifier;
 		return this;
+	}
+
+	public String type() {
+		return _type;
 	}
 
 	public VibrateNotify type(String type) {
-		super.type(type);
+		_type = type;
 		return this;
 	}
-
-	
 }

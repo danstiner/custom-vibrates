@@ -21,5 +21,7 @@
         	<intent android:data="settings://vibrates.danielstiner.com/services/voice" android:action="android.intent.action.VIEW" />
         </PreferenceScreen>
     </PreferenceCategory>
-    
+    <PreferenceScreen android:key="accessibilitysettings" android:title="Open System Accessibility Menu">
+    	<intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
+    </PreferenceScreen>
 </PreferenceScreen>

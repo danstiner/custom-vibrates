@@ -96,12 +96,14 @@ public class IdentifierManager implements IIdentifierManager {
     	SQLiteDatabase sql_db = db.getReadableDatabase();
         try {
         	// Grab all contacts 
-        	return sql_db.query(
+        	Cursor c = sql_db.query(
     				TABLE,
     				new String[] { KEY_ENTITYID },
     				KEY_IDENTIFIER + " = ?",
     				new String[] { identifier },
     				null, null, null, null);
+        	int test = c.getCount();
+        	return c;
         } finally {
             if (sql_db != null)
             	sql_db.close();

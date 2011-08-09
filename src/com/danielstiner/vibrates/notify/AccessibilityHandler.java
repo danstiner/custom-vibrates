@@ -2,6 +2,7 @@ package com.danielstiner.vibrates.notify;
 
 import roboguice.util.Ln;
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import android.content.Context;
@@ -14,6 +15,7 @@ public class AccessibilityHandler {
 	
 	private Provider<VibrateNotify> notify_provider;
     
+	@Inject
     public AccessibilityHandler(Provider<VibrateNotify> notify_provider)
     {
     	this.notify_provider = notify_provider;
@@ -47,7 +49,7 @@ public class AccessibilityHandler {
 		
 		String name = message_parts[0];
 		String text = message_parts[1];
-		notify_provider.get().identifier(name).type(GOOGLE_VOICE_TYPE).extra(text);
+		notify_provider.get().identifier(name).type(GOOGLE_VOICE_TYPE).extra(text).fire(context);
 	}
 
 	
