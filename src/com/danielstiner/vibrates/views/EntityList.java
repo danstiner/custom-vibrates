@@ -124,8 +124,7 @@ public class EntityList extends CoreListActivity {
 		switch (requestCode) {
 		case ACTIVITY_EDIT:
 			// Refresh contact list
-			if (resultCode == RESULT_OK)
-				fillList();
+			fillList();
 			break;
 		case ACTIVITY_ADD_CONTACT_CHOOSE:
 			if (resultCode == RESULT_OK && data != null) {
@@ -139,7 +138,8 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	protected void fillList() {
-		// TODO Auto-generated method stub
+		
+		// Close any existing cursors
 		if(mContactsCursor != null)
 			mContactsCursor.close();
 		// Get all of the notes from the database and create the item list
