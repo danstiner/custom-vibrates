@@ -13,7 +13,7 @@ public class PatternManager implements IPatternManager {
 	public static final int ID_NOBODY = -3;
 	
 	// milliseconds per dit
-	private static final long MORSE_MULTIPLIER = 100;
+	private static final long MORSE_MULTIPLIER = 90;
 	
 	// number of letters to use when morsifying a name or such
 	private static final int MAX_MORSE = 3;

@@ -20,7 +20,7 @@ public class VibratePatternView extends View {
 	Paint pattern_vibrate_paint;
 	Paint pattern_wait_paint;
 	
-	float pattern_drawlength_multiplier = (float) 0.15;
+	float pattern_drawlength_multiplier = (float) 0.12;
 
 	public VibratePatternView(Context context) {
 		super(context);
