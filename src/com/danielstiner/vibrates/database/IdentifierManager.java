@@ -170,6 +170,32 @@ public class IdentifierManager implements IIdentifierManager {
 //				c.getLong(c.getColumnIndexOrThrow(KEY_ENTITYID))
 //				);
 //	}
+	
+	@Override
+	public void update(Entity entity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int removeAll(Entity entity) {
+		if(entity == null || entity.entityid() == null) {
+			Ln.e("Cannot remove identifiers for a null entity.");
+			return 0;
+		}
+		// Open a connection to the database
+    	SQLiteDatabase sql_db = db.getWritableDatabase();
+        try {
+        	// Try and remove any identifiers for this entity
+            int delete_count = sql_db.delete(TABLE,
+            		KEY_ENTITYID + " = ?",
+            		new String[] { entity.entityid().toString() });
+            return delete_count;
+        } finally {
+            if (sql_db != null)
+            	sql_db.close();
+        }
+	}
 
 	
 	
@@ -199,14 +225,6 @@ public class IdentifierManager implements IIdentifierManager {
 			return VERSION;
 		}
 	
-	}
-
-
-
-	@Override
-	public void update(Entity entity) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 //	private void updatePhoneNumbers(Contact contact, ContentResolver cr) {

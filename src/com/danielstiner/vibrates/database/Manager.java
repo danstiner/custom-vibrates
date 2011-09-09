@@ -205,4 +205,11 @@ public class Manager implements IManager {
 		getEntityManager().update(entity);
 		getIdentifierManager().update(entity);
 	}
+
+
+	@Override
+	public void remove(Entity entity) {
+		getEntityManager().remove(entity);
+		getIdentifierManager().removeAll(entity);
+	}
 }

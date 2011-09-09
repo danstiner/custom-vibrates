@@ -28,6 +28,8 @@ public interface IIdentifierManager {
 	
 	public abstract String kindFromCursor(Cursor c);
 
+	public abstract int removeAll(Entity entity);
+
 	//public abstract Entity entityFromCursor(Cursor c);
 
 }

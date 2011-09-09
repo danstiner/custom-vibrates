@@ -63,4 +63,6 @@ public interface IManager {
 	public abstract InputStream getPhotoStream(Entity entity);
 
 	public abstract String getKind(Entity entity);
+
+	public abstract void remove(Entity fromCursor);
 }

@@ -100,7 +100,7 @@ public class EntityList extends CoreListActivity {
 			// TODO Not a great method for linking row in list to database delete
 			mContactsCursor.moveToPosition((int)info.position);
 			
-			entity_manager.remove(entity_manager.fromCursor(mContactsCursor));
+			manager.remove(entity_manager.fromCursor(mContactsCursor));
 			fillList();
 			return true;
 		}
