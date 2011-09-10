@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.settings.UserSettings;
+import com.danielstiner.vibrates.utility.NotificationTypes;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -26,9 +27,9 @@ import android.widget.Toast;
 
 public class IntentHandler implements IIntentHandler {
 	
-	private static final String NOTIFY_GMAIL = VibrateNotify.particularizeType(VibrateNotify.TYPE_EMAIL, "gmail");
-	private static final String NOTIFY_PHONE = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, "phone");
-	private static final String NOTIFY_SMS = VibrateNotify.TYPE_SMS;
+	private static final String NOTIFY_GMAIL = NotificationTypes.particularizeType(NotificationTypes.MESSAGE_EMAIL, "gmail");
+	private static final String NOTIFY_PHONE = NotificationTypes.particularizeType(NotificationTypes.VOICE, "phone");
+	private static final String NOTIFY_SMS = NotificationTypes.CHAT_SMS;
 	
 	private static final String LOG_TAG = "CustomVibrates";
 
@@ -102,7 +103,7 @@ public class IntentHandler implements IIntentHandler {
 			
 			//bundle.get
 			//String identifier = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
-			String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_HARDWARE, NOTIFY_PHONE);
+			String type = NotificationTypes.particularizeType(NotificationTypes.HARDWARE, NOTIFY_PHONE);
 			//notify_provider.get().identifier(identifier).type(type).fire(context);
 		}
 	}
@@ -119,7 +120,7 @@ public class IntentHandler implements IIntentHandler {
 		if (bundle.getString(TelephonyManager.EXTRA_STATE).equals(TelephonyManager.EXTRA_STATE_RINGING)) {
 			// Hand off handling of this event
 			String number = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
-			String type = VibrateNotify.particularizeType(VibrateNotify.TYPE_VOICE, NOTIFY_PHONE);
+			String type = NotificationTypes.particularizeType(NotificationTypes.VOICE, NOTIFY_PHONE);
 			VibrateNotify n = notify_provider.get();
 			n.identifier(number).type(type);
 			n.fire(context);
@@ -132,7 +133,7 @@ public class IntentHandler implements IIntentHandler {
 		String type = NOTIFY_SMS;
 		if (msg.isEmail())
 			// Must have been an SMS from an email address
-			type = VibrateNotify.particularizeType(type, "emailed");
+			type = NotificationTypes.particularizeType(type, "emailed");
 
 		// throw in the body of the message for good measure
 		String extra = msg.getDisplayMessageBody();
@@ -257,7 +258,7 @@ public class IntentHandler implements IIntentHandler {
         
         
         String type = NOTIFY_GMAIL;
-        type = VibrateNotify.particularizeType(type, tagLabel);
+        type = NotificationTypes.particularizeType(type, tagLabel);
         notify_provider.get().identifier(fromAddress).type(type).extra(subject).fire(context);
         //return new VibrateNotify(fromAddress).setType(type).setExtra(subject);
 	}

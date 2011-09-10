@@ -203,7 +203,7 @@ public class Manager implements IManager {
 
 	@Override
 	public void update(Entity entity) {
-		Refresh.update(entity, getEntityManager(), getIdentifierManager());
+		Refresh.update(entity, getEntityManager(), getIdentifierManager(), context);
 	}
 
 

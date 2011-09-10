@@ -2,6 +2,7 @@ package com.danielstiner.vibrates.notify;
 
 import roboguice.util.Ln;
 
+import com.danielstiner.vibrates.utility.NotificationTypes;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -11,7 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 public class AccessibilityHandler {
 	
 	private static final String GOOGLE_VOICE_PACKAGE = "com.google.android.apps.googlevoice";
-	private static final String GOOGLE_VOICE_TYPE = VibrateNotify.particularizeType(VibrateNotify.TYPE_SMS, "google_voice");
+	private static final String GOOGLE_VOICE_TYPE = NotificationTypes.particularizeType(NotificationTypes.CHAT_SMS, "google_voice");
 	
 	private Provider<VibrateNotify> notify_provider;
     

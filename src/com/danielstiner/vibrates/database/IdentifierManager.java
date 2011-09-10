@@ -191,7 +191,26 @@ public class IdentifierManager implements IIdentifierManager {
         }
 	}
 
-	
+	@Override
+	public int removeAll(Entity entity, String kind) {
+		if(entity == null || entity.entityid() == null) {
+			Ln.e("Cannot remove identifiers for a null entity.");
+			return 0;
+		}
+		// Open a connection to the database
+    	SQLiteDatabase sql_db = db.getWritableDatabase();
+        try {
+        	// Try and remove any identifiers for this entity
+            int delete_count = sql_db.delete(TABLE,
+            		KEY_ENTITYID + " = ? " +
+            		KEY_KIND + " = ? ",
+            		new String[] { entity.entityid().toString(), kind });
+            return delete_count;
+        } finally {
+            if (sql_db != null)
+            	sql_db.close();
+        }
+	}
 	
 	static class Helper implements IDatabaseHelper
 	{
@@ -220,5 +239,4 @@ public class IdentifierManager implements IIdentifierManager {
 		}
 	
 	}
-
 }

@@ -24,6 +24,8 @@ public interface IIdentifierManager {
 
 	public abstract int removeAll(Entity entity);
 
+	public abstract int removeAll(Entity entity, String defaultPhonenumber);
+
 	//public abstract Entity entityFromCursor(Cursor c);
 
 }

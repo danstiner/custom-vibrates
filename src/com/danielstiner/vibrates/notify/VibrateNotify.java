@@ -14,31 +14,6 @@ public class VibrateNotify {
 	private static final String NS = com.danielstiner.vibrates.Vibrates.NS + ".notify";
 	private static final String CLASSNAME = NS + ".VibrateNotify";
 	
-	public static String particularizeType(String type, String specifier) {
-		return type + "/" + specifier;
-	}
-	
-	public static final String TYPE_DEFAULT  = "";
-	public static final String TYPE_CHAT     = particularizeType(TYPE_DEFAULT, "Chat");
-	public static final String TYPE_HARDWARE = particularizeType(TYPE_DEFAULT, "Hardware");
-	public static final String TYPE_MESSAGE  = particularizeType(TYPE_DEFAULT, "Messaging");
-	public static final String TYPE_UPDATE   = particularizeType(TYPE_DEFAULT, "Updates");
-	public static final String TYPE_VOICE    = particularizeType(TYPE_DEFAULT, "Voice");
-	
-	// Very common types, throwing them in here for convenience
-	public static final String TYPE_EMAIL     = particularizeType(TYPE_MESSAGE, "email");
-	public static final String TYPE_SMS       = particularizeType(TYPE_CHAT, "Status Updates");
-	public static final String TYPE_STATUS_UPDATE = particularizeType(TYPE_UPDATE, "Status Updates");
-	
-	/** List of root types for generating a tree of notification types */
-	public static final String[] COMMON_TYPES = {
-		TYPE_CHAT,
-		TYPE_HARDWARE,
-		TYPE_MESSAGE,
-		TYPE_UPDATE,
-		TYPE_VOICE
-		};
-	
 	private static final String BUNDLE_KEY_EXTRA = CLASSNAME + ".extra";
 	private static final String BUNDLE_KEY_IDENTIFIER = CLASSNAME + ".identifier";
 	private static final String BUNDLE_KEY_TYPE = CLASSNAME + ".type";	
