@@ -173,6 +173,7 @@ public class EntityManager implements IEntityManager {
 		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
 		
 		Bundle got_extras = e.getExtras();
+		// TODO: Only pull extras if they exist
 		got_extras.putString(EXTRA_CACHE_KEY_NAME, c.getString(c.getColumnIndexOrThrow(KEY_NAME)));
 		got_extras.putString(EXTRA_CACHE_KEY_KIND, c.getString(c.getColumnIndexOrThrow(KEY_KIND)));
 		got_extras.putString(EXTRA_CACHE_KEY_PATTERN, c.getString(c.getColumnIndexOrThrow(KEY_PATTERN)));
@@ -195,7 +196,7 @@ public class EntityManager implements IEntityManager {
 //        			null, //new String[] { KEY_ID },
 //        			null, null, null, null, null, null);
         	// TODO FIx
-        	Cursor c = db.query(TABLE, null, null, null, null, null, null);
+        	Cursor c = db.query(TABLE, null, null, null, null, null, KEY_NAME);
         	int test = c.getCount();
         	return c;
         } finally {
