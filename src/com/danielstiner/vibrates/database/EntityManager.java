@@ -242,12 +242,6 @@ public class EntityManager implements IEntityManager {
 	}
 
 	@Override
-	public void update(Entity entity) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setPattern(Entity entity, long[] pattern) {		
 		// Open a connection to the database
     	SQLiteDatabase db = _db.getReadableDatabase();
