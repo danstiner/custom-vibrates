@@ -17,12 +17,6 @@ public interface IIdentifierManager {
 	public abstract Entity get(String identifier);
 
 	public abstract void add(Entity to, String identifier, String kind);
-	
-	/**
-	 * Updates auto-generated identifiers for the given entity
-	 * @param entity
-	 */
-	public abstract void update(Entity entity);
 
 	public abstract String identifierFromCursor(Cursor c);
 	

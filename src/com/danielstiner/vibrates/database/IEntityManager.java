@@ -24,8 +24,6 @@ public interface IEntityManager {
 	 */
 	public abstract Entity create(String name, long[] pattern, String type);
 	
-	public abstract void update(Entity entity);
-	
 	public abstract void remove(Entity entity);
 	
 	public abstract String getDisplayName(Entity entity);

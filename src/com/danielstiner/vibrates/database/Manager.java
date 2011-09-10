@@ -14,6 +14,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.utility.Refresh;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -202,8 +203,7 @@ public class Manager implements IManager {
 
 	@Override
 	public void update(Entity entity) {
-		getEntityManager().update(entity);
-		getIdentifierManager().update(entity);
+		Refresh.update(entity, getEntityManager(), getIdentifierManager());
 	}
 
 
