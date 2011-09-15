@@ -27,7 +27,7 @@
 		        android:layout_width="wrap_content"
 		        android:orientation="vertical"
 		        >
-	            <TextView
+	            <!-- <TextView
 	            	android:text="@string/entitylist_message_preauto"
 	            	android:id="@+id/textView1"
 	            	android:layout_width="wrap_content"
@@ -56,7 +56,28 @@
 	            	android:layout_gravity="center_horizontal"
 	            	android:layout_margin="50px"
 	            	android:layout_marginTop="30px"
-	            	/>
+	            	/> -->
+	            <TextView
+                android:text="@string/entitylist_message_premanual"
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="50px"
+                android:layout_marginBottom="40px"
+                />
+              <Button
+                android:text="@string/buttonlabel_manual_setup_start"
+                android:id="@+id/entitylist_empty_manualstart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="23px"
+                android:paddingTop="3px"
+                android:paddingRight="23px"
+                android:paddingBottom="3px"
+                android:layout_margin="10px"
+                />
 	        </LinearLayout>
 	    </FrameLayout>
 	</LinearLayout>

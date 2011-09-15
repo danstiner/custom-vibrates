@@ -20,4 +20,6 @@
 	<string name="toast_forcesilent">Custom Vibrates: Kept phone in vibrate mode based on your preferences.</string>
 	<string name="entity_edit_pattern_premessage">Tap to create a new pattern</string>
 	<string name="entity_edit_pattern_postmessage"></string>
+	<string name="entitylist_message_premanual">Welcome to the Custom Vibrates app. Get started with per-contact vibration patterns for incoming messages by clicking the setup button below.</string>
+	<string name="buttonlabel_manual_setup_start">Quick Setup</string>
 </resources>

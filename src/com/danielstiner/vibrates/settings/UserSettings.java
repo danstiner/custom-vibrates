@@ -31,6 +31,14 @@ public class UserSettings implements IUserSettings {
 	}
 	
 	@Override
+	public void enabled(Boolean newValue) {
+		// Save new value
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(KEY_ENABLED, newValue);
+		editor.apply();
+	}
+	
+	@Override
 	public Boolean warnOnRingerEnabled() {
 		return sharedPreferences.getBoolean(KEY_WARN_RINGER_CHANGED, false);
 	}

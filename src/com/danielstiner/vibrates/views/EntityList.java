@@ -32,7 +32,8 @@ public class EntityList extends CoreListActivity {
 	
 	@Inject IEntityManager entity_manager;
 	
-	@InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
+	//@InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
+	@InjectView(R.id.entitylist_empty_manualstart) Button manualSetupButton;
 
 	private static final int CONTEXTMENU_DELETE_ID = 1;
 	private static final int OPTIONS_INSERT_ID = 2;
@@ -46,20 +47,32 @@ public class EntityList extends CoreListActivity {
 	private Cursor mContactsCursor;
 	
 	private EntityListCursorAdapter mContactsCursorAdapter;
+	
+	private Intent intentStartManualSetup;
 
 	// Called when the activity is first created.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		intentStartManualSetup = new Intent(this, ManualSetup.class);
 	}
 	
 	@Override
 	protected void initEmptyView() {
-		automajicButton.setOnClickListener(new View.OnClickListener() {
+//		automajicButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				//newContact();
+//				// TODO FIXME Need to do some majic here
+//			}
+//		});
+		
+		
+		manualSetupButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//newContact();
-				// TODO FIXME Need to do some majic here
+				startActivity(intentStartManualSetup);
 			}
 		});
 	}

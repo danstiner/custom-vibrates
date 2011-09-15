@@ -11,4 +11,6 @@ public interface IUserSettings {
 	long[] defaultPattern();
 
 	void defaultPattern(long[] newPattern);
+
+	void enabled(Boolean newValue);
 }
