@@ -3,6 +3,7 @@ package com.danielstiner.vibrates.database;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.utility.MorseCodePattern;
 
+// TODO: Factor out this class entirely into a utility class
 public class PatternManager implements IPatternManager {
 	
 	private static final String PREFIX = "com.danielstiner.vibrates.manager";
@@ -13,7 +14,7 @@ public class PatternManager implements IPatternManager {
 	public static final int ID_NOBODY = -3;
 	
 	// milliseconds per dit
-	private static final long MORSE_MULTIPLIER = 90;
+	private static final long MORSE_MULTIPLIER = 111;
 	
 	// number of letters to use when morsifying a name or such
 	private static final int MAX_MORSE = 3;

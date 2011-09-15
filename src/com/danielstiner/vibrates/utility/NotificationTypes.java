@@ -12,8 +12,13 @@ public class NotificationTypes {
 	// Listing of all types used in the application
 	public static final String DEFAULT_PHONENUMBER  = "";
 	public static final String MESSAGE_EMAIL        = particularizeType(MESSAGE, "email");
-	public static final String CHAT_SMS             = particularizeType(CHAT, "SMS");
+	
+	public static final String CHAT_TEXT            = particularizeType(CHAT, "text");
+	public static final String CHAT_MMS             = particularizeType(CHAT_TEXT, "MMS");
+	public static final String CHAT_SMS             = particularizeType(CHAT_TEXT, "SMS");
+	
 	public static final String UPDATE_STATUS_UPDATE = particularizeType(UPDATE, "Status Updates");
+	public static final String VOICE_PHONECALL      = particularizeType(VOICE, "phone");
 	
 	/** List of root types for generating a tree of notification types */
 	public static final String[] COMMON_TYPES = {

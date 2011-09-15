@@ -31,7 +31,8 @@ public class SyncEntities extends RoboAsyncTask<Boolean> {
 	@Override 
     protected void onPreExecute() { 
         // do this in the UI thread before executing call()
-        //dialog.setMessage(loadingLabel).show(); 
+        
+		// Grab all contacts
     } 
     
     @Override 

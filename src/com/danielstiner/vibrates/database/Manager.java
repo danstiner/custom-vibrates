@@ -8,6 +8,7 @@ import roboguice.util.Ln;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -72,6 +73,11 @@ public class Manager implements IManager {
 	public Entity getEntity(String identifier) {
 		return getIdentifierManager().get(identifier);
 	}
+	
+//	@Override
+//	public Entity getEntity(String identifier, String kind) {
+//		return getIdentifierManager().get(identifier, kind);
+//	}
 
 	@Override
     public Entity createFromContactUri(Uri contact_uri) {
@@ -108,6 +114,7 @@ public class Manager implements IManager {
 		    name = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
 		    lookup = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts.LOOKUP_KEY));
 		    id = c.getLong(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+		    // TODO: Catch clause in case something goes wrong
 		} finally {
 		    c.close();
 		}
@@ -211,5 +218,26 @@ public class Manager implements IManager {
 	public void remove(Entity entity) {
 		getEntityManager().remove(entity);
 		getIdentifierManager().removeAll(entity);
+	}
+
+
+	@Override
+	public Intent getViewIntent(Entity entity) {
+		if(getKind(entity).equals(Entity.TYPE_CONTACTSCONTRACTCONTACT))
+		{
+			Cursor ids = getIdentifierManager().get(entity, IdentifierManager.KIND_CONTACTS_CONTRACT_ID);
+			
+			if(ids.getCount() != 1) return null;
+			
+			ids.moveToFirst();
+			
+			Long id = Long.parseLong(getIdentifierManager().identifierFromCursor(ids));
+			
+			return new Intent(Intent.ACTION_VIEW, Uri.parse("content://contacts/people/" + id.toString()));
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

@@ -21,7 +21,10 @@
         	<intent android:data="settings://vibrates.danielstiner.com/services/voice" android:action="android.intent.action.VIEW" />
         </PreferenceScreen>
     </PreferenceCategory> -->
-    <PreferenceScreen android:key="accessibilitysettings" android:title="Open System Accessibility Menu">
+    <PreferenceScreen
+    	android:key="accessibilitysettings"
+    	android:title="System Accessibility Menu"
+    	android:summary="Enable for Google Voice integration">
     	<intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
     </PreferenceScreen>
 </PreferenceScreen>

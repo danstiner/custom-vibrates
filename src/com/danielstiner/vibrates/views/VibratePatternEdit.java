@@ -1,9 +1,11 @@
 package com.danielstiner.vibrates.views;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.utility.PatternEditManager;
 import com.google.inject.Inject;
 
 import roboguice.activity.RoboActivity;
@@ -36,8 +38,6 @@ public class VibratePatternEdit extends RoboActivity {
 	@InjectView(R.id.pattern_edit_patternview) private VibratePatternView pattern_view;
 	
 	@InjectView(R.id.pattern_edit_finish_button) private Button finish_button;
-	
-	@Inject private Vibrator _vibratr;
 
 	private List<Long> _pattern;
 	
@@ -48,40 +48,29 @@ public class VibratePatternEdit extends RoboActivity {
 	private Handler _editHandler;
 
 	private Runnable _editWatcher;
+	
+	@Inject private PatternEditManager _editManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(CONTENT_VIEW);
+
+		// Save the current pattern
+		_editManager.setPattern(getVibratePattern(savedInstanceState));
+
+		// Preview the current pattern
+		_editManager.playPattern();
 		
-		// Initialize variables
-		_editing = false;
-		_pattern = new LinkedList<Long>();
-		_editHandler = new Handler();
-		_editWatcher = new Runnable() {
+		// Handle when the pattern changes
+		_editManager.setWatcher(new Runnable() {
 
 			@Override
 			public void run() {
-				editWatcherTick();
+				endEdit();
 			}
 			
-		};
-
-		// Get the current pattern
-		getVibratePattern(savedInstanceState);
-
-		// Preview the current pattern
-		playPattern();
-		pattern_view.setPattern(_pattern);
-		
-		// Content stuff
-		finish_button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				endEdit();
-				finish();
-			}
 		});
 	}
 
@@ -94,7 +83,7 @@ public class VibratePatternEdit extends RoboActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		endEdit();
+		//_editManager.cancel();
 	}
 
 	@Override
@@ -107,118 +96,51 @@ public class VibratePatternEdit extends RoboActivity {
 	public boolean onTouchEvent(MotionEvent motion) {
 		if(motion.getAction() == MotionEvent.ACTION_DOWN)
 		{
-			_vibratr.vibrate(EDITING_MAX_DOWN);
-			
-			if(!_editing)
-				startEdit();
-			else
-				editDown(motion);
+			_editManager.press();
 		}
 		else if(motion.getAction() == MotionEvent.ACTION_UP)
 		{
-			_vibratr.cancel();
-			editUp(motion);
+			_editManager.release();
 		}
 		
 		return true;
 	}
 	
-	private void startEdit()
-	{
-		// Clear any previous pattern
-		_pattern.clear();
-		// Init pattern with zero wait before first vibrate
-		_pattern.add((long)0);
-		// Set our edit state
-		_editing = true;
-		_last_edit_up = 0;
-		
-		// Start timeout watcher
-		_editHandler.postDelayed(_editWatcher, EDITING_WATCHER_DELAY);
-	}
-	
-	private void editUp(MotionEvent motion)
-	{
-		_pattern.add(motion.getEventTime() - motion.getDownTime());
-		_last_edit_up = System.currentTimeMillis();
-		pattern_view.setPattern(_pattern);
-	}
-	
-	private void editDown(MotionEvent motion)
-	{
-		_pattern.add(System.currentTimeMillis() - _last_edit_up);
-		_last_edit_up = 0;
-		pattern_view.setPattern(_pattern);
-	}
-	
 	private void endEdit() {
-		
-		// Stop any ongoing vibrations
-		_vibratr.cancel();
-		
-		// Clean up any running callbacks and reset state
-		_editHandler.removeCallbacks(_editWatcher);
-		_editing = false;
-		
 		// Save result for the calling activity to handle
 		Intent i = new Intent();
-		i.putExtra(EXTRA_KEY_PATTERN, asLongArray(_pattern));
+		i.putExtra(EXTRA_KEY_PATTERN, _editManager.getPattern());
 		setResult(Activity.RESULT_OK, i);
 		
-		// Play back if needed
-		// TODO if(playback_pattern == true)
-		playPattern();
-	}
-	
-	private void editWatcherTick() {
-		// Call ourselves again in a bit
-		_editHandler.postDelayed(_editWatcher, EDITING_WATCHER_DELAY);
-		
-		// See if it has been a long time since the user let up their finger
-		// if so, play back their pattern
-		long diff = System.currentTimeMillis() - _last_edit_up;
-		if(_last_edit_up != 0 && diff > EDITING_MAX_UP)
-			endEdit();
+		// Play back
+		_editManager.playPattern();
 	}
 
 	private void saveState() {
 		
 	}
 
-	private void getVibratePattern(Bundle savedState) {
+	private List<Long> getVibratePattern(Bundle savedState) {
+		List<Long> pattern = new ArrayList<Long>();
+		
 		// Recover saved state pattern if possible
 		if(savedState != null && _pattern.size() == 0) {
 			// It was stored as Long[]
-			Long[] pattern = (Long[]) savedState.getSerializable(EXTRA_KEY_PATTERN);
-			for(int i=0; i<pattern.length; i++)
-				_pattern.add(pattern[i]);
+			Long[] patterntmp = (Long[]) savedState.getSerializable(EXTRA_KEY_PATTERN);
+			for(int i=0; i<patterntmp.length; i++)
+				pattern.add(patterntmp[i]);
 		}
 		// Else try check passed intent for a pattern
-		if (_pattern.size() == 0) {
+		if (pattern.size() == 0) {
 			// Pull in pattern from passed intent if possible
 			Bundle extras = getIntent().getExtras();
 			if(extras != null) {
-				long[] pattern = extras.getLongArray(EXTRA_KEY_PATTERN);
-				for(int i=0; i<pattern.length; i++)
-					_pattern.add(pattern[i]);
+				long[] patterntmp = extras.getLongArray(EXTRA_KEY_PATTERN);
+				for(int i=0; i<patterntmp.length; i++)
+					pattern.add(patterntmp[i]);
 			}
 		}
-	}
-	
-	private void playPattern() {
-		// Make a copy of the pattern for playing
 		
-		// Play it off
-		_vibratr.vibrate(asLongArray(_pattern), -1);
-	}
-	
-	private long[] asLongArray(List<Long> list)
-	{
-		long[] array = new long[list.size()];
-		
-		for(int i=0; i<list.size(); i++)
-			array[i] = list.get(i).longValue();
-		
-		return array;
+		return pattern;
 	}
 }

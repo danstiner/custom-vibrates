@@ -75,7 +75,7 @@ public class IntentHandler implements IIntentHandler {
 		} else if(action.equals(PHONE_STATE)) {
 			handlePhoneState(bundle, context);
 		} else if(action.equals(Intent.ACTION_PROVIDER_CHANGED)) {
-			//handleProviderChange(bundle, context).fire(context);
+			handleProviderChange(bundle, context);
 		} else if(action.equals(VIB_STATE)) {
 			handleVibrateState(bundle, context);
 		} else if(action.equals(RINGER_MODE)) {
@@ -96,9 +96,20 @@ public class IntentHandler implements IIntentHandler {
 	private void handleRingerMode(Bundle bundle, Context context) {
 		// Keep in vibrate mode if switched to normal ring mode
 		if(settings_provider.get().keepInSilentMode()
-				&& bundle.getInt(AudioManager.EXTRA_RINGER_MODE) == AudioManager.RINGER_MODE_NORMAL) {
+				&& bundle.getInt(AudioManager.EXTRA_RINGER_MODE) != AudioManager.RINGER_MODE_SILENT) {
+			
 			AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE); 
+			
+			// Vibrate mode makes the pretty vibrate icon show up
 			am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+			
+			// Only go to silent if we are enabled to replace the system vibrates
+			if(settings_provider.get().enabled())
+			{
+				// Silent mode allows system vibrations for SMS/voice to be turned off
+				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			}
+			
 			Toast.makeText(context, R.string.toast_forcesilent, Toast.LENGTH_SHORT).show();
 			
 			//bundle.get

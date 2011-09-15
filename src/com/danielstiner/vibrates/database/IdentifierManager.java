@@ -202,7 +202,7 @@ public class IdentifierManager implements IIdentifierManager {
         try {
         	// Try and remove any identifiers for this entity
             int delete_count = sql_db.delete(TABLE,
-            		KEY_ENTITYID + " = ? " +
+            		KEY_ENTITYID + " = ? AND " +
             		KEY_KIND + " = ? ",
             		new String[] { entity.entityid().toString(), kind });
             return delete_count;

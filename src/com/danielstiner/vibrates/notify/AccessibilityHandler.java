@@ -8,11 +8,14 @@ import com.google.inject.Provider;
 
 import android.content.Context;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 
 public class AccessibilityHandler {
 	
 	private static final String GOOGLE_VOICE_PACKAGE = "com.google.android.apps.googlevoice";
 	private static final String GOOGLE_VOICE_TYPE = NotificationTypes.particularizeType(NotificationTypes.CHAT_SMS, "google_voice");
+	
+	private static final String GOOGLE_GMAIL_PACKAGE = "com.google.android.gm";
 	
 	private Provider<VibrateNotify> notify_provider;
     
@@ -25,13 +28,16 @@ public class AccessibilityHandler {
 	public void handle(AccessibilityEvent event, Context context) {
 		// TODO Auto-generated method stub\
 		android.app.Notification notification = (android.app.Notification) event.getParcelableData();
-		//Toast.makeText(getBaseContext(), event.getPackageName(), Toast.LENGTH_SHORT).show();
-		//Parcelable p = event.getParcelableData();
-		// Parse our accessibility event
-		//new Notification
-		if(event.getPackageName().toString().equals(GOOGLE_VOICE_PACKAGE))
-			handleGoogleVoice(event, context);
 		
+		String packageName = event.getPackageName().toString();
+		
+		// TODO: Remove, for testing
+		//Toast.makeText(context, packageName, Toast.LENGTH_SHORT).show();
+		
+		if(packageName.equals(GOOGLE_VOICE_PACKAGE))
+			handleGoogleVoice(event, context);
+		else if(packageName.equals(GOOGLE_GMAIL_PACKAGE))
+			handleGmail(event, context);
 	}
 	
 	private void handleGoogleVoice(AccessibilityEvent event, Context context) {
@@ -53,6 +59,8 @@ public class AccessibilityHandler {
 		notify_provider.get().identifier(name).type(GOOGLE_VOICE_TYPE).extra(text).fire(context);
 	}
 
-	
+	private void handleGmail(AccessibilityEvent event, Context context) {
+		
+	}
 
 }

@@ -2,6 +2,7 @@ package com.danielstiner.vibrates.database;
 
 import java.io.InputStream;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -65,4 +66,6 @@ public interface IManager {
 	public abstract String getKind(Entity entity);
 
 	public abstract void remove(Entity fromCursor);
+
+	public abstract Intent getViewIntent(Entity entity);
 }

@@ -18,4 +18,6 @@
 	<string name="pattern_edit_premessage">Tap the screen to create a new pattern</string>
 	<string name="pattern_edit_postmessage">Press back or the button below to finish</string>
 	<string name="toast_forcesilent">Custom Vibrates: Kept phone in vibrate mode based on your preferences.</string>
+	<string name="entity_edit_pattern_premessage">Tap to create a new pattern</string>
+	<string name="entity_edit_pattern_postmessage"></string>
 </resources>
