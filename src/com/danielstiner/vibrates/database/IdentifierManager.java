@@ -81,10 +81,8 @@ public class IdentifierManager implements IIdentifierManager {
 		if(matches.getCount() > 1)
 		{
 			Ln.d("Found multiple (%d) entities for the identifier: %s", matches.getCount(), identifier);
-			return null;
+			//return null;
 		}
-		if(matches.getCount() > 1)
-			return null;
 		if(!matches.moveToFirst())
 			return null;
 		Long entityid = matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
