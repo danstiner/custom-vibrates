@@ -196,7 +196,7 @@ public class EntityManager implements IEntityManager {
 //        			null, //new String[] { KEY_ID },
 //        			null, null, null, null, null, null);
         	// TODO FIx
-        	Cursor c = db.query(TABLE, null, null, null, null, null, KEY_NAME);
+        	Cursor c = db.query(TABLE, null, KEY_ID + " > 0", null, null, null, KEY_NAME);
         	int test = c.getCount();
         	return c;
         } finally {

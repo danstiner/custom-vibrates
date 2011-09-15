@@ -7,4 +7,8 @@ public interface IUserSettings {
 	Boolean warnOnRingerEnabled();
 	
 	Boolean keepInSilentMode();
+
+	long[] defaultPattern();
+
+	void defaultPattern(long[] newPattern);
 }

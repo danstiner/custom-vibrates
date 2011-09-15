@@ -5,6 +5,7 @@ import roboguice.util.Ln;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.database.IManager;
+import com.danielstiner.vibrates.settings.IUserSettings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -15,7 +16,9 @@ import android.os.Vibrator;
 
 public class VibratrService extends RoboService {
 	
-	@Inject Provider<VibrateNotify> notify_provider;
+	@Inject VibrateNotify notification;
+	
+	@Inject Provider<IUserSettings> user_settings_provider;
 	
 	@Inject INotificationConstraints notify_constraints;
 	
@@ -32,27 +35,38 @@ public class VibratrService extends RoboService {
 		Bundle bundle = intent.getExtras();
 		
 		// Extract what just happened
-		VibrateNotify n = notify_provider.get();
-		n.loadBundle(bundle);
+		notification.loadBundle(bundle);
 		
 		// Try an find the associated entity
-		Entity e = manager.getEntity(n.identifier());
+		Entity e = manager.getEntity(notification.identifier());
 		
 		if(e == null)
-			Ln.d("Got a null notification");
+		{
+			Ln.d("VibratrService Notify: Got a null notification, playing default");
+			
+			// Play a default
+			if(notify_constraints.vibrate(null, notification.type()))
+			{
+				vibrator.vibrate(user_settings_provider.get().defaultPattern(), -1);
+			}
+		}
 		else
+		{
 			Ln.v(
 				"VibratrService Notify: got entity #%s for %s because %s",
 				e.entityid().toString(),
-				n.identifier(),
-				n.type()
+				notification.identifier(),
+				notification.type()
 				);
-		
-		// If we have something, then vibrate away!
-		if(notify_constraints.vibrate(e, n.type()))
-		{
-			vibrator.vibrate(manager.getPattern(e, n.type()), -1);
+			
+			// If we have something, then vibrate away!
+			if(notify_constraints.vibrate(e, notification.type()))
+			{
+				vibrator.vibrate(manager.getPattern(e, notification.type()), -1);
+			}
 		}
+		
+		
 		
 //		// Fancy toast notifications
 //		String extra = bundle.getString(com.danielstiner.vibrates.notify.EXTRA_KEY);

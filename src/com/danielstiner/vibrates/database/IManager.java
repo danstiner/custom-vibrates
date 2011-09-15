@@ -65,7 +65,7 @@ public interface IManager {
 
 	public abstract String getKind(Entity entity);
 
-	public abstract void remove(Entity fromCursor);
+	public abstract void remove(Entity entity);
 
 	public abstract Intent getViewIntent(Entity entity);
 }

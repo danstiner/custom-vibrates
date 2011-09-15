@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:installLocation="auto"
-      package="com.danielstiner.vibrates" android:versionName="0.1" android:versionCode="23">
+      package="com.danielstiner.vibrates" android:versionName="0.1" android:versionCode="25">
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<!-- Know about incoming calls and the number they are coming from -->
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
@@ -94,6 +94,13 @@
         </service>
         <activity android:name="com.danielstiner.vibrates.settings.Preferences"></activity>
         <activity android:name=".settings.ServiceSettings">
+            <intent-filter>
+                <data android:host="vibrates.danielstiner.com" android:scheme="settings" android:pathPattern="defaults/pattern"></data>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW"></action>
+            </intent-filter>
+        </activity>
+        <activity android:name=".settings.DefaultPatternEdit">
             <intent-filter>
                 <data android:host="vibrates.danielstiner.com" android:scheme="settings"></data>
                 <category android:name="android.intent.category.DEFAULT" />

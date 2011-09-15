@@ -16,6 +16,8 @@ public class Entity {
 	/**  */
 	public static final int ID_NOBODY = -3;
 
+	public static final int ID_DEFAULT = -4;
+
 	private Long _id;
 
 	private Bundle _extras;

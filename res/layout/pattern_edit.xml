@@ -31,12 +31,12 @@
   		android:layout_marginTop="30px"
   		/>
   </LinearLayout>
-  <Button
+  <!-- <Button
   	android:id="@+id/pattern_edit_finish_button"
 	android:text="@string/buttonlabel_finish"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_gravity="bottom|center_horizontal"
 	android:layout_marginBottom="20px"
-	/>
+	/> -->
 </FrameLayout>

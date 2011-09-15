@@ -19,9 +19,6 @@ public class NotificationConstraints implements INotificationConstraints {
 	
 	@Override
 	public boolean vibrate(Entity entity, String notificationType) {
-		// TODO Auto-generated method stub
-		if(entity == null)
-			return false;
 		
 		// check enabled user preference
 		if(!this.userSettings.enabled())

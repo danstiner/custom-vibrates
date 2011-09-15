@@ -27,27 +27,10 @@ public class VibratePatternEdit extends RoboActivity {
 	private static final String CLASSNAME = NS + "." + "VibratePatternEdit";
 	
 	public static final String EXTRA_KEY_PATTERN = CLASSNAME + "." + "pattern";
-
-	private static final long EDITING_WATCHER_DELAY = 10;
-	private static final long EDITING_MAX_UP = 1500;
-	// One whole day, just to be sure
-	private static final long EDITING_MAX_DOWN = 24 * 60 * 60 * 1000;
 	
 	private static final int CONTENT_VIEW = R.layout.pattern_edit;
 
 	@InjectView(R.id.pattern_edit_patternview) private VibratePatternView pattern_view;
-	
-	@InjectView(R.id.pattern_edit_finish_button) private Button finish_button;
-
-	private List<Long> _pattern;
-	
-	private boolean _editing;
-	
-	private long _last_edit_up;
-
-	private Handler _editHandler;
-
-	private Runnable _editWatcher;
 	
 	@Inject private PatternEditManager _editManager;
 
@@ -62,12 +45,14 @@ public class VibratePatternEdit extends RoboActivity {
 
 		// Preview the current pattern
 		_editManager.playPattern();
+		pattern_view.setPattern(_editManager.getPattern());
 		
 		// Handle when the pattern changes
 		_editManager.setWatcher(new Runnable() {
 
 			@Override
 			public void run() {
+				pattern_view.setPattern(_editManager.getPattern());
 				endEdit();
 			}
 			
@@ -77,7 +62,7 @@ public class VibratePatternEdit extends RoboActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(EXTRA_KEY_PATTERN, _pattern.toArray());
+		outState.putSerializable(EXTRA_KEY_PATTERN, _editManager.getPattern());
 	}
 
 	@Override
@@ -103,6 +88,8 @@ public class VibratePatternEdit extends RoboActivity {
 			_editManager.release();
 		}
 		
+		pattern_view.setPattern(_editManager.getPattern());
+		
 		return true;
 	}
 	
@@ -124,9 +111,9 @@ public class VibratePatternEdit extends RoboActivity {
 		List<Long> pattern = new ArrayList<Long>();
 		
 		// Recover saved state pattern if possible
-		if(savedState != null && _pattern.size() == 0) {
+		if(savedState != null) {
 			// It was stored as Long[]
-			Long[] patterntmp = (Long[]) savedState.getSerializable(EXTRA_KEY_PATTERN);
+			long[] patterntmp = (long[]) savedState.getSerializable(EXTRA_KEY_PATTERN);
 			for(int i=0; i<patterntmp.length; i++)
 				pattern.add(patterntmp[i]);
 		}
