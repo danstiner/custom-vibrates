@@ -4,7 +4,6 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.database.IEntityManager;
 import com.danielstiner.vibrates.database.IManager;
-import com.danielstiner.vibrates.database.IPatternManager;
 import com.google.inject.Injector;
 
 import android.content.Context;
@@ -18,14 +17,9 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class EntityListCursorAdapter extends CursorAdapter { // implements Filterable {
+public class EntityListCursorAdapter extends CursorAdapter {
 
 	protected IManager manager;
-	protected IEntityManager entity_manager;
-	
-	//@InjectView(R.id.entitylist_row_name) TextView name_text;
-	//@InjectView(R.id.entitylist_row_image) ImageView entity_pic;
-	//@InjectView(R.id.entitylist_row_defaultpattern) VibratePatternView pattern_view;
 	
 	// For view management
 	private int layout = R.layout.entity_list_row;
@@ -34,9 +28,6 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 		super(context, c);
 		
 		this.manager = manager;
-		
-		// Inject manually
-		this.entity_manager = injector.getInstance(IEntityManager.class);
 	}
 
 	@Override
@@ -53,19 +44,17 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 
 		return v;
 	}
-	
-	
 
 	@Override
 	public void bindView(View v, Context context, Cursor c) {
 
 		// Lets find some info about this contact
-		Entity entity = entity_manager.fromCursor(c);
+		Entity entity = manager.getEntity(c);
 		
 		// Bind in contact name
 		TextView name_text = (TextView)v.findViewById(R.id.entitylist_row_name);
 		if (name_text != null) {
-			name_text.setText(entity_manager.getDisplayName(entity));
+			name_text.setText(manager.getDisplayName(entity));
 		}
 		
 		// Bind in contact photo
@@ -80,26 +69,5 @@ public class EntityListCursorAdapter extends CursorAdapter { // implements Filte
 			pattern_view.setPattern(manager.getPattern(entity, null));
 		}
 	}
-/*
-	@Override
-	public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-		if (getFilterQueryProvider() != null) {
-			return getFilterQueryProvider().runQuery(constraint);
-		}
-
-		StringBuilder buffer = null;
-		String[] args = null;
-		if (constraint != null) {
-			buffer = new StringBuilder();
-			buffer.append("UPPER(");
-			buffer.append(People.NAME);
-			buffer.append(") GLOB ?");
-			args = new String[] { constraint.toString().toUpperCase() + "*" };
-		}
-
-		return context.getContentResolver().query(People.CONTENT_URI, null,
-				buffer == null ? null : buffer.toString(), args,
-				People.NAME + " ASC");
-	}*/
 }
 

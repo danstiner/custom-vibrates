@@ -1,9 +1,6 @@
 package com.danielstiner.vibrates.database;
 
-import java.io.InputStream;
-
 import android.database.Cursor;
-import android.net.Uri;
 
 import com.danielstiner.vibrates.Entity;
 

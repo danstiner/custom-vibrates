@@ -68,4 +68,6 @@ public interface IManager {
 	public abstract void remove(Entity entity);
 
 	public abstract Intent getViewIntent(Entity entity);
+
+	public abstract Entity getEntity(Cursor c);
 }
