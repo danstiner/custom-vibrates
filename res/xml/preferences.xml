@@ -42,7 +42,7 @@
     <PreferenceScreen
     	android:key="accessibilitysettings"
     	android:title="System Accessibility Menu"
-    	android:summary="Enable for Google Voice integration">
+    	android:summary="To enable Google Voice integration">
     	<intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
     </PreferenceScreen>
 </PreferenceScreen>
