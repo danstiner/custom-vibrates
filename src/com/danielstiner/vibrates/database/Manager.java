@@ -15,6 +15,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.utility.PatternUtilities;
 import com.danielstiner.vibrates.utility.Refresh;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -26,11 +27,9 @@ public class Manager implements IManager {
 	private Context context;
 	private Provider<IEntityManager> entitymanager_provider;
 	private Provider<IIdentifierManager> identifiermanager_provider;
-	private Provider<IPatternManager> patternmanager_provider;
 	
 	@Inject private IEntityManager entity_manager;
 	@Inject private IIdentifierManager identifier_manager;
-	@Inject private IPatternManager pattern_manager;
 	
 	@Inject
     public Manager(
@@ -55,7 +54,7 @@ public class Manager implements IManager {
     		return entity;
     	
     	// Do some validation
-    	if(!getPatternManager().isValid(pattern)) {
+    	if(!PatternUtilities.isValid(pattern)) {
     		Ln.e("Invalid pattern given to create a new contact.");
     	}
     	
@@ -122,7 +121,7 @@ public class Manager implements IManager {
 			return null;
 		
 	    // Generate a default contact pattern
-	    long[] pattern = PatternManager.generate(name);
+	    long[] pattern = PatternUtilities.generate(name);
 	    
 	    Entity e = create(lookup, name, pattern, Entity.TYPE_CONTACTSCONTRACTCONTACT);
 	    
@@ -201,12 +200,6 @@ public class Manager implements IManager {
 			identifier_manager = identifiermanager_provider.get();
 		return identifier_manager;
 	}
-	private IPatternManager getPatternManager()
-	{
-		if(pattern_manager == null)
-			pattern_manager = patternmanager_provider.get();
-		return pattern_manager;
-	}
 
 	@Override
 	public void update(Entity entity) {
@@ -239,5 +232,11 @@ public class Manager implements IManager {
 		{
 			return null;
 		}
+	}
+
+
+	@Override
+	public Entity getEntity(Cursor c) {
+		return getEntityManager().fromCursor(c);
 	}
 }

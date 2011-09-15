@@ -10,7 +10,6 @@ public class ManagersModule extends AbstractModule {
 		
 		bind(IEntityManager.class).to(EntityManager.class);
 		bind(IIdentifierManager.class).to(IdentifierManager.class);
-		bind(IPatternManager.class).to(PatternManager.class);
 	}
 
 }
