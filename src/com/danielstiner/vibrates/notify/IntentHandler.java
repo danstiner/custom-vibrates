@@ -103,12 +103,12 @@ public class IntentHandler implements IIntentHandler {
 			// Vibrate mode makes the pretty vibrate icon show up
 			am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 			
-			// Only go to silent if we are enabled to replace the system vibrates
-			if(settings_provider.get().enabled())
-			{
-				// Silent mode allows system vibrations for SMS/voice to be turned off
-				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-			}
+//			// Only go to silent if we are enabled to replace the system vibrates
+//			if(settings_provider.get().enabled())
+//			{
+//				// Silent mode allows system vibrations for SMS/voice to be turned off
+//				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+//			}
 			
 			Toast.makeText(context, R.string.toast_forcesilent, Toast.LENGTH_SHORT).show();
 			
