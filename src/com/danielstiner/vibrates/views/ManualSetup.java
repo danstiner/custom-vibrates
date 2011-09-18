@@ -1,6 +1,7 @@
 package com.danielstiner.vibrates.views;
 
 import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.database.IManager;
 import com.danielstiner.vibrates.settings.IUserSettings;
 import com.danielstiner.vibrates.utility.PatternEditManager;
 import com.google.inject.Inject;
@@ -19,6 +20,8 @@ import android.widget.LinearLayout;
 public class ManualSetup extends RoboActivity {
 
 	
+	private static final int ACTIVITY_ADD_CONTACT_CHOOSE = 1;
+
 	@InjectView(R.id.setup_manual_openaccessiblity) private Button buttonOpenAccessibility;
 	
 	@InjectView(R.id.setup_manual_defaultpattern_editbox) private LinearLayout defaultPatternEditBox;
@@ -29,14 +32,19 @@ public class ManualSetup extends RoboActivity {
 	
 	@InjectView(R.id.setup_manual_complete) private Button buttonComplete;
 	
+	@Inject private IManager manager;
 	
 	@Inject private PatternEditManager defaultPatternEditManager;
 	
 	@Inject private IUserSettings user_settings;
+	
+	private Intent startMainScreenIntent;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		startMainScreenIntent = new Intent(this, EntityList.class);
 		
 		setTitle("Custom Vibrates: Quick Setup");
 		
@@ -46,9 +54,25 @@ public class ManualSetup extends RoboActivity {
 		setupDefaultPatternEdit();
 	}
 	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		switch (requestCode) {
+		case ACTIVITY_ADD_CONTACT_CHOOSE:
+			if (resultCode == RESULT_OK && data != null) {
+				Uri contactpath = data.getData();	
+				manager.createFromContactUri(contactpath);
+			}
+			break;
+		}
+	}
+	
 	private void setupDefaultPatternEdit()
 	{
 		defaultPatternEditManager.setPattern(user_settings.defaultPattern());
+		
+		updateDefaultPatternView();
+		
 		// Handle when the pattern changes
 		defaultPatternEditManager.setWatcher(new Runnable() {
 			@Override
@@ -103,7 +127,7 @@ public class ManualSetup extends RoboActivity {
 			@Override
 			public void onClick(View v) {
 				Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-				startActivity(contactPickerIntent);
+				startActivityForResult(contactPickerIntent, ACTIVITY_ADD_CONTACT_CHOOSE);
 			}
 		});
 		buttonComplete.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +136,7 @@ public class ManualSetup extends RoboActivity {
 				// Enable ourselves!
 				user_settings.enabled(true);
 				
-				startActivity(new Intent(Intent.ACTION_MAIN, Uri.parse("com.danielstiner.vibrates/.views.EntityList")));
+				startActivity(startMainScreenIntent);
 			}
 		});
 		
