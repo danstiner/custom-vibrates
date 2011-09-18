@@ -14,7 +14,7 @@
     	android:title="Force silent mode"
     	android:summaryOff="Phone may be switched to ringer mode"
     	>
-    	</CheckBoxPreference>
+    </CheckBoxPreference>
    	<PreferenceScreen
     	android:key="defaultpattern"
     	android:title="Default Vibrate Pattern"
