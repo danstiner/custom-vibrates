@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 
 public class UserSettings implements IUserSettings {
 
-	private static final String DEFAULT_PATTERN = "0,0,0,400,200,400";
+	private static final String DEFAULT_PATTERN = "0,0";
 	
 	private static final String KEY_ENABLED = "enabled";
 	private static final String KEY_WARN_RINGER_CHANGED = "warnonringerchange";
