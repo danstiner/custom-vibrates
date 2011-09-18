@@ -7,10 +7,15 @@
         </menu>
     </item> -->
     <item
-    	android:id="@+id/entitylist_menu_add_contact"
+    	android:id="@+id/entity_list_menu_add_contact"
     	android:titleCondensed="Add Contact"
     	android:title="Add Contact"
     	/>
+   	<!-- <item
+    	android:id="@+id/entity_list_menu_add_group"
+    	android:titleCondensed="Add Group"
+    	android:title="Add Group"
+    	/> -->
     <item
     	android:id="@+id/menu_settings"
     	android:titleCondensed="@string/menu_settings_title"

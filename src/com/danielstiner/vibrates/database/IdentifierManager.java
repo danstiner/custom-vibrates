@@ -26,6 +26,8 @@ public class IdentifierManager implements IIdentifierManager {
 	public static final String KIND_CONTACTS_CONTRACT_NAME = "generated.contacts_contract_name";
 	public static final String KIND_CONTACTS_CONTRACT_LOOKUP = "generated.contacts_contract_lookup";
 	
+	public static final String KIND_CONTACTS_GROUP_ID = "generated.contacts_group_id";
+	public static final String KIND_CONTACTS_GROUP_TITLE = "generated.contacts_group_title";
 	//protected static final String DEFAULT_KIND = "";
 
 	@Inject private IDatabase db;

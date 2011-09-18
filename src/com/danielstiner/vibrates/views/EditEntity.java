@@ -128,11 +128,11 @@ public class EditEntity extends RoboActivity {
 //		}
 //	}
 	
-	private void editPattern(String type) {
-		Intent i = new Intent(this, VibratePatternEdit.class);
-		i.putExtra(VibratePatternEdit.EXTRA_KEY_PATTERN, manager.getPattern(_entity, null));
-		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
-	}
+//	private void editPattern(String type) {
+//		Intent i = new Intent(this, VibratePatternEdit.class);
+//		i.putExtra(VibratePatternEdit.EXTRA_KEY_PATTERN, manager.getPattern(_entity, null));
+//		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
+//	}
 	
 	 @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -181,7 +181,7 @@ public class EditEntity extends RoboActivity {
 		{
 			// TODO Do this prettyfing somewhere else
 			String kind = manager.getKind(_entity);
-			if(kind.equals(Entity.TYPE_CONTACTSCONTRACTCONTACT))
+			if(kind.equals(Entity.TYPE_CONTACT))
 				entity_type.setText("Contact");
 			else
 				entity_type.setText("");

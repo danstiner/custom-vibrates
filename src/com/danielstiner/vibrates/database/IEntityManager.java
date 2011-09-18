@@ -30,4 +30,6 @@ public interface IEntityManager {
 	public abstract long[] getPattern(Entity entity);
 
 	public abstract String getKind(Entity entity);
+
+	public abstract Cursor getAll(String type);
 }

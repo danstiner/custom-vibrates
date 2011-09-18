@@ -30,8 +30,6 @@ public class EntityList extends CoreListActivity {
 	
 	@Inject IManager manager;
 	
-	@Inject IEntityManager entity_manager;
-	
 	//@InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
 	@InjectView(R.id.entitylist_empty_manualstart) Button manualSetupButton;
 
@@ -43,6 +41,8 @@ public class EntityList extends CoreListActivity {
 	private static final int CONTENT_VIEW = R.layout.entity_list;
 	
 	private static final int ACTIVITY_ADD_CONTACT_CHOOSE = 5;
+
+	private static final int ACTIVITY_ADD_GROUP = 6;
 
 	private Cursor mContactsCursor;
 	
@@ -60,15 +60,6 @@ public class EntityList extends CoreListActivity {
 	
 	@Override
 	protected void initEmptyView() {
-//		automajicButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				//newContact();
-//				// TODO FIXME Need to do some majic here
-//			}
-//		});
-		
-		
 		manualSetupButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -89,7 +80,10 @@ public class EntityList extends CoreListActivity {
 		case R.id.menu_settings:
 			openPreferences();
 			break;
-		case R.id.entitylist_menu_add_contact:
+//		case R.id.entity_list_menu_add_group:
+//			addGroup();
+//			break;
+		case R.id.entity_list_menu_add_contact:
 			newContact();
 			break;
 		}
@@ -113,7 +107,7 @@ public class EntityList extends CoreListActivity {
 			// TODO Not a great method for linking row in list to database delete
 			mContactsCursor.moveToPosition((int)info.position);
 			
-			manager.remove(entity_manager.fromCursor(mContactsCursor));
+			manager.remove(manager.getEntity(mContactsCursor));
 			fillList();
 			return true;
 		}
@@ -126,7 +120,7 @@ public class EntityList extends CoreListActivity {
 
 		mContactsCursor.moveToPosition(position);
 		
-		Entity entity = entity_manager.fromCursor(mContactsCursor);
+		Entity entity = manager.getEntity(mContactsCursor);
 
 		editEntity(entity);
 	}
@@ -146,6 +140,13 @@ public class EntityList extends CoreListActivity {
 				fillList();
 			}
 			break;
+		case ACTIVITY_ADD_GROUP:
+			if (resultCode == RESULT_OK && data != null) {
+				Uri grouppath = data.getData();	
+				editEntity(manager.createFromGroupUri(grouppath));
+				fillList();
+			}
+			break;
 		}
 	}
 
@@ -156,7 +157,7 @@ public class EntityList extends CoreListActivity {
 		if(mContactsCursor != null)
 			mContactsCursor.close();
 		// Get all of the notes from the database and create the item list
-		mContactsCursor = entity_manager.getAll();
+		mContactsCursor = manager.getEntities(Entity.TYPE_CONTACT);
 		//startManagingCursor(mContactsCursor);
 
 		// Now create an array adapter and set it to display using our row
@@ -169,7 +170,10 @@ public class EntityList extends CoreListActivity {
 		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 		startActivityForResult(contactPickerIntent, ACTIVITY_ADD_CONTACT_CHOOSE);
 	}
-	
+	private void addGroup() {
+		Intent groupPickerIntent = new Intent(this, PickGroup.class);
+		startActivityForResult(groupPickerIntent, ACTIVITY_ADD_GROUP);
+	}
 	private void openPreferences() {
 		startActivity(new Intent(this, Preferences.class));
 	}

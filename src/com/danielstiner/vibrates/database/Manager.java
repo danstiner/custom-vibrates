@@ -26,7 +26,7 @@ public class Manager implements IManager {
 
 	private Context context;
 	private Provider<IEntityManager> entitymanager_provider;
-	private Provider<IIdentifierManager> identifiermanager_provider;
+	@Inject private Provider<IIdentifierManager> identifiermanager_provider;
 	
 	@Inject private IEntityManager entity_manager;
 	@Inject private IIdentifierManager identifier_manager;
@@ -123,7 +123,7 @@ public class Manager implements IManager {
 	    // Generate a default contact pattern
 	    long[] pattern = PatternUtilities.generate(name);
 	    
-	    Entity e = create(lookup, name, pattern, Entity.TYPE_CONTACTSCONTRACTCONTACT);
+	    Entity e = create(lookup, name, pattern, Entity.TYPE_CONTACT);
 	    
 	    // Add some lookup identifiers
 	    getIdentifierManager().add(e, name, IdentifierManager.KIND_CONTACTS_CONTRACT_NAME);
@@ -216,7 +216,7 @@ public class Manager implements IManager {
 
 	@Override
 	public Intent getViewIntent(Entity entity) {
-		if(getKind(entity).equals(Entity.TYPE_CONTACTSCONTRACTCONTACT))
+		if(getKind(entity).equals(Entity.TYPE_CONTACT))
 		{
 			Cursor ids = getIdentifierManager().get(entity, IdentifierManager.KIND_CONTACTS_CONTRACT_ID);
 			
@@ -238,5 +238,18 @@ public class Manager implements IManager {
 	@Override
 	public Entity getEntity(Cursor c) {
 		return getEntityManager().fromCursor(c);
+	}
+
+
+	@Override
+	public Entity createFromGroupUri(Uri grouppath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Cursor getEntities(String type) {
+		return getEntityManager().getAll(type);
 	}
 }

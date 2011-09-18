@@ -11,7 +11,9 @@ public class Entity {
 	
 	public static final String EXTRA_KEY_ID = CLASSNAME + "." + "id";
 
-	public static final String TYPE_CONTACTSCONTRACTCONTACT = "contacts_contract_contact";
+	public static final String TYPE_CONTACT = "contacts_contract_contact";
+	
+	public static final String TYPE_GROUP = "contacts_contract_group";
 	
 	/**  */
 	public static final int ID_NOBODY = -3;

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.views.EntityListCursorAdapter;
 
 public interface IManager {
 
@@ -70,4 +71,8 @@ public interface IManager {
 	public abstract Intent getViewIntent(Entity entity);
 
 	public abstract Entity getEntity(Cursor c);
+
+	public abstract Entity createFromGroupUri(Uri grouppath);
+
+	public abstract Cursor getEntities(String type);
 }

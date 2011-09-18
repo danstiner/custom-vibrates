@@ -196,7 +196,26 @@ public class EntityManager implements IEntityManager {
 //        			null, //new String[] { KEY_ID },
 //        			null, null, null, null, null, null);
         	// TODO FIx
-        	Cursor c = db.query(TABLE, null, KEY_ID + " > 0", null, null, null, KEY_NAME);
+        	Cursor c = db.query(TABLE, null, null, null, null, null, KEY_NAME);
+        	int test = c.getCount();
+        	return c;
+        } finally {
+            if (db != null)
+                db.close();
+        }
+	}
+	
+	@Override
+	public Cursor getAll(String type) {
+		// Open a connection to the database
+    	SQLiteDatabase db = _db.getReadableDatabase();
+        try {
+        	// Grab all contacts 
+//        	return db.query(TABLE,
+//        			null, //new String[] { KEY_ID },
+//        			null, null, null, null, null, null);
+        	// TODO Fix
+        	Cursor c = db.query(TABLE, null, KEY_KIND + "= ?", new String[] { type }, null, null, KEY_NAME);
         	int test = c.getCount();
         	return c;
         } finally {
