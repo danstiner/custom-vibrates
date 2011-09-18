@@ -11,9 +11,9 @@ import android.os.Vibrator;
 
 public class PatternEditManager {
 	private static final long EDITING_WATCHER_DELAY = 10;
-	private static final long EDITING_MAX_UP = 1500;
-	// One whole day, just to be sure
-	private static final long EDITING_MAX_DOWN = 24 * 60 * 60 * 1000;
+	private static final long EDITING_MAX_UP = 1400;
+	private static final long EDITING_MAX_TOTAL = 10 * 1000; 
+	private static final long EDITING_MAX_DOWN = 60 * 1000;
 	
 	private Vibrator _vibratr;
 
@@ -21,8 +21,9 @@ public class PatternEditManager {
 	
 	private boolean _editing;
 	
-	private long _last_edit_up;
-	private long _last_edit_down;
+	private long _last_edit_start = 0;
+	private long _last_edit_up = 0;
+	private long _last_edit_down = 0;
 
 	private Handler _editHandler;
 
@@ -108,6 +109,7 @@ public class PatternEditManager {
 		_editing = true;
 		_last_edit_up = 0;
 		_last_edit_down = System.currentTimeMillis();
+		_last_edit_start = System.currentTimeMillis();
 		
 		// Start timeout watcher
 		_editHandler.postDelayed(_editWatcher, EDITING_WATCHER_DELAY);
@@ -151,6 +153,12 @@ public class PatternEditManager {
 		// if so, play back their pattern
 		long diff = System.currentTimeMillis() - _last_edit_up;
 		if(_last_edit_up != 0 && diff > EDITING_MAX_UP)
+			endEdit();
+		
+		// See if the pattern is waaaaay to long
+		// if so, stop editing
+		diff = System.currentTimeMillis() - _last_edit_start;
+		if(_last_edit_start != 0 && diff > EDITING_MAX_TOTAL)
 			endEdit();
 	}
 	

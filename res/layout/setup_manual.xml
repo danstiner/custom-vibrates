@@ -49,7 +49,6 @@
 	  	
 	  	<!-- Default pattern edit -->
 		<LinearLayout
-	  		android:id="@+id/setup_manual_defaultpattern_editbox"
 		  	android:layout_width="fill_parent"
 		  	android:layout_height="wrap_content"
 		  	android:layout_gravity="center"
@@ -63,7 +62,15 @@
 				android:textSize="10pt"
 				android:layout_marginBottom="10px"
 	  			/>
+	  		<TextView
+	  			android:text="Optional pattern to play when a message is recieved for an uncustomzied contact. Note that the default system vibrations are not automatically turned off, please disable these in your phone's settings to prevent doubled vibratation patterns."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="15px"
+	  			/>
 	  		<LinearLayout
+	  			android:id="@+id/setup_manual_defaultpattern_editbox"
 		  		android:layout_width="fill_parent"
 			  	android:layout_height="wrap_content"
 			  	android:layout_gravity="center"

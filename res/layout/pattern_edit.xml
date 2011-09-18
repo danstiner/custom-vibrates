@@ -31,12 +31,12 @@
   		android:layout_marginTop="30px"
   		/>
   </LinearLayout>
-  <!-- <Button
-  	android:id="@+id/pattern_edit_finish_button"
-	android:text="@string/buttonlabel_finish"
+  <Button
+  	android:id="@+id/pattern_edit_clear_button"
+	android:text="Clear Vibrate Pattern"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
 	android:layout_gravity="bottom|center_horizontal"
-	android:layout_marginBottom="20px"
-	/> -->
+	android:layout_marginBottom="40px"
+	/>
 </FrameLayout>

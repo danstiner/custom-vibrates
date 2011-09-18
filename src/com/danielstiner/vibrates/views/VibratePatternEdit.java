@@ -29,8 +29,11 @@ public class VibratePatternEdit extends RoboActivity {
 	public static final String EXTRA_KEY_PATTERN = CLASSNAME + "." + "pattern";
 	
 	private static final int CONTENT_VIEW = R.layout.pattern_edit;
+	protected static final long[] PATTERN_EMPTY = new long[] { 0, 0 };
 
 	@InjectView(R.id.pattern_edit_patternview) private VibratePatternView pattern_view;
+	
+	@InjectView(R.id.pattern_edit_clear_button) private Button pattern_clear;
 	
 	@Inject private PatternEditManager _editManager;
 
@@ -57,24 +60,22 @@ public class VibratePatternEdit extends RoboActivity {
 			}
 			
 		});
+		
+		// Handle clear button
+		pattern_clear.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				_editManager.setPattern(PATTERN_EMPTY);
+				pattern_view.setPattern(_editManager.getPattern());
+				endEdit();
+			}
+		});
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(EXTRA_KEY_PATTERN, _editManager.getPattern());
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		//_editManager.cancel();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		//endEdit();
 	}
 	
 	@Override
