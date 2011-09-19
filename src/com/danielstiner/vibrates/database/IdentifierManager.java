@@ -74,23 +74,46 @@ public class IdentifierManager implements IIdentifierManager {
 	/* (non-Javadoc)
 	 * @see com.danielstiner.vibrates.IIdentifierManager#get(java.lang.String)
 	 */
-	public Entity get(String identifier) {
+	public Cursor get(String identifier) {
 		if(identifier == null)
 			return null;
 		
-		Cursor matches = getByEntityIdentifier(identifier);
-		// Make sure we only have one entity match
-		if(matches.getCount() > 1)
-		{
-			Ln.d("Found multiple (%d) entities for the identifier: %s", matches.getCount(), identifier);
-			//return null;
-		}
-		if(!matches.moveToFirst())
-			return null;
-		Long entityid = matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
-		// Must have worked
-		return entity_provider.get().entityid(entityid);
+		return getByEntityIdentifier(identifier);
+		
+//		Cursor matches = getByEntityIdentifier(identifier);
+//		// Make sure we only have one entity match
+//		if(matches.getCount() > 1)
+//		{
+//			Ln.d("Found multiple (%d) entities for the identifier: %s", matches.getCount(), identifier);
+//			//return null;
+//		}
+//		if(!matches.moveToFirst())
+//			return null;
+//		Long entityid = matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
+//		// Must have worked
+//		return entity_provider.get().entityid(entityid);
 	}
+	
+	public Cursor get(String identifier, String kind) {
+		if(identifier == null || kind == null)
+			return null;
+		
+		return getByEntityIdentifierAndKind(identifier, kind);
+		
+//		Cursor matches = getByEntityIdentifier(identifier);
+//		// Make sure we only have one entity match
+//		if(matches.getCount() > 1)
+//		{
+//			Ln.d("Found multiple (%d) entities for the identifier: %s", matches.getCount(), identifier);
+//			//return null;
+//		}
+//		if(!matches.moveToFirst())
+//			return null;
+//		Long entityid = matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
+//		// Must have worked
+//		return entity_provider.get().entityid(entityid);
+	}
+	
 	private Cursor getByEntityIdentifier(String identifier) {
 		// Open a connection to the database
     	SQLiteDatabase sql_db = db.getReadableDatabase();
@@ -98,9 +121,28 @@ public class IdentifierManager implements IIdentifierManager {
         	// Grab all contacts 
         	Cursor c = sql_db.query(
     				TABLE,
-    				new String[] { KEY_ENTITYID },
+    				null,
     				KEY_IDENTIFIER + " = ?",
     				new String[] { identifier },
+    				null, null, null, null);
+        	int test = c.getCount();
+        	return c;
+        } finally {
+            if (sql_db != null)
+            	sql_db.close();
+        }
+	}
+	private Cursor getByEntityIdentifierAndKind(String identifier, String kind) {
+		// Open a connection to the database
+    	SQLiteDatabase sql_db = db.getReadableDatabase();
+        try {
+        	// Grab all contacts 
+        	Cursor c = sql_db.query(
+    				TABLE,
+    				null,
+    				KEY_IDENTIFIER + " = ?" + " AND " +
+    				KEY_KIND + " = ? ",
+    				new String[] { identifier, kind },
     				null, null, null, null);
         	int test = c.getCount();
         	return c;
@@ -151,6 +193,13 @@ public class IdentifierManager implements IIdentifierManager {
             if (sql_db != null)
             	sql_db.close();
         }
+	}
+	
+	@Override
+	public Entity entityFromCursor(Cursor c) {
+		Long entityid = c.getLong(c.getColumnIndexOrThrow(KEY_ENTITYID));
+		// Must have worked
+		return entity_provider.get().entityid(entityid);
 	}
 	
 	@Override

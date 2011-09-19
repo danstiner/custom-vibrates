@@ -14,7 +14,7 @@ public interface IIdentifierManager {
 	
 	public abstract Cursor get(Entity owner, String kind);
 
-	public abstract Entity get(String identifier);
+	public abstract Cursor get(String identifier);
 
 	public abstract void add(Entity to, String identifier, String kind);
 
@@ -25,6 +25,8 @@ public interface IIdentifierManager {
 	public abstract int removeAll(Entity entity);
 
 	public abstract int removeAll(Entity entity, String defaultPhonenumber);
+
+	public abstract Entity entityFromCursor(Cursor c);
 
 	//public abstract Entity entityFromCursor(Cursor c);
 

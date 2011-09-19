@@ -49,12 +49,12 @@ public class GroupListCursorAdapter extends CursorAdapter {
 			title_text.setText(c.getString(c.getColumnIndexOrThrow(ContactsContract.Groups.TITLE)));
 		}
 		
-//		// Bind in contacts count
-//		TextView count_text = (TextView)v.findViewById(R.id.group_list_row_size);
-//		if (count_text != null) {
-//			int count = c.getInt(c.getColumnIndexOrThrow(ContactsContract.Groups.SUMMARY_COUNT));
-//			count_text.setText(Integer.toString(count));
-//		}
+		// Bind in contacts count
+		TextView count_text = (TextView)v.findViewById(R.id.group_list_row_size);
+		if (count_text != null) {
+			int count = c.getInt(c.getColumnIndexOrThrow(ContactsContract.Groups.SUMMARY_COUNT));
+			count_text.setText(Integer.toString(count));
+		}
 	}
 }
 

@@ -80,9 +80,9 @@ public class EntityList extends CoreListActivity {
 		case R.id.menu_settings:
 			openPreferences();
 			break;
-//		case R.id.entity_list_menu_add_group:
-//			addGroup();
-//			break;
+		case R.id.entity_list_menu_add_group:
+			addGroup();
+			break;
 		case R.id.entity_list_menu_add_contact:
 			newContact();
 			break;
@@ -142,8 +142,9 @@ public class EntityList extends CoreListActivity {
 			break;
 		case ACTIVITY_ADD_GROUP:
 			if (resultCode == RESULT_OK && data != null) {
-				Uri grouppath = data.getData();	
-				editEntity(manager.createFromGroupUri(grouppath));
+				Long groupid = data.getLongExtra(PickGroup.EXTRA_KEY_ID, -1);
+				if(groupid != -1)
+					editEntity(manager.createFromGroupId(groupid.toString()));
 				fillList();
 			}
 			break;
@@ -157,7 +158,7 @@ public class EntityList extends CoreListActivity {
 		if(mContactsCursor != null)
 			mContactsCursor.close();
 		// Get all of the notes from the database and create the item list
-		mContactsCursor = manager.getEntities(Entity.TYPE_CONTACT);
+		mContactsCursor = manager.getEntities();
 		//startManagingCursor(mContactsCursor);
 
 		// Now create an array adapter and set it to display using our row

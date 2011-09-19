@@ -37,27 +37,36 @@ public class VibratrService extends RoboService {
 		// Extract what just happened
 		notification.loadBundle(bundle);
 		
-		// Try an find the associated entity
-		Entity e = manager.getEntity(notification.identifier());
+		// Try and find the associated group
+		Entity group = manager.getEntity(notification.identifier(), Entity.TYPE_GROUP);
 		
-		if(e == null)
+		// Try and find the associated entity
+		Entity e = manager.getEntity(notification.identifier(), Entity.TYPE_CONTACT);
+		
+		if(e == null && group == null)
 		{
 			Ln.d("VibratrService Notify: Got a null notification, playing default");
 			
 			// Play a default
-			if(notify_constraints.vibrate(null, notification.type()))
+			if(notify_constraints.vibrate_default(notification.type()))
 			{
 				vibrator.vibrate(user_settings_provider.get().defaultPattern(), -1);
 			}
 		}
 		else
 		{
-			Ln.v(
-				"VibratrService Notify: got entity #%s for %s because %s",
-				e.entityid().toString(),
-				notification.identifier(),
-				notification.type()
-				);
+//			Ln.v(
+//				"VibratrService Notify: got entity #%s for %s because %s",
+//				e.entityid().toString(),
+//				notification.identifier(),
+//				notification.type()
+//				);
+			
+			// If we have a group, play it first
+			if(notify_constraints.vibrate_group(group, notification.type()))
+			{
+				vibrator.vibrate(manager.getPattern(group, notification.type()), -1);
+			}
 			
 			// If we have something, then vibrate away!
 			if(notify_constraints.vibrate(e, notification.type()))

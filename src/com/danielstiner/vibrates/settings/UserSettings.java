@@ -35,7 +35,7 @@ public class UserSettings implements IUserSettings {
 		// Save new value
 		Editor editor = sharedPreferences.edit();
 		editor.putBoolean(KEY_ENABLED, newValue);
-		editor.apply();
+		editor.commit();
 	}
 	
 	@Override
@@ -81,7 +81,7 @@ public class UserSettings implements IUserSettings {
 			
 		Editor editor = sharedPreferences.edit();
 		editor.putString(KEY_DEFAULT_PATTERN, pattern_packed);
-		editor.apply();
+		editor.commit();
 	}
 
 }

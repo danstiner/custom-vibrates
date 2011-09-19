@@ -72,7 +72,9 @@ public interface IManager {
 
 	public abstract Entity getEntity(Cursor c);
 
-	public abstract Entity createFromGroupUri(Uri grouppath);
-
 	public abstract Cursor getEntities(String type);
+
+	public abstract Entity createFromGroupId(String groupid);
+
+	public abstract Entity getEntity(String identifier, String kind);
 }

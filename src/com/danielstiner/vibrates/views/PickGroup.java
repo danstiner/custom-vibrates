@@ -58,17 +58,18 @@ public class PickGroup extends CoreListActivity {
 			} while(appGroupsCursor.moveToNext());
 			
 			// Drop unwanted leading comma
-			excludeIdsCSV = excludeIdsCSV.substring(1);
+			if(excludeIdsCSV.length() > 0)
+				excludeIdsCSV = excludeIdsCSV.substring(1);
 		}	
 		appGroupsCursor.close();
 		
 		// Get all of the system groups
 		mGroupsCursor = getContentResolver().query(
-				ContactsContract.Groups.CONTENT_URI,
+				ContactsContract.Groups.CONTENT_SUMMARY_URI,
 				new String[] {
 					ContactsContract.Groups.TITLE,
-					ContactsContract.Groups._ID //,
-					//ContactsContract.Groups.SUMMARY_COUNT
+					ContactsContract.Groups._ID,
+					ContactsContract.Groups.SUMMARY_COUNT
 				},
 				ContactsContract.Groups._ID + " NOT IN (?)",
 				new String[] { excludeIdsCSV },
@@ -88,7 +89,7 @@ public class PickGroup extends CoreListActivity {
 		
 		// Save state of our chosen group
 		Intent i = new Intent();
-		i.putExtra(EXTRA_KEY_ID, mGroupsCursor.getInt(mGroupsCursor.getColumnIndexOrThrow(ContactsContract.Groups._ID)));
+		i.putExtra(EXTRA_KEY_ID, mGroupsCursor.getLong(mGroupsCursor.getColumnIndexOrThrow(ContactsContract.Groups._ID)));
 		setResult(Activity.RESULT_OK, i);
 		
 		// return to the caller

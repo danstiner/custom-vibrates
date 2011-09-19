@@ -1,6 +1,7 @@
 package com.danielstiner.vibrates.database;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.util.Ln;
@@ -46,10 +47,54 @@ public class Manager implements IManager {
     	//this.patternmanager_provider = patternmanager_provider;
     }
 	
+	@Override
+	public Entity createFromGroupId(String groupid) {
+		if(groupid == null)
+			return null;
+    	// Example uri: content://com.android.contacts/contacts/lookup/0r7-2C46324E483C324A3A484634/7
+		Ln.v("Create group from: %s", groupid);
+		
+		// TODO fix identifier assumptions
+		// Grab some info from the system contacts service
+		Cursor c = context.getContentResolver().query(
+				ContactsContract.Groups.CONTENT_URI,
+				new String[] {
+					ContactsContract.Groups.TITLE,
+					ContactsContract.Groups._ID
+					},
+				ContactsContract.Groups._ID + " = ?",
+				new String[] { groupid },
+				null);
+		String title;
+		Long id;
+		try {
+		    c.moveToFirst();
+		    // Grab some info
+		    title = c.getString(c.getColumnIndexOrThrow(ContactsContract.Groups.TITLE));;
+		    id = c.getLong(c.getColumnIndexOrThrow(ContactsContract.Groups._ID));
+		    // TODO: Catch clause in case something goes wrong
+		} finally {
+		    c.close();
+		}
+		if(id == null || title == null)
+			return null;
+		
+	    // Generate a default contact pattern
+	    long[] pattern = PatternUtilities.generate(title);
+	    
+	    Entity e = create(id.toString(), title, pattern, Entity.TYPE_GROUP);
+	    
+	    // Add some lookup identifiers
+	    getIdentifierManager().add(e, title, IdentifierManager.KIND_CONTACTS_GROUP_TITLE);
+	    getIdentifierManager().add(e, id.toString(), IdentifierManager.KIND_CONTACTS_GROUP_ID);
+	    
+	    return e;
+	}
+	
 	
 	private Entity create(String identifier, String name, long[] pattern, String type) {
     	// First first see if such an entity already exists
-    	Entity entity = getEntity(identifier);
+    	Entity entity = getEntity(identifier, type);
     	if(entity != null)
     		return entity;
     	
@@ -67,16 +112,37 @@ public class Manager implements IManager {
         
         return entity;
 	}
-	
+
 	@Override
 	public Entity getEntity(String identifier) {
-		return getIdentifierManager().get(identifier);
+		Cursor c = getIdentifierManager().get(identifier);
+		if(c.moveToFirst())
+		{
+			return getIdentifierManager().entityFromCursor(c);
+		}
+		return null;
 	}
 	
 //	@Override
-//	public Entity getEntity(String identifier, String kind) {
-//		return getIdentifierManager().get(identifier, kind);
+//	public Entity[] getEntities(String identifier) {
+//		ArrayList<Entity> entities = new ArrayList<Entity>();
+//		Cursor c = getIdentifierManager().get(identifier);
 //	}
+	
+	@Override
+	public Entity getEntity(String identifier, String kind) {
+		Cursor c = getIdentifierManager().get(identifier);
+		if(c.moveToFirst())
+		{
+			do {
+				if(getKind(getIdentifierManager().entityFromCursor(c)).equals(kind))
+				{
+					return getIdentifierManager().entityFromCursor(c);
+				}
+			} while(c.moveToNext());
+		}
+		return null;
+	}
 
 	@Override
     public Entity createFromContactUri(Uri contact_uri) {
@@ -131,9 +197,6 @@ public class Manager implements IManager {
 	    getIdentifierManager().add(e, id.toString(), IdentifierManager.KIND_CONTACTS_CONTRACT_ID);
 	    
 	    return e;
-		    
-		
-		
     }
 	
 	@Override
@@ -239,14 +302,6 @@ public class Manager implements IManager {
 	public Entity getEntity(Cursor c) {
 		return getEntityManager().fromCursor(c);
 	}
-
-
-	@Override
-	public Entity createFromGroupUri(Uri grouppath) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 	@Override
 	public Cursor getEntities(String type) {

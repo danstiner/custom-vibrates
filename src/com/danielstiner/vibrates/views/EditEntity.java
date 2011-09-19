@@ -183,6 +183,8 @@ public class EditEntity extends RoboActivity {
 			String kind = manager.getKind(_entity);
 			if(kind.equals(Entity.TYPE_CONTACT))
 				entity_type.setText("Contact");
+			else if(kind.equals(Entity.TYPE_GROUP))
+				entity_type.setText("Group");
 			else
 				entity_type.setText("");
 		}
