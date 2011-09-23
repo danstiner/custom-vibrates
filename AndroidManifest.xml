@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:installLocation="auto"
-      package="com.danielstiner.vibrates" android:versionName="0.1.0" android:versionCode="34">
+      package="com.danielstiner.vibrates" android:versionName="0.1.1" android:versionCode="36">
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<!-- Know about incoming calls and the number they are coming from -->
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
@@ -47,7 +47,7 @@
                 <action android:name="android.media.RINGER_MODE_CHANGED"></action>
                 <action android:name="android.media.VOLUME_CHANGED_ACTION"></action>
             </intent-filter> -->
-            <intent-filter android:label="Incoming SMS">
+            <intent-filter android:label="Incoming SMS" android:priority="999">
 	            <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
 	        </intent-filter>
 	        <intent-filter android:label="Vibrate Mode Change">
@@ -56,10 +56,10 @@
 	        <!-- <intent-filter android:label="Incoming Call">
 	            <action android:name="android.intent.action.PHONE_STATE"></action>
 	        </intent-filter> -->
-	        <intent-filter android:label="Google Voice Stuff">
-	            <action android:name="android.intent.action.PROVIDER_CHANGED"></action>
+	        <!-- <intent-filter android:label="Google Voice Stuff">
+	            <action android:name="android.intent.action.PROVIDER_CHANGED"></action> -->
 	            <!-- <action android:name="android.appwidget.action.APPWIDGET_UPDATE"></action> -->
-	        </intent-filter>
+	        <!-- </intent-filter> -->
 	        <!-- <intent-filter android:label="Gmail stuff">
                 <action android:name="android.intent.action.PROVIDER_CHANGED"
                     android:priority="-10">
