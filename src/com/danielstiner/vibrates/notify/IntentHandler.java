@@ -65,7 +65,6 @@ public class IntentHandler implements IIntentHandler {
 	 * @see com.danielstiner.vibrates.notify.IIntentHandler#handle(java.lang.String, android.os.Bundle, android.content.Context)
 	 */
 	public void handle(String action, Bundle bundle, Context context) {
-		// TODO Auto-generated method stub
 		if (action.equals(SMS_RECEIVED)) {
 			// retrieve the SMS message(s)
 			Object[] pdus = (Object[]) bundle.get("pdus");

@@ -1,6 +1,5 @@
 package com.danielstiner.vibrates.database;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -8,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import roboguice.inject.ContextScoped;
 
 // @ContextScoped
 public class Database implements IDatabase {

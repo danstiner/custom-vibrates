@@ -53,7 +53,7 @@ public class VibratrService extends RoboService {
 				vibrator.vibrate(user_settings_provider.get().defaultPattern(), -1);
 			}
 		}
-		else
+		else if(notify_constraints.vibrate(e, notification.type()))
 		{
 //			Ln.v(
 //				"VibratrService Notify: got entity #%s for %s because %s",
@@ -62,17 +62,19 @@ public class VibratrService extends RoboService {
 //				notification.type()
 //				);
 			
-			// If we have a group, play it first
-			if(notify_constraints.vibrate_group(group, notification.type()))
-			{
-				vibrator.vibrate(manager.getPattern(group, notification.type()), -1);
-			}
 			
-			// If we have something, then vibrate away!
-			if(notify_constraints.vibrate(e, notification.type()))
-			{
-				vibrator.vibrate(manager.getPattern(e, notification.type()), -1);
-			}
+			vibrator.vibrate(manager.getPattern(e, notification.type()), -1);
+		}
+		else if(notify_constraints.vibrate_group(group, notification.type()))
+		{
+//			Ln.v(
+//				"VibratrService Notify: got entity #%s for %s because %s",
+//				e.entityid().toString(),
+//				notification.identifier(),
+//				notification.type()
+//				);
+			
+			vibrator.vibrate(manager.getPattern(group, notification.type()), -1);
 		}
 		
 		
@@ -86,6 +88,8 @@ public class VibratrService extends RoboService {
 		
 		// We are lightweight to start, and notifications do not come often enough
 		// to justify sticking around forever, so just exit
+		// TODO: Auto stop sometime after the pattern finishes please!
+		//stopSelf();
 		return START_NOT_STICKY;
 	}
 
