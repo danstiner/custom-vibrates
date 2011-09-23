@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 public class IntentReciever extends RoboBroadcastReceiver {
     
