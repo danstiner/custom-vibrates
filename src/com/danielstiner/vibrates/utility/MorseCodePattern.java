@@ -118,7 +118,10 @@ public class MorseCodePattern {
 		// Build a pattern to return
 		long[] return_pattern = new long[pattern.size()];
 		for(int index=0; index<pattern.size(); index++) {
-			return_pattern[index] = pattern.get(index);
+			if(pattern.get(index) == null)
+				return_pattern[index] = 0;
+			else
+				return_pattern[index] = pattern.get(index);
 		}		
 		return return_pattern;
 	}

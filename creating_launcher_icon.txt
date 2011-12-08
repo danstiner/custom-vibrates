@@ -1,0 +1,3 @@
+Scale icon from google docs to maximum width and height of 56px
+Resize stage to 72px square
+Place into res folder

@@ -31,9 +31,6 @@ public class AccessibilityHandler {
 		
 		String packageName = event.getPackageName().toString();
 		
-		// TODO: Remove, for testing
-		//Toast.makeText(context, packageName, Toast.LENGTH_SHORT).show();
-		
 		if(packageName.equals(GOOGLE_VOICE_PACKAGE))
 			handleGoogleVoice(event, context);
 		else if(packageName.equals(GOOGLE_GMAIL_PACKAGE))

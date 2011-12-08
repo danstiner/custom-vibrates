@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:installLocation="auto"
-      package="com.danielstiner.vibrates" android:versionName="0.1.1" android:versionCode="36">
+      package="com.danielstiner.vibrates" android:versionName="0.1.2" android:versionCode="37">
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<!-- Know about incoming calls and the number they are coming from -->
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
@@ -11,20 +11,22 @@
 	<!-- Know when the phone leaves vibrate mode, so we can switch it back to vibrate only -->
 	<uses-permission android:name="android.media.RINGER_MODE_CHANGED"></uses-permission>
 	
-<!-- <uses-permission android:name="android.permission.BATTERY_STATS"></uses-permission>
-<uses-permission android:name="android.permission.DEVICE_POWER"></uses-permission>
-
-<uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
-<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
-<uses-permission android:name="com.google.android.permission.RECEIVE_DATA_MESSAGE"></uses-permission>
-<permission android:name="com.danielstiner.vibrates.VIBRATE"></permission>
-<uses-permission android:name="com.google.android.gm.permission.READ_GMAIL"></uses-permission>
-<uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH"></uses-permission>
-<uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
-<uses-permission android:name="com.google.android.providers.gmail.permission.READ_GMAIL"></uses-permission>
-<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"></uses-permission>
-<uses-permission android:name="android.media.RINGER_MODE_CHANGED"></uses-permission>
-<uses-permission android:name="android.media.VOLUME_CHANGED_ACTION"></uses-permission> -->
+	<permission android:name="android.permission.ACCESS_FINE_LOCATION"></permission>
+	
+	<!-- <uses-permission android:name="android.permission.BATTERY_STATS"></uses-permission>
+	<uses-permission android:name="android.permission.DEVICE_POWER"></uses-permission>
+	
+	<uses-permission android:name="android.permission.READ_CALENDAR"></uses-permission>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="com.google.android.permission.RECEIVE_DATA_MESSAGE"></uses-permission>
+	<permission android:name="com.danielstiner.vibrates.VIBRATE"></permission>
+	<uses-permission android:name="com.google.android.gm.permission.READ_GMAIL"></uses-permission>
+	<uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH"></uses-permission>
+	<uses-permission android:name="android.permission.GET_ACCOUNTS"></uses-permission>
+	<uses-permission android:name="com.google.android.providers.gmail.permission.READ_GMAIL"></uses-permission>
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"></uses-permission>
+	<uses-permission android:name="android.media.RINGER_MODE_CHANGED"></uses-permission>
+	<uses-permission android:name="android.media.VOLUME_CHANGED_ACTION"></uses-permission> -->
 	
 	<!-- Targeting my handset (Samsung Galaxy S), but trying to reasonably support older versions -->
 	<uses-sdk android:targetSdkVersion="10" android:minSdkVersion="7"></uses-sdk>
@@ -47,6 +49,7 @@
                 <action android:name="android.media.RINGER_MODE_CHANGED"></action>
                 <action android:name="android.media.VOLUME_CHANGED_ACTION"></action>
             </intent-filter> -->
+            <!-- Priority set to maximum allowable to make sure we get called before the notification is cancelled -->
             <intent-filter android:label="Incoming SMS" android:priority="999">
 	            <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
 	        </intent-filter>

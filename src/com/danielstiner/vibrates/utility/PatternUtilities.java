@@ -9,7 +9,11 @@ public class PatternUtilities {
 	private static final int MAX_MORSE = 3;
     
     public static long[] generate(String text) {
-		// TODO Auto-generated method stub
+		// Null check
+    	if(text == null) {
+    		// Give a simple default pattern for invalid names
+    		return new long[] {0,400,300,400};
+    	}
     	
     	// pare down the text to the first few words
     	text = text.substring(0, Math.min(MAX_MORSE, text.length()));
@@ -19,7 +23,7 @@ public class PatternUtilities {
     	
     	ret[0] = 0;
     	for(int i=0; i<morse.length; i++) {
-    		ret[i+1] = morse[i] * MORSE_MULTIPLIER;
+			ret[i+1] = morse[i] * MORSE_MULTIPLIER;
     	}
     	
 		return ret;
