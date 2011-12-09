@@ -4,6 +4,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="horizontal"
+  android:padding="4px"
   >
   	<!-- <ImageView
     	android:id="@+id/entitylist_row_image"
@@ -12,8 +13,9 @@
     	android:layout_width="80px"
     	/> -->
 	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
+		android:layout_width="0pt"
+		android:layout_weight="1.0"
+		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:layout_marginLeft="10px"
 		>
@@ -22,7 +24,7 @@
 	    	android:text=""
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
-	    	android:textSize="11pt"
+	    	android:textSize="10pt"
 	    	/>
    	</LinearLayout>
    	<TextView
@@ -30,7 +32,7 @@
 	    	android:text=""
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
-	    	android:textSize="8pt"
+	    	android:textSize="10pt"
 	    	android:gravity="right"
 	    	/>
 </LinearLayout>
