@@ -11,8 +11,8 @@ import android.os.Vibrator;
 
 public class PatternEditManager {
 	private static final long EDITING_WATCHER_DELAY = 10;
-	private static final long EDITING_MAX_UP = 1400;
-	private static final long EDITING_MAX_TOTAL = 10 * 1000; 
+	private static final long EDITING_MAX_UP = 1200;
+	private static final long EDITING_MAX_TOTAL = 4 * 1000; 
 	private static final long EDITING_MAX_DOWN = 60 * 1000;
 	
 	private Vibrator _vibratr;
