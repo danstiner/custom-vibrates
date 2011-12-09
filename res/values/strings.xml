@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="accessiblity_listener_desc">Tie in for vibrating on accessibility events</string>
-    <string name="app_name">Custom Vibrates</string>
+    <string name="app_name">Contact Vibrates</string>
     <string name="buttonlabel_automajic_setup">Automajic Setup</string>
     <string name="buttonlabel_finish">Finish</string>
     <string name="buttonlabel_help">Help</string>
-    <string name="entityedit_delete_button">Remove Customizations</string>
+    <string name="entity_edit_delete_button">Remove Customizations</string>
     <string name="entityedit_title">Customize Vibration Pattern</string>
     <string name="entitylist_message_preauto">To have customized vibrate patterns for common services and your top contacts, simply click the automajic button below.</string>
     <string name="entitylist_message_postauto">Otherwise, please use the menu button to manually customize vibrate patterns.</string>

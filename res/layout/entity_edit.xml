@@ -10,12 +10,17 @@
 	  	android:layout_width="match_parent"
 	  	android:padding="15px"
 	  	>
-  		<ImageView
+	  	<QuickContactBadge
+	  	    android:id="@+id/contact_badge"
+	    	android:layout_width="wrap_content"  
+			android:layout_height="wrap_content"  
+	    	/>
+  		<!-- <ImageView
 	    	android:id="@+id/entity_edit_image"
 	    	android:src="@drawable/icon"
 	    	android:layout_height="80px"
 	    	android:layout_width="wrap_content"
-	    	/>
+	    	/> -->
     	
     	<LinearLayout
     		android:orientation="vertical"
@@ -76,7 +81,7 @@
   	</LinearLayout>
     <Button
        	android:id="@+id/entity_edit_remove"
-       	android:text="Remove Custom Vibration"
+       	android:text="@string/entity_edit_delete_button"
        	android:layout_height="wrap_content"
        	android:layout_width="wrap_content"
        	android:layout_gravity="center_horizontal"

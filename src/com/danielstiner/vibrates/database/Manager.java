@@ -214,6 +214,7 @@ public class Manager implements IManager {
 		return getEntityManager().getKind(entity);
 	}
 	
+	// TODO, remove, should be able to use getContactUri to replace this
 	@Override
 	public InputStream getPhotoStream(Entity entity) {
 		// TODO Switch based on entity kind maybe?
@@ -230,6 +231,28 @@ public class Manager implements IManager {
 			Uri uri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contacts_contract_id);
 			InputStream input = Contacts.openContactPhotoInputStream(context.getContentResolver(), uri);
 			return input;
+		} catch(NumberFormatException e) {
+			return null;
+		}
+	}
+	
+	@Override
+	public Uri getContactUri(Entity entity) {
+		Cursor c_id = getIdentifierManager().get(entity, IdentifierManager.KIND_CONTACTS_CONTRACT_ID);
+		Cursor c_lookup = getIdentifierManager().get(entity, IdentifierManager.KIND_CONTACTS_CONTRACT_LOOKUP);
+		
+		if(!c_lookup.moveToFirst() || !c_id.moveToFirst())
+			return null;
+		
+		String contacts_contract_idstring = getIdentifierManager().identifierFromCursor(c_id);
+		String contacts_contract_lookup = getIdentifierManager().identifierFromCursor(c_lookup);
+		
+		try {
+			Long contacts_contract_id = Long.parseLong(contacts_contract_idstring);
+			
+			// Build uri
+			return Contacts.getLookupUri(contacts_contract_id, contacts_contract_lookup);
+			
 		} catch(NumberFormatException e) {
 			return null;
 		}

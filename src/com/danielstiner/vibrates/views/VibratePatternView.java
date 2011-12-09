@@ -16,11 +16,13 @@ public class VibratePatternView extends View {
 	private List<Long> _pattern;
 	private Long _pattern_length;
 	
-	Paint pattern_border_paint;
-	Paint pattern_vibrate_paint;
-	Paint pattern_wait_paint;
+	private Paint pattern_border_paint;
+	private Paint pattern_vibrate_paint;
+	private Paint pattern_wait_paint;
+	private Paint oversized_vibrate_paint;
 	
-	float pattern_drawlength_multiplier = (float) 0.12;
+	//private static final float DEFAULT_PATTERN_STRIPE_SIZE = (float) 0.12;
+	private static final float DEFAULT_PATTERN_STRIPE_SIZE = (float) 0.15;
 
 	public VibratePatternView(Context context) {
 		super(context);
@@ -42,12 +44,16 @@ public class VibratePatternView extends View {
 		pattern_border_paint = new Paint();
 		pattern_vibrate_paint = new Paint();
 		pattern_wait_paint = new Paint();
+		oversized_vibrate_paint = new Paint();
 		
 		pattern_border_paint.setColor(Color.DKGRAY);
 		pattern_border_paint.setStrokeWidth((float) 1.1);
 		pattern_border_paint.setStyle(Paint.Style.STROKE);
 		pattern_border_paint.setAlpha(50);
+		
 		pattern_vibrate_paint.setColor(Color.LTGRAY);
+		oversized_vibrate_paint.setColor(Color.WHITE);
+		
 		pattern_wait_paint.setColor(Color.BLACK);
 		pattern_wait_paint.setAlpha(0);
 	}
@@ -113,6 +119,44 @@ public class VibratePatternView extends View {
 		// another null check
 		if(_pattern == null) return;
 		
+		if(isPatternOversized()) {
+			// Compute needed stripe size to get everything to fit
+ 			float size = (float)w / (float)sumPattern(_pattern);
+			
+			//oversized_stripe_paint
+			drawStripes(canvas, size, oversized_vibrate_paint);
+		} else {
+			drawStripes(canvas, DEFAULT_PATTERN_STRIPE_SIZE, pattern_vibrate_paint);
+		}
+		
+		
+		
+	}
+	
+	private static long sumPattern(List<Long> pattern) {
+		long sum = 0;
+		if(pattern == null)
+			return sum;
+		
+		for(Long l : pattern)
+			sum += l.longValue();
+		
+		return sum;
+	}
+	
+	//private boolean isPatternOversized(long length_ms, float stripe_size, int width) {
+	private boolean isPatternOversized() {
+		if(sumPattern(_pattern) * DEFAULT_PATTERN_STRIPE_SIZE > this.getWidth())
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private void drawStripes(Canvas canvas, float stripe_size, Paint vibrate_paint) {
+		float w = this.getWidth();
+		float h = this.getHeight();
+		
 		// Boolean to alternate between wait and vibrate times in the pattern
 		// First number in pattern is a wait time
 		boolean is_wait_period = true;
@@ -126,7 +170,7 @@ public class VibratePatternView extends View {
 		for(Long l : _pattern) {
 			
 			// Draw part of the pattern
-			draw_width = ((float) l) * (pattern_drawlength_multiplier);
+			draw_width = ((float) l) * (stripe_size);
 			
 			if(is_wait_period == true) {
 				// Draw wait time box
@@ -134,7 +178,7 @@ public class VibratePatternView extends View {
 				is_wait_period = false;
 			} else {
 				// Draw vibrate time box
-				draw_paint = pattern_vibrate_paint;
+				draw_paint = vibrate_paint;
 				is_wait_period = true;
 			}
 			
@@ -147,10 +191,8 @@ public class VibratePatternView extends View {
 			// Check we are still inside the width of this control
 			if(last_draw_pos > w) break;
 		}
-		
 	}
-	
-	
+
 	/**
      * Determines the width of this view
      * @param measureSpec A measureSpec packed into an int

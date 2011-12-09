@@ -16,65 +16,67 @@ public interface IManager {
 	 * @param contactUri
 	 * @return
 	 */
-	public abstract Entity createFromContactUri(Uri contactUri);
+	Entity createFromContactUri(Uri contactUri);
 
 	/**
 	 * 
 	 * @param identifier
 	 * @return
 	 */
-	public abstract Entity getEntity(String identifier);
+	Entity getEntity(String identifier);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract Cursor getEntities();
+	Cursor getEntities();
 
 	/**
 	 * 
 	 * @return
 	 */
-	public abstract long[] getPattern(Entity entity, String type);
+	long[] getPattern(Entity entity, String type);
 
 	/**
 	 * 
 	 * @param entity
 	 * @param longArrayExtra
 	 */
-	public abstract void setPattern(Entity entity, long[] pattern);
+	void setPattern(Entity entity, long[] pattern);
 
 	/**
 	 * 
 	 * @param entity
 	 */
-	public abstract void update(Entity entity);
+	void update(Entity entity);
 
 	/**
 	 * 
 	 * @param entity
 	 * @return
 	 */
-	public abstract String getDisplayName(Entity entity);
+	String getDisplayName(Entity entity);
 
 	/**
 	 * Gives a photo for an entity if at all possible, otherwise returns null
 	 * @param entity Entity instance to grab a photostream for
 	 * @return Stream that can be read out to get the contacts photo, or null if they have none
 	 */
-	public abstract InputStream getPhotoStream(Entity entity);
+	InputStream getPhotoStream(Entity entity);
 
-	public abstract String getKind(Entity entity);
+	String getKind(Entity entity);
 
-	public abstract void remove(Entity entity);
+	void remove(Entity entity);
 
-	public abstract Intent getViewIntent(Entity entity);
+	Intent getViewIntent(Entity entity);
 
-	public abstract Entity getEntity(Cursor c);
+	Entity getEntity(Cursor c);
 
-	public abstract Cursor getEntities(String type);
+	Cursor getEntities(String type);
 
-	public abstract Entity createFromGroupId(String groupid);
+	Entity createFromGroupId(String groupid);
 
-	public abstract Entity getEntity(String identifier, String kind);
+	Entity getEntity(String identifier, String kind);
+
+	Uri getContactUri(Entity entity);
 }
