@@ -3,10 +3,11 @@ package com.danielstiner.vibrates.utility;
 public class PatternUtilities {
 
 	// milliseconds per dit to use
-	private static final long MORSE_MULTIPLIER = 89;
+	//private static final long MORSE_MULTIPLIER = 89;
+	private static final long MORSE_MULTIPLIER = 104;
 	
 	// number of letters to use when morsifying a name or such
-	private static final int MAX_MORSE = 3;
+	private static final int MAX_MORSE = 2;
     
     public static long[] generate(String text) {
 		// Null check
