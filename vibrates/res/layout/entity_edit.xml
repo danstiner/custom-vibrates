@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" android:orientation="vertical">
+  	<LinearLayout
+  		android:id="@+id/entity_edit_linearlayout_details"
+	  	android:orientation="horizontal"
+	  	android:layout_height="wrap_content"
+	  	android:layout_width="match_parent"
+	  	android:padding="15px"
+	  	>
+	  	<QuickContactBadge
+	  	    android:id="@+id/contact_badge"
+	    	android:layout_width="wrap_content"  
+			android:layout_height="wrap_content"  
+	    	/>
+  		<!-- <ImageView
+	    	android:id="@+id/entity_edit_image"
+	    	android:src="@drawable/icon"
+	    	android:layout_height="80px"
+	    	android:layout_width="wrap_content"
+	    	/> -->
+    	
+    	<LinearLayout
+    		android:orientation="vertical"
+    		android:layout_height="wrap_content"
+    		android:layout_width="wrap_content"
+    		android:layout_marginLeft="14px"
+    		>
+    		<TextView
+		    	android:text=""
+		    	android:id="@+id/entity_edit_name"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:textSize="11pt"
+		    	/>
+    		<TextView
+   				android:text=""
+		    	android:id="@+id/entity_edit_type"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:textSize="7pt"
+		    	android:layout_marginTop="-5px"
+		    	/>
+    	</LinearLayout>
+    	
+  	</LinearLayout>
+  	<LinearLayout
+  		android:id="@+id/entity_edit_linearlayout_patternedit"
+	  	android:layout_width="fill_parent"
+	  	android:layout_height="wrap_content"
+	  	android:layout_gravity="center"
+	  	android:orientation="vertical"
+	  	android:gravity="center"
+	  	android:padding="30px"
+  		>
+  		<LinearLayout
+	  		android:layout_width="fill_parent"
+		  	android:layout_height="wrap_content"
+		  	android:layout_gravity="center"
+		  	android:orientation="vertical"
+		  	android:gravity="center"
+		  	android:padding="20px"
+		  	android:background="@drawable/back_rect_whiterounded"
+	  		>
+	  		<TextView
+		  		android:text="@string/entity_edit_pattern_premessage"
+		  		android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+		  		android:layout_marginBottom="60px"
+		  		/>
+	  		<com.danielstiner.vibrates.views.VibratePatternView
+		    	android:id="@+id/entity_edit_pattern"
+		    	android:layout_width="match_parent"
+			    android:layout_height="22px"
+			    android:layout_marginBottom="60px"
+		    	/>
+	    </LinearLayout>
+  	</LinearLayout>
+    <Button
+       	android:id="@+id/entity_edit_remove"
+       	android:text="@string/entity_edit_delete_button"
+       	android:layout_height="wrap_content"
+       	android:layout_width="wrap_content"
+       	android:layout_gravity="center_horizontal"
+       	android:layout_marginTop="40px"
+       	/>
+</LinearLayout>
