@@ -1,35 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/tabhost"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent"
+    >
+    <ListView
+      android:id="@android:id/list"
+      android:layout_width="match_parent"
+	  android:layout_height="match_parent"
+      >
+    </ListView>
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-
-        <TabWidget
-            android:id="@android:id/tabs"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" >
-
-                <FrameLayout
-                    android:id="@+id/tab_contacts"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
-
-                <FrameLayout
-                    android:id="@+id/tab_groups"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" />
-            </FrameLayout>
-        </TabWidget>
-    </LinearLayout>
-
-</TabHost>
+	  android:id="@android:id/empty"
+	  android:layout_width="match_parent"
+	  android:layout_height="match_parent"
+	  >
+	    <FrameLayout
+		    android:id="@+id/frameLayout1"
+		    android:layout_height="match_parent"
+		    android:layout_width="match_parent"
+		    >
+	        <LinearLayout
+		        android:layout_height="wrap_content"
+		        android:id="@+id/linearLayout1"
+		        android:layout_gravity="center"
+		        android:layout_width="wrap_content"
+		        android:orientation="vertical"
+		        >
+	            <!-- <TextView
+	            	android:text="@string/entitylist_message_preauto"
+	            	android:id="@+id/textView1"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:layout_margin="50px"
+	            	android:layout_marginBottom="40px"
+	            	/>
+	            <Button
+	            	android:text="@string/buttonlabel_automajic_setup"
+	            	android:id="@+id/entitylist_empty_automajic"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:paddingLeft="23px"
+	            	android:paddingTop="3px"
+	            	android:paddingRight="23px"
+	            	android:paddingBottom="3px"
+	            	android:layout_margin="10px"
+	            	/>
+	            <TextView
+	            	android:text="@string/entitylist_message_postauto"
+	            	android:id="@+id/textView1"
+	            	android:layout_width="wrap_content"
+	            	android:layout_height="wrap_content"
+	            	android:layout_gravity="center_horizontal"
+	            	android:layout_margin="50px"
+	            	android:layout_marginTop="30px"
+	            	/> -->
+	            <TextView
+                android:text="@string/entitylist_message_premanual"
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="50px"
+                android:layout_marginBottom="40px"
+                />
+              <Button
+                android:text="@string/buttonlabel_manual_setup_start"
+                android:id="@+id/entitylist_empty_manualstart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="23px"
+                android:paddingTop="3px"
+                android:paddingRight="23px"
+                android:paddingBottom="3px"
+                android:layout_margin="10px"
+                />
+	        </LinearLayout>
+	    </FrameLayout>
+	</LinearLayout>
+</LinearLayout>
