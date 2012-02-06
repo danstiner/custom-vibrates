@@ -71,12 +71,14 @@ public class EntityFilter implements IEntityFilter {
 		
 		// TODO other selections
 		
+		// Apply built selection string
 		if(selection.length() < selJoiner.length())
 			target.setSelection(null);
 		else
 			target.setSelection(selection.substring(selJoiner.length()));
 		
-		String[] selectionArgsArr = null;
+		// Apply arguments for selection, transform to array first
+		String[] selectionArgsArr = new String[selectionArgs.size()];
 		selectionArgs.toArray(selectionArgsArr);
 		target.setSelectionArgs(selectionArgsArr);
 		
