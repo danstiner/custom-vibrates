@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage;
+package com.danielstiner.vibrates.storage.internal;
 
 import java.io.InputStream;
 import java.util.List;
@@ -16,11 +16,8 @@ import android.support.v4.app.LoaderManager;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;
-import com.danielstiner.vibrates.storage.internal.EntityLoaderCallbacks;
-import com.danielstiner.vibrates.storage.internal.IEntityStore;
-import com.danielstiner.vibrates.storage.internal.IIdentifierStore;
-import com.danielstiner.vibrates.storage.internal.ISearchCallback;
-import com.danielstiner.vibrates.storage.internal.IdentifierStore;
+import com.danielstiner.vibrates.storage.IEntityFilter;
+import com.danielstiner.vibrates.storage.IManager;
 import com.danielstiner.vibrates.util.PatternUtil;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -42,7 +39,28 @@ public class Manager implements IManager {
 	private IEntityStore entity_manager;
 	@Inject
 	private IIdentifierStore identifier_manager;
+	
+	
+	
+	
+	
+	
 
+	@Inject
+	private Context mContext;
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Inject
 	public Manager(
 	// Provider<Entity> entity_provider,
@@ -92,7 +110,7 @@ public class Manager implements IManager {
 		// Generate a default contact pattern
 		long[] pattern = PatternUtil.generate(title);
 
-		Entity e = create(id.toString(), title, pattern, Entity.TYPE_GROUP);
+		Entity e = create(id.toString(), title, pattern, Entity.KIND_GROUP);
 
 		// Add some lookup identifiers
 		getIdentifierManager().add(e, title,
@@ -104,7 +122,7 @@ public class Manager implements IManager {
 	}
 
 	private Entity create(String identifier, String name, long[] pattern,
-			String type) {
+			Entity.Kind type) {
 		// First first see if such an entity already exists
 		Entity entity = getEntity(identifier, type);
 		if (entity != null)
@@ -141,7 +159,7 @@ public class Manager implements IManager {
 	// }
 
 
-	public Entity getEntity(String identifier, String kind) {
+	public Entity getEntity(String identifier, Entity.Kind kind) {
 		Cursor c = getIdentifierManager().get(identifier);
 		if (c.moveToFirst()) {
 			do {
@@ -199,7 +217,7 @@ public class Manager implements IManager {
 		// Generate a default contact pattern
 		long[] pattern = PatternUtil.generate(name);
 
-		Entity e = create(lookup, name, pattern, Entity.TYPE_CONTACT);
+		Entity e = create(lookup, name, pattern, Entity.KIND_CONTACT);
 
 		// Add some lookup identifiers
 		getIdentifierManager().add(e, name,
@@ -225,7 +243,7 @@ public class Manager implements IManager {
 	}
 
 	@Override
-	public String getKind(Entity entity) {
+	public Entity.Kind getKind(Entity entity) {
 		// TODO return getEntityManager().getKind(entity);
 		return null;
 	}
@@ -339,7 +357,7 @@ public class Manager implements IManager {
 
 	@Override
 	public Intent getViewIntent(Entity entity) {
-		if (getKind(entity).equals(Entity.TYPE_CONTACT)) {
+		if (getKind(entity).equals(Entity.KIND_CONTACT)) {
 			Cursor ids = getIdentifierManager().get(entity,
 					IdentifierStore.KIND_CONTACTS_CONTRACT_ID);
 
@@ -375,8 +393,7 @@ public class Manager implements IManager {
 //		if(filter.isInitialized()) {
 //			loaderManager.restartLoader(filter.getLoaderId(), null, new EntityLoaderCallbacks(callback));
 //		} else {
-			loaderManager.initLoader(filter.getLoaderId(), null, new EntityLoaderCallbacks(callback));
-			filter.initialize();
+			loaderManager.initLoader(filter.getLoaderId(), null, new EntitySearchLoaderCallbacks(mContext).setFilter(filter).setCallback(callback));
 		//}
 		
 		

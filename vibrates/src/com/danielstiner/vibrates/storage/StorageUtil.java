@@ -8,9 +8,9 @@ import android.support.v4.widget.CursorAdapter;
 
 public class StorageUtil {
 
-	public static void searchIntoAdapter(int loaderId, LoaderManager loaderManager, IManager mManager,
+	public static void searchIntoAdapter(int loaderId, LoaderManager loaderManager, IManager manager,
 			IEntityFilter entityFilter, CursorAdapter adapter) {
-		mManager.searchEntities(loaderId, loaderManager, entityFilter, new SearchCallback(adapter));
+		manager.searchEntities(loaderId, loaderManager, entityFilter, new SearchCallback(adapter));
 	}
 	
 	private static class SearchCallback implements ISearchCallback {

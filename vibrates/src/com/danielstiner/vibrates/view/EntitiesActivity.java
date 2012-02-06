@@ -50,13 +50,13 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 			switch (itemPosition) {
 			case CONTACTS_TAB_POS:
-				entities_frag.setType(Entity.TYPE_CONTACT);
+				entities_frag.setKind(Entity.KIND_CONTACT);
 				break;
 			case GROUPS_TAB_POS:
-				entities_frag.setType(Entity.TYPE_GROUP);
+				entities_frag.setKind(Entity.KIND_GROUP);
 				break;
 			case APPS_TAB_POS:
-				entities_frag.setType(Entity.TYPE_APP);
+				entities_frag.setKind(Entity.KIND_APP);
 				break;
 			}
 

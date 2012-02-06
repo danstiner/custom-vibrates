@@ -8,9 +8,9 @@ public interface IEntityStore {
 
 	Entity get(Long id);
 	
-	List<Entity> getAll(String type);
+	List<Entity> getAll(Entity.Kind type);
 
-	Entity create(String name, long[] pattern, String type);
+	Entity create(String name, long[] pattern, Entity.Kind type);
 
 	void delete(Entity entity);
 	

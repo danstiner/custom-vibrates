@@ -1,9 +1,7 @@
 package com.danielstiner.vibrates.storage.internal;
 
-import com.danielstiner.vibrates.storage.EntityFilter;
 import com.danielstiner.vibrates.storage.IEntityFilter;
 import com.danielstiner.vibrates.storage.IManager;
-import com.danielstiner.vibrates.storage.Manager;
 import com.danielstiner.vibrates.storage.internal.IDatabase.IHelper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

@@ -71,7 +71,7 @@ public interface IManager {
 	 */
 	InputStream getPhotoStream(Entity entity);
 
-	String getKind(Entity entity);
+	Entity.Kind getKind(Entity entity);
 
 	void remove(Entity entity);
 
@@ -83,7 +83,7 @@ public interface IManager {
 
 	Entity createFromGroupId(String groupid);
 
-	Entity getEntity(String identifier, String kind);
+	Entity getEntity(String identifier, Entity.Kind kind);
 
 	Uri getContactUri(Entity entity);
 

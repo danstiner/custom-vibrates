@@ -10,25 +10,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.storage.internal.IDatabase.IHelper;
+import com.danielstiner.vibrates.Entity.Entities;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 public class EntityStore implements IEntityStore, IPatternStore {
 
 	static final String NS = com.danielstiner.vibrates.Vibrates.NS + "."
-			+ "database";
-	static final String CLASSNAME = NS + "." + "EntityManager";
+			+ "storage";
+	static final String CLASSNAME = NS + "." + "EntityStore";
 
 	private static final int VERSION = Database.VERSION;
 
 	protected static final String TABLE = "entities";
 
-	protected static final String KEY_ID = "_id";
-	protected static final String KEY_KIND = "kind";
-	protected static final String KEY_NAME = "name";
-	protected static final String KEY_PATTERN = "pattern";
-	protected static final String KEY_NOTIFY_COUNT = "notified";
+	protected static final String KEY_ID = Entities.ENTITY_ID;
+	protected static final String KEY_KIND = Entities.KIND;
+	protected static final String KEY_NAME = Entities.NAME;
+	protected static final String KEY_PATTERN = Entities.PATTERN;
+	protected static final String KEY_NOTIFY_COUNT = Entities.NOTIFY_COUNT;
 
 	protected static final String EXTRA_CACHE_KEY_NAME = CLASSNAME + "."
 			+ KEY_NAME;
@@ -63,7 +63,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	// c.identifier());
 	// }
 
-	public Entity create(String name, long[] pattern, String type) {
+	public Entity create(String name, long[] pattern, Entity.Kind type) {
 		long created_id = -2;
 		// First open a connection to the database
 		SQLiteDatabase db = _db.getWritableDatabase();
@@ -71,7 +71,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 			// Perform insert of actual entity
 			ContentValues entity_values = new ContentValues(4);
 			entity_values.put(KEY_NAME, name);
-			entity_values.put(KEY_KIND, type);
+			entity_values.put(KEY_KIND, type.toString());
 			entity_values.put(KEY_PATTERN, stringify(pattern));
 			entity_values.put(KEY_NOTIFY_COUNT, 0);
 
@@ -90,7 +90,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 
 		Bundle created_extras = e.getExtras();
 		created_extras.putString(EXTRA_CACHE_KEY_NAME, name);
-		created_extras.putString(EXTRA_CACHE_KEY_KIND, type);
+		created_extras.putString(EXTRA_CACHE_KEY_KIND, type.toString());
 		created_extras.putString(EXTRA_CACHE_KEY_PATTERN, pattern.toString());
 		created_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT, 0);
 
@@ -316,7 +316,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 		return null;
 	}
 
-	public List<Entity> getAll(String type) {
+	public List<Entity> getAll(Entity.Kind type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

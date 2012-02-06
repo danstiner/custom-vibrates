@@ -60,7 +60,8 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		setRetainInstance(true);
 
 		mManager = mManagerProvider.get(getActivity().getApplicationContext());
-		mAdapter = (mAdapter != null) ? mAdapter : mAdapterProvider.get(getActivity().getBaseContext());
+		mAdapter = (mAdapter != null) ? mAdapter : mAdapterProvider
+				.get(getActivity().getBaseContext());
 
 		getListView().setAdapter(mAdapter);
 
@@ -85,9 +86,10 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		}
 	}
 
-	public void setType(String type) {
-		if (!mEntityFilter.getType().equals(type)) {
-			mEntityFilter.setType(type);
+	public void setKind(Entity.Kind kind) {
+		if (mEntityFilter.getKind() == null
+				|| !mEntityFilter.getKind().equals(kind)) {
+			mEntityFilter.setKind(kind);
 		}
 	}
 
