@@ -22,7 +22,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 
 	private static final int VERSION = Database.VERSION;
 
-	protected static final String TABLE = "entities";
+	public static final String TABLE = "entities";
 
 	protected static final String KEY_ID = Entities.ENTITY_ID;
 	protected static final String KEY_KIND = Entities.KIND;
