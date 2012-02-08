@@ -23,12 +23,21 @@ public class StorageModule extends AbstractModule {
 		bind(IIdentifierStore.class).to(IdentifierStore.class);
 	}
 
-	public static final int DATABASE_VERSION = Entities.VERSION;
+	/**
+	 * Given to always increase when any table in the database increases its
+	 * version. For simplicity, it is a sum of the tables versions.
+	 * 
+	 * Removing a table from the sum could cause this to decrease, resulting in
+	 * undefined upgrade behavior. So don't do it.
+	 * 
+	 */
+	public static final int DATABASE_VERSION = Entities.VERSION
+			+ Identifiers.VERSION;
 
 	@Provides
 	IHelper[] provideDatabaseHelpers() {
-		return new IHelper[] { new Entities.Provider.DatabaseHelper(),
-				new Identifiers.Provider.DatabaseHelper() };
+		return new IHelper[] { new Entities.DatabaseHelper(),
+				new Identifiers.DatabaseHelper() };
 	}
 
 }

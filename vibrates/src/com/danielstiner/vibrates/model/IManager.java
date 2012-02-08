@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.widget.CursorAdapter;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;
@@ -89,5 +87,6 @@ public interface IManager {
 
 	Pattern getPattern(Entity e);
 
-	void searchEntities(int loaderId, LoaderManager loaderManager, IEntityFilter mEntityFilter, ISearchCallback callback);
+	void searchEntities(int loaderId, LoaderManager loaderManager,
+			IEntityFilter mEntityFilter, ISearchCallback callback);
 }

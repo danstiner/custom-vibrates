@@ -20,8 +20,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 			+ "storage";
 	static final String CLASSNAME = NS + "." + "EntityStore";
 
-	private static final int VERSION = Database.VERSION;
-
 	public static final String TABLE = "entities";
 
 	protected static final String KEY_ID = Entities.ENTITY_ID;
@@ -122,23 +120,24 @@ public class EntityStore implements IEntityStore, IPatternStore {
 				db.close();
 		}
 	}
-//
-//	@Override
-//	public Entity get(Long id) {
-//		Cursor c = getCursor(id);
-//
-//		try {
-//			if (!c.moveToFirst()) {
-//				Ln.d("Could not find entity %d", id);
-//				return null;
-//			}
-//
-//			return fromCursor(c);
-//
-//		} finally {
-//			c.close();
-//		}
-//	}
+
+	//
+	// @Override
+	// public Entity get(Long id) {
+	// Cursor c = getCursor(id);
+	//
+	// try {
+	// if (!c.moveToFirst()) {
+	// Ln.d("Could not find entity %d", id);
+	// return null;
+	// }
+	//
+	// return fromCursor(c);
+	//
+	// } finally {
+	// c.close();
+	// }
+	// }
 
 	private Cursor getCursor(Long id) {
 		Cursor c;
@@ -160,69 +159,69 @@ public class EntityStore implements IEntityStore, IPatternStore {
 		return c;
 	}
 
-//	@Override
-//	public Entity fromCursor(Cursor c) {
-//
-//		Entity e = entity_provider.get();
-//		e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
-//
-//		Bundle got_extras = e.getExtras();
-//		// TODO: Only pull extras if they exist
-//		got_extras.putString(EXTRA_CACHE_KEY_NAME,
-//				c.getString(c.getColumnIndexOrThrow(KEY_NAME)));
-//		got_extras.putString(EXTRA_CACHE_KEY_KIND,
-//				c.getString(c.getColumnIndexOrThrow(KEY_KIND)));
-//		got_extras.putString(EXTRA_CACHE_KEY_PATTERN,
-//				c.getString(c.getColumnIndexOrThrow(KEY_PATTERN)));
-//		got_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT,
-//				c.getInt(c.getColumnIndexOrThrow(KEY_NOTIFY_COUNT)));
-//
-//		// TODO error handling
-//		return e;
-//
-//		// old way
-//		// return get(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
-//	}
+	// @Override
+	// public Entity fromCursor(Cursor c) {
+	//
+	// Entity e = entity_provider.get();
+	// e.entityid(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
+	//
+	// Bundle got_extras = e.getExtras();
+	// // TODO: Only pull extras if they exist
+	// got_extras.putString(EXTRA_CACHE_KEY_NAME,
+	// c.getString(c.getColumnIndexOrThrow(KEY_NAME)));
+	// got_extras.putString(EXTRA_CACHE_KEY_KIND,
+	// c.getString(c.getColumnIndexOrThrow(KEY_KIND)));
+	// got_extras.putString(EXTRA_CACHE_KEY_PATTERN,
+	// c.getString(c.getColumnIndexOrThrow(KEY_PATTERN)));
+	// got_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT,
+	// c.getInt(c.getColumnIndexOrThrow(KEY_NOTIFY_COUNT)));
+	//
+	// // TODO error handling
+	// return e;
+	//
+	// // old way
+	// // return get(c.getLong(c.getColumnIndexOrThrow(KEY_ID)));
+	// }
 
-//	@Override
-//	public Cursor getAll() {
-//		// Open a connection to the database
-//		SQLiteDatabase db = _db.getReadableDatabase();
-//		try {
-//			Cursor c = db.query(TABLE, null, null, null, null, null, KEY_NAME);
-//
-//			if (c.isClosed())
-//				Ln.d("Opening Cursor failed");
-//
-//			return c;
-//		} finally {
-//			if (db != null)
-//				db.close();
-//		}
-//	}
-//
-//	@Override
-//	public Cursor getAll(String type) {
-//		// Open a connection to the database
-//		SQLiteDatabase db = _db.getReadableDatabase();
-//		try {
-//			// Grab all contacts
-//			// return db.query(TABLE,
-//			// null, //new String[] { KEY_ID },
-//			// null, null, null, null, null, null);
-//			// TODO Fix
-//			Cursor c = db.query(TABLE, null, KEY_KIND + "= ?",
-//					new String[] { type }, null, null, KEY_NAME);
-//
-//			if (c.isClosed())
-//				Ln.d("Opening Cursor failed");
-//
-//			return c;
-//		} finally {
-//			if (db != null)
-//				db.close();
-//		}
-//	}
+	// @Override
+	// public Cursor getAll() {
+	// // Open a connection to the database
+	// SQLiteDatabase db = _db.getReadableDatabase();
+	// try {
+	// Cursor c = db.query(TABLE, null, null, null, null, null, KEY_NAME);
+	//
+	// if (c.isClosed())
+	// Ln.d("Opening Cursor failed");
+	//
+	// return c;
+	// } finally {
+	// if (db != null)
+	// db.close();
+	// }
+	// }
+	//
+	// @Override
+	// public Cursor getAll(String type) {
+	// // Open a connection to the database
+	// SQLiteDatabase db = _db.getReadableDatabase();
+	// try {
+	// // Grab all contacts
+	// // return db.query(TABLE,
+	// // null, //new String[] { KEY_ID },
+	// // null, null, null, null, null, null);
+	// // TODO Fix
+	// Cursor c = db.query(TABLE, null, KEY_KIND + "= ?",
+	// new String[] { type }, null, null, KEY_NAME);
+	//
+	// if (c.isClosed())
+	// Ln.d("Opening Cursor failed");
+	//
+	// return c;
+	// } finally {
+	// if (db != null)
+	// db.close();
+	// }
+	// }
 
 	public String getDisplayName(Entity entity) {
 		// update cache first if needed
@@ -302,7 +301,7 @@ public class EntityStore implements IEntityStore, IPatternStore {
 
 	public void update(Entity entity) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	// @Override

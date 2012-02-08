@@ -6,11 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.danielstiner.vibrates.Entity;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 public class IdentifierStore implements IIdentifierStore {
-
-	private static final int VERSION = Database.VERSION;
 
 	protected static final String TABLE = "lookups";
 
@@ -31,12 +28,12 @@ public class IdentifierStore implements IIdentifierStore {
 	@Inject
 	private IDatabase db;
 
-	//private Provider<Entity> entity_provider;
+	// private Provider<Entity> entity_provider;
 
-//	@Inject
-//	public IdentifierStore(Provider<Entity> entity_provider) {
-//		this.entity_provider = entity_provider;
-//	}
+	// @Inject
+	// public IdentifierStore(Provider<Entity> entity_provider) {
+	// this.entity_provider = entity_provider;
+	// }
 
 	// @Override
 	// public Cursor getOrphans() {
@@ -51,18 +48,18 @@ public class IdentifierStore implements IIdentifierStore {
 	// return getByEntityId(owner.entityid());
 	// }
 
-//	private Cursor getByEntityId(Long entityid) {
-//		// Open a connection to the database
-//		SQLiteDatabase sql_db = db.getReadableDatabase();
-//		try {
-//			// Grab all contacts
-//			return sql_db.query(TABLE, null, KEY_ENTITYID + " = ?",
-//					new String[] { entityid.toString() }, null, null, null);
-//		} finally {
-//			if (sql_db != null)
-//				sql_db.close();
-//		}
-//	}
+	// private Cursor getByEntityId(Long entityid) {
+	// // Open a connection to the database
+	// SQLiteDatabase sql_db = db.getReadableDatabase();
+	// try {
+	// // Grab all contacts
+	// return sql_db.query(TABLE, null, KEY_ENTITYID + " = ?",
+	// new String[] { entityid.toString() }, null, null, null);
+	// } finally {
+	// if (sql_db != null)
+	// sql_db.close();
+	// }
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -260,27 +257,6 @@ public class IdentifierStore implements IIdentifierStore {
 	// sql_db.close();
 	// }
 	// }
-
-	static class Helper implements IDatabase.IHelper {
-
-		public void onCreate(SQLiteDatabase db) {
-			// Create lookup table
-			String lookup_sql = "CREATE TABLE " + TABLE + " ( " + KEY_ID
-					+ " INTEGER PRIMARY KEY, " + KEY_IDENTIFIER
-					+ " string KEY, " + KEY_ENTITYID + " integer, " + KEY_KIND
-					+ " string " + ");";
-			db.execSQL(lookup_sql);
-		}
-
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-		}
-
-		public int version() {
-			return VERSION;
-		}
-
-	}
 
 	public Cursor getOrphans() {
 		// TODO Auto-generated method stub

@@ -3,28 +3,23 @@
  */
 package com.danielstiner.vibrates;
 
-import com.danielstiner.vibrates.model.VibrateEntityProvider;
-
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 
 public class Entity {
-	
+
 	public enum Kind {
-		
-		Contact("contacts_contract_contact"),
-		Group("contacts_contract_group"),
-		App("contact_vibrates_apptype");
-		
+
+		Contact("contacts_contract_contact"), Group("contacts_contract_group"), App(
+				"contact_vibrates_apptype");
+
 		private String mName;
-		private Kind(String name)
-		{
+
+		private Kind(String name) {
 			mName = name;
 		}
+
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return mName;
 		}
 	}
@@ -37,7 +32,7 @@ public class Entity {
 	public static final Kind KIND_CONTACT = Kind.Contact;
 
 	public static final Kind KIND_GROUP = Kind.Group;
-	
+
 	public static final Kind KIND_APP = Kind.App;
 
 	/**  */

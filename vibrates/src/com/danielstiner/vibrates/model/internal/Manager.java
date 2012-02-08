@@ -39,28 +39,10 @@ public class Manager implements IManager {
 	private IEntityStore entity_manager;
 	@Inject
 	private IIdentifierStore identifier_manager;
-	
-	
-	
-	
-	
-	
 
 	@Inject
 	private Context mContext;
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Inject
 	public Manager(
 	// Provider<Entity> entity_provider,
@@ -143,7 +125,6 @@ public class Manager implements IManager {
 		return entity;
 	}
 
-
 	public Entity getEntity(String identifier) {
 		Cursor c = getIdentifierManager().get(identifier);
 		if (c.moveToFirst()) {
@@ -158,7 +139,6 @@ public class Manager implements IManager {
 	// Cursor c = getIdentifierManager().get(identifier);
 	// }
 
-
 	public Entity getEntity(String identifier, Entity.Kind kind) {
 		Cursor c = getIdentifierManager().get(identifier);
 		if (c.moveToFirst()) {
@@ -171,7 +151,6 @@ public class Manager implements IManager {
 		}
 		return null;
 	}
-
 
 	public Entity createFromContactUri(Uri contact_uri) {
 		if (contact_uri == null)
@@ -307,21 +286,21 @@ public class Manager implements IManager {
 	@Override
 	public long[] getPattern(Entity entity, String type) {
 		// TODO
-//		long[] entity_pattern = getEntityManager().getPattern(entity);
-//
-//		// TODO type based pattern appending
-//		if (entity_pattern != null)
-//			return entity_pattern;
-//		else
-//			return DEFAULT_PATTERN;
+		// long[] entity_pattern = getEntityManager().getPattern(entity);
+		//
+		// // TODO type based pattern appending
+		// if (entity_pattern != null)
+		// return entity_pattern;
+		// else
+		// return DEFAULT_PATTERN;
 		return null;
 	}
 
 	@Override
 	public Pattern getPattern(Entity e) {
-//		long[] entity_pattern = getEntityManager().getPattern(e);
-//
-//		return pattern_provider.get().pattern(entity_pattern);
+		// long[] entity_pattern = getEntityManager().getPattern(e);
+		//
+		// return pattern_provider.get().pattern(entity_pattern);
 		// TODO
 		return null;
 	}
@@ -345,8 +324,9 @@ public class Manager implements IManager {
 
 	@Override
 	public void update(Entity entity) {
-		// TODO Refresh.update(entity, getEntityManager(), getIdentifierManager(),
-		//		context);
+		// TODO Refresh.update(entity, getEntityManager(),
+		// getIdentifierManager(),
+		// context);
 	}
 
 	@Override
@@ -378,7 +358,7 @@ public class Manager implements IManager {
 
 	@Override
 	public Entity getEntity(Cursor c) {
-		return null; //getEntityManager().fromCursor(c);
+		return null; // getEntityManager().fromCursor(c);
 	}
 
 	@Override
@@ -387,15 +367,17 @@ public class Manager implements IManager {
 	}
 
 	@Override
-	public void searchEntities(int loaderId, LoaderManager loaderManager, IEntityFilter filter,
-			ISearchCallback callback) {
-		
-//		if(filter.isInitialized()) {
-//			loaderManager.restartLoader(filter.getLoaderId(), null, new EntityLoaderCallbacks(callback));
-//		} else {
-			loaderManager.initLoader(filter.getLoaderId(), null, new EntitySearchLoaderCallbacks(mContext).setFilter(filter).setCallback(callback));
-		//}
-		
-		
+	public void searchEntities(int loaderId, LoaderManager loaderManager,
+			IEntityFilter filter, ISearchCallback callback) {
+
+		// if(filter.isInitialized()) {
+		// loaderManager.restartLoader(filter.getLoaderId(), null, new
+		// EntityLoaderCallbacks(callback));
+		// } else {
+		loaderManager.initLoader(filter.getLoaderId(), null,
+				new EntitySearchLoaderCallbacks(mContext).setFilter(filter)
+						.setCallback(callback));
+		// }
+
 	}
 }
