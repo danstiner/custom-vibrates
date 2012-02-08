@@ -5,7 +5,7 @@ import android.net.Uri;
 import android.widget.QuickContactBadge;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.storage.IManager;
+import com.danielstiner.vibrates.model.IManager;
 
 public class EntityDisplayUtil {
 	public static void setupBadge(QuickContactBadge badge, Entity e,

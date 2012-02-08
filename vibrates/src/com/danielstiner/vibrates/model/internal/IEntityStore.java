@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import java.util.List;
 

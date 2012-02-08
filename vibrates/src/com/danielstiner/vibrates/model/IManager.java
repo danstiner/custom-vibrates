@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage;
+package com.danielstiner.vibrates.model;
 
 import java.io.InputStream;
 
@@ -11,7 +11,7 @@ import android.support.v4.widget.CursorAdapter;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;
-import com.danielstiner.vibrates.storage.internal.ISearchCallback;
+import com.danielstiner.vibrates.model.internal.ISearchCallback;
 
 public interface IManager {
 

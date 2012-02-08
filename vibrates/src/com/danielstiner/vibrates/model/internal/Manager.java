@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import java.io.InputStream;
 import java.util.List;
@@ -16,8 +16,8 @@ import android.support.v4.app.LoaderManager;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;
-import com.danielstiner.vibrates.storage.IEntityFilter;
-import com.danielstiner.vibrates.storage.IManager;
+import com.danielstiner.vibrates.model.IEntityFilter;
+import com.danielstiner.vibrates.model.IManager;
 import com.danielstiner.vibrates.util.PatternUtil;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -255,7 +255,7 @@ public class Manager implements IManager {
 		Cursor c = getIdentifierManager().get(entity,
 				IdentifierStore.KIND_CONTACTS_CONTRACT_ID);
 
-		if (!c.moveToFirst())
+		if (c == null || !c.moveToFirst())
 			return null;
 
 		String contacts_contract_idstring = getIdentifierManager()

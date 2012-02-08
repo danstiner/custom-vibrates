@@ -15,9 +15,11 @@
       </intent-filter>
     </activity>
     <provider
-        android:name=".storage.VibrateEntityProvider"
-        android:authorities="com.danielstiner.vibrates.providers.VibrateEntityProvider"></provider>
+        android:name=".model.Entities.Provider"
+        android:authorities="com.danielstiner.vibrates.providers.Entity"></provider>
+    <provider
+        android:name=".model.Identifiers.Provider"
+        android:authorities="com.danielstiner.vibrates.providers.Identifier"></provider>
   </application>
 
 </manifest>
-

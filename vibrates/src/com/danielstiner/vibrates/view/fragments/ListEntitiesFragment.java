@@ -11,9 +11,9 @@ import android.widget.ListView;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.storage.IEntityFilter;
-import com.danielstiner.vibrates.storage.IManager;
-import com.danielstiner.vibrates.storage.StorageUtil;
+import com.danielstiner.vibrates.model.IEntityFilter;
+import com.danielstiner.vibrates.model.IManager;
+import com.danielstiner.vibrates.model.StorageUtil;
 import com.danielstiner.vibrates.view.EntitiesActivity;
 import com.danielstiner.vibrates.view.OnEntitySelectedListener;
 import com.danielstiner.vibrates.view.model.EntityCursorAdapter;

@@ -1,6 +1,6 @@
-package com.danielstiner.vibrates.storage;
+package com.danielstiner.vibrates.model;
 
-import com.danielstiner.vibrates.storage.internal.ISearchCallback;
+import com.danielstiner.vibrates.model.internal.ISearchCallback;
 
 import android.database.Cursor;
 import android.support.v4.app.LoaderManager;

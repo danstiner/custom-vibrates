@@ -1,12 +1,11 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.Entity.Entities;
-import com.danielstiner.vibrates.storage.IEntityFilter;
-import com.danielstiner.vibrates.storage.VibrateEntityProvider;
+import com.danielstiner.vibrates.model.Entities;
+import com.danielstiner.vibrates.model.IEntityFilter;
 
 public class EntityFilter implements IEntityFilter {
 

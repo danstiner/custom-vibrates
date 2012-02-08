@@ -3,7 +3,7 @@
  */
 package com.danielstiner.vibrates;
 
-import com.danielstiner.vibrates.storage.VibrateEntityProvider;
+import com.danielstiner.vibrates.model.VibrateEntityProvider;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -79,23 +79,5 @@ public class Entity {
 			_extras = new Bundle();
 
 		return _extras;
-	}
-	
-	public static final class Entities implements BaseColumns {
-		
-		public Entities() {
-			
-		}
-		
-		public static final Uri CONTENT_URI = VibrateEntityProvider.CONTENT_URI;
-	
-		public static final String CONTENT_TYPE = VibrateEntityProvider.CONTENT_ITEM_TYPE;
-		
-		public static final String ENTITY_ID = "_id";
-		
-		public static final String KIND = "kind";
-		public static final String NAME = "name";
-		public static final String PATTERN = "pattern";
-		public static final String NOTIFY_COUNT = "notified";
 	}
 }

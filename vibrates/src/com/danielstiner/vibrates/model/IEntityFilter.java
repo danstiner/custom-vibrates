@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage;
+package com.danielstiner.vibrates.model;
 
 import android.net.Uri;
 

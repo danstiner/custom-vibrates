@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.Entity.Entities;
+import com.danielstiner.vibrates.model.Entities;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -230,27 +230,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 			entity = get(entity.entityid());
 
 		return entity.getExtras().getString(EXTRA_CACHE_KEY_NAME);
-	}
-
-	static class Helper implements IDatabase.IHelper {
-
-		public void onCreate(SQLiteDatabase db) {
-			// Create entity table
-			String entity_sql = "CREATE TABLE " + TABLE + " ( " + KEY_ID
-					+ " INTEGER PRIMARY KEY, " + KEY_KIND + " string, "
-					+ KEY_NAME + " string, " + KEY_PATTERN + " string, "
-					+ KEY_NOTIFY_COUNT + " integer " + ");";
-			db.execSQL(entity_sql);
-		}
-
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-		}
-
-		public int version() {
-			return VERSION;
-		}
-
 	}
 
 	// @Override

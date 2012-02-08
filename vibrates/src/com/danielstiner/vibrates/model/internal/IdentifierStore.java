@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import roboguice.util.Ln;
 import android.database.Cursor;

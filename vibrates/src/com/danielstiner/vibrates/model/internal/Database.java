@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.storage.internal;
+package com.danielstiner.vibrates.model.internal;
 
 import roboguice.inject.ContextSingleton;
 import android.content.Context;
@@ -6,23 +6,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.danielstiner.vibrates.model.StorageModule;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 @ContextSingleton
 public class Database implements IDatabase {
 
-	static final int VERSION = 7;
+	private static final String DATABASE_NAME = "vibrates";
+
+	private static final int VERSION = StorageModule.DATABASE_VERSION;
 
 	private IHelper[] database_helpers;
 	private SQLiteOpenHelper _dbHelper;
 
 	@Inject
-	public Database(Context activity,
-			@Named(StorageModule.DATABASE_NAME_KEY) String database_name,
-			IHelper[] database_helpers) {
+	public Database(Context activity, IHelper[] database_helpers) {
 		this.database_helpers = database_helpers;
-		_dbHelper = new DBHelper(activity, database_name, null, VERSION);
+		_dbHelper = new DBHelper(activity, DATABASE_NAME, null, VERSION);
 	}
 
 	private class DBHelper extends SQLiteOpenHelper {
