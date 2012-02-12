@@ -1,3 +1,5 @@
 test-key.keystore
 
-.settings/*
+.settings
+bin
+gen
