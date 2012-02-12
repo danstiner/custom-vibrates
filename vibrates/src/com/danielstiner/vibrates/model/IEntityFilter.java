@@ -29,4 +29,6 @@ public interface IEntityFilter {
 
 		void setProjection(String[] projection);
 	}
+
+	void refresh();
 }

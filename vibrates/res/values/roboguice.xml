@@ -2,5 +2,6 @@
   <resources>
     <string-array name="roboguice_modules">
     <item>com.danielstiner.vibrates.model.StorageModule</item>
+    <item>com.danielstiner.vibrates.view.ViewModule</item>
   </string-array>
 </resources>

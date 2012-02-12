@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.danielstiner.vibrates.model.StorageModule;
 import com.google.inject.Inject;
 
 @ContextSingleton
@@ -14,7 +13,10 @@ public class Database implements IDatabase {
 
 	private static final String DATABASE_NAME = "vibrates";
 
-	private static final int VERSION = StorageModule.DATABASE_VERSION;
+	/** Monotonically increasing
+	 * Used as version for both EntityStore and IdentifierStore
+	 */
+	public static final int VERSION = 21;
 
 	private IHelper[] mTableHelpers;
 	private SQLiteOpenHelper mSQLiteHelper;

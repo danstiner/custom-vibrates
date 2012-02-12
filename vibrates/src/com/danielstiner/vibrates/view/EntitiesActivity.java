@@ -8,10 +8,13 @@ import android.widget.ArrayAdapter;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.Vibrates;
 import com.danielstiner.vibrates.view.fragments.EditEntity;
+import com.danielstiner.vibrates.view.fragments.IListEntitiesFragment;
 import com.danielstiner.vibrates.view.fragments.ListEntitiesFragment;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -32,7 +35,9 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 	private static final String STATE_NAV_INDEX = CLASSNAME
 			+ ".state.navigation_index";
 
-	private ListEntitiesFragment mEntitiesFragment;
+	protected static final int ACTIVITY_RESULT_ADD = 0;
+
+	private IListEntitiesFragment mEntitiesFragment;
 
 	@Inject
 	private Provider<ListEntitiesFragment> mEntitiesFragmentProvider;
@@ -41,22 +46,15 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 		public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 
-			// Ensure we have a entity list fragment to show
-
-			ListEntitiesFragment entities_frag = loadChildFragment();
-			
-			if(entities_frag == null)
-				return true;
-
 			switch (itemPosition) {
 			case CONTACTS_TAB_POS:
-				entities_frag.setKind(Entity.KIND_CONTACT);
+				setKind(Entity.Kind.Contact);
 				break;
 			case GROUPS_TAB_POS:
-				entities_frag.setKind(Entity.KIND_GROUP);
+				setKind(Entity.Kind.Group);
 				break;
 			case APPS_TAB_POS:
-				entities_frag.setKind(Entity.KIND_APP);
+				setKind(Entity.Kind.App);
 				break;
 			}
 
@@ -65,33 +63,49 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 	};
 
-	private ListEntitiesFragment loadChildFragment() {
-		if (mEntitiesFragment == null || mEntitiesFragment != getSupportFragmentManager().findFragmentById(
-				R.id.fragment_container)) {
+	private IListEntitiesFragment loadChildFragment() {
+		if (mEntitiesFragment == null
+				|| mEntitiesFragment != getSupportFragmentManager()
+						.findFragmentById(R.id.fragment_container)) {
 
 			if (mEntitiesFragment == null)
 				mEntitiesFragment = (ListEntitiesFragment) getSupportFragmentManager()
 						.findFragmentByTag(ENTITIES_TAG);
 
-			if (mEntitiesFragment == null)
+			if (mEntitiesFragment == null) {
 				mEntitiesFragment = mEntitiesFragmentProvider.get();
 
-			FragmentTransaction transact = getSupportFragmentManager()
-					.beginTransaction();
+				FragmentTransaction transact = getSupportFragmentManager()
+						.beginTransaction();
 
-			transact.replace(R.id.fragment_container, mEntitiesFragment,
-					ENTITIES_TAG);
+				transact.replace(R.id.fragment_container,
+						(ListEntitiesFragment) mEntitiesFragment, ENTITIES_TAG);
 
-			transact.commit();
+				transact.commit();
+			}
 		}
 
 		// Should always have a fragment by this time
 		return mEntitiesFragment;
 	}
 
+	private OnMenuItemClickListener mOnMenuAddClick = new OnMenuItemClickListener() {
+
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			// Only fires for add entity button
+			EntityAddActivity.show(mSelectedKind, EntitiesActivity.this, EntitiesActivity.ACTIVITY_RESULT_ADD);
+			
+			return true;
+		}
+		
+	};
+
 	private ActionBar mActionBar;
 
 	private Entity mSelectedEntity;
+
+	private Kind mSelectedKind;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +147,11 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 				.getSelectedNavigationIndex());
 	}
 
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add("Add")
-				.setIcon(R.drawable.ic_action_refresh)
+				.setIcon(R.drawable.ic_action_add)
+				.setOnMenuItemClickListener(mOnMenuAddClick)
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_ALWAYS
 								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -161,5 +177,15 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		} else {
 			editEntity.onEntitySelected(e);
 		}
+	}
+	
+	private void setKind(Entity.Kind kind) {
+		
+		IListEntitiesFragment entities_frag = loadChildFragment();
+		
+		this.mSelectedKind = kind;
+		
+		if(entities_frag != null)
+			entities_frag.setKind(kind);
 	}
 }

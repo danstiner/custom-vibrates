@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.danielstiner.vibrates.model.Identifiers;
 import com.google.inject.Inject;
 
 public class IdentifierProvider extends RoboContentProvider {
@@ -21,6 +22,8 @@ public class IdentifierProvider extends RoboContentProvider {
 			+ "/danielstiner-vibrate-entity";
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/danielstiner-vibrate-entity";
+
+	private static final String TABLE = Identifiers.TABLE;
 
 	@Inject
 	private IDatabase mDatabase;
@@ -60,8 +63,8 @@ public class IdentifierProvider extends RoboContentProvider {
 			String[] selectionArgs, String sortOrder) {
 
 		if (CONTENT_URI.equals(uri)) {
-			return mDatabase.getReadableDatabase().query(EntityStore.TABLE,
-					projection, selection, selectionArgs, null, null, null);
+			return mDatabase.getReadableDatabase().query(TABLE, projection,
+					selection, selectionArgs, null, null, null);
 			// groupBy,
 			// having,
 			// orderBy)

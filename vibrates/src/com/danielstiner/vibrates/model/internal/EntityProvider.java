@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.danielstiner.vibrates.model.Entities;
 import com.google.inject.Inject;
 
 public class EntityProvider extends RoboContentProvider {
@@ -22,6 +23,8 @@ public class EntityProvider extends RoboContentProvider {
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
 			+ "/danielstiner-vibrate-entity";
 
+	private static final String TABLE = Entities.TABLE;
+
 	@Inject
 	private IDatabase mDatabase;
 
@@ -33,8 +36,15 @@ public class EntityProvider extends RoboContentProvider {
 	}
 
 	@Override
-	public int delete(Uri arg0, String arg1, String[] arg2) {
-		// TODO Auto-generated method stub
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
+
+		if (CONTENT_URI.equals(uri)) {
+			return mDatabase.getWritableDatabase().delete(TABLE, selection, selectionArgs);
+			// groupBy,
+			// having,
+			// orderBy)
+		}
+		
 		return 0;
 	}
 
@@ -45,14 +55,25 @@ public class EntityProvider extends RoboContentProvider {
 	}
 
 	@Override
-	public Uri insert(Uri uri, ContentValues arg1) {
+	public Uri insert(Uri uri, ContentValues values) {
 		if (CONTENT_URI.equals(uri)) {
-			// mDatabase.getWritableDatabase().insert(table, nullColumnHack,
-			// values)
+			long insert_id = mDatabase.getWritableDatabase().insert(TABLE,
+					null, values);
+
+			if (insert_id < 0)
+				return null;
+
+			return getEntityUriFromId(insert_id);
 
 		}
 
 		return null;
+	}
+
+	private Uri getEntityUriFromId(long insert_id) {
+		// TODO Auto-generated method stub
+		return Uri
+				.withAppendedPath(CONTENT_URI, "#" + Long.toString(insert_id));
 	}
 
 	@Override
@@ -60,8 +81,8 @@ public class EntityProvider extends RoboContentProvider {
 			String[] selectionArgs, String sortOrder) {
 
 		if (CONTENT_URI.equals(uri)) {
-			return mDatabase.getReadableDatabase().query(EntityStore.TABLE,
-					projection, selection, selectionArgs, null, null, null);
+			return mDatabase.getReadableDatabase().query(TABLE, projection,
+					selection, selectionArgs, null, null, null);
 			// groupBy,
 			// having,
 			// orderBy)

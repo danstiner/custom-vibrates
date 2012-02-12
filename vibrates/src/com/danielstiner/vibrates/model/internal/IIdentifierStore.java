@@ -3,31 +3,24 @@ package com.danielstiner.vibrates.model.internal;
 import android.database.Cursor;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.Identifier;
 
 public interface IIdentifierStore {
 
-	// public abstract Cursor getAll();
+	Cursor getOrphans();
 
-	public abstract Cursor getOrphans();
+	Cursor search(Entity owner);
 
-	public abstract Cursor get(Entity owner);
+	Cursor search(Entity owner, Identifier kind);
 
-	public abstract Cursor get(Entity owner, String kind);
+	Cursor search(Identifier identifier);
 
-	public abstract Cursor get(String identifier);
+	void add(Entity to, Identifier identifier);
 
-	public abstract void add(Entity to, String identifier, String kind);
+	Identifier fromCursor(Cursor c);
 
-	public abstract String identifierFromCursor(Cursor c);
+	int removeAll(Entity entity);
 
-	public abstract String kindFromCursor(Cursor c);
-
-	public abstract int removeAll(Entity entity);
-
-	public abstract int removeAll(Entity entity, String defaultPhonenumber);
-
-	public abstract Entity entityFromCursor(Cursor c);
-
-	// public abstract Entity entityFromCursor(Cursor c);
+	Entity entityFromCursor(Cursor c);
 
 }

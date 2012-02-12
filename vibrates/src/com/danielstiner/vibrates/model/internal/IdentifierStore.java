@@ -1,39 +1,33 @@
 package com.danielstiner.vibrates.model.internal;
 
 import roboguice.util.Ln;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.Identifier;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class IdentifierStore implements IIdentifierStore {
 
-	protected static final String TABLE = "lookups";
+	@Inject
+	private Provider<Identifier> mIdentifierProvider;
 
-	protected static final String KEY_ID = "_id";
-	protected static final String KEY_KIND = "kind";
-	protected static final String KEY_ENTITYID = "entity";
-	protected static final String KEY_IDENTIFIER = "identifier";
+	@Inject
+	private Provider<Context> mContextProvider;
 
 	public static final String KIND_DEFAULT = "unknown";
-	public static final String KIND_CONTACTS_CONTRACT_ID = "generated.contacts_contract_id";
+	public static final Identifier KIND_CONTACTS_CONTRACT_ID = new Identifier(
+			null, Identifier.Kind.SystemContactId);
 	public static final String KIND_CONTACTS_CONTRACT_NAME = "generated.contacts_contract_name";
 	public static final String KIND_CONTACTS_CONTRACT_LOOKUP = "generated.contacts_contract_lookup";
 
 	public static final String KIND_CONTACTS_GROUP_ID = "generated.contacts_group_id";
 	public static final String KIND_CONTACTS_GROUP_TITLE = "generated.contacts_group_title";
+
 	// protected static final String DEFAULT_KIND = "";
-
-	@Inject
-	private IDatabase db;
-
-	// private Provider<Entity> entity_provider;
-
-	// @Inject
-	// public IdentifierStore(Provider<Entity> entity_provider) {
-	// this.entity_provider = entity_provider;
-	// }
 
 	// @Override
 	// public Cursor getOrphans() {
@@ -66,86 +60,87 @@ public class IdentifierStore implements IIdentifierStore {
 	 * 
 	 * @see com.danielstiner.vibrates.IIdentifierManager#get(java.lang.String)
 	 */
-	public Cursor get(String identifier) {
-		if (identifier == null)
-			return null;
+	// public Cursor get(String identifier) {
+	// if (identifier == null)
+	// return null;
+	//
+	// return getByEntityIdentifier(identifier);
 
-		return getByEntityIdentifier(identifier);
+	// Cursor matches = getByEntityIdentifier(identifier);
+	// // Make sure we only have one entity match
+	// if(matches.getCount() > 1)
+	// {
+	// Ln.d("Found multiple (%d) entities for the identifier: %s",
+	// matches.getCount(), identifier);
+	// //return null;
+	// }
+	// if(!matches.moveToFirst())
+	// return null;
+	// Long entityid =
+	// matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
+	// // Must have worked
+	// return entity_provider.get().entityid(entityid);
+	// }
 
-		// Cursor matches = getByEntityIdentifier(identifier);
-		// // Make sure we only have one entity match
-		// if(matches.getCount() > 1)
-		// {
-		// Ln.d("Found multiple (%d) entities for the identifier: %s",
-		// matches.getCount(), identifier);
-		// //return null;
-		// }
-		// if(!matches.moveToFirst())
-		// return null;
-		// Long entityid =
-		// matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
-		// // Must have worked
-		// return entity_provider.get().entityid(entityid);
-	}
-
-	public Cursor get(String identifier, String kind) {
-		if (identifier == null || kind == null)
-			return null;
-
-		return getByEntityIdentifierAndKind(identifier, kind);
-
-		// Cursor matches = getByEntityIdentifier(identifier);
-		// // Make sure we only have one entity match
-		// if(matches.getCount() > 1)
-		// {
-		// Ln.d("Found multiple (%d) entities for the identifier: %s",
-		// matches.getCount(), identifier);
-		// //return null;
-		// }
-		// if(!matches.moveToFirst())
-		// return null;
-		// Long entityid =
-		// matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
-		// // Must have worked
-		// return entity_provider.get().entityid(entityid);
-	}
-
-	private Cursor getByEntityIdentifier(String identifier) {
-		// Open a connection to the database
-		SQLiteDatabase sql_db = db.getReadableDatabase();
-		try {
-			// Grab all contacts for identifier
-			Cursor c = sql_db.query(TABLE, null, KEY_IDENTIFIER + " = ?",
-					new String[] { identifier }, null, null, null, null);
-
-			if (c.isClosed())
-				Ln.d("Opening Cursor failed");
-
-			return c;
-		} finally {
-			if (sql_db != null)
-				sql_db.close();
-		}
-	}
-
-	private Cursor getByEntityIdentifierAndKind(String identifier, String kind) {
-		// Open a connection to the database
-		SQLiteDatabase sql_db = db.getReadableDatabase();
-		try {
-			// Grab all contacts
-			Cursor c = sql_db.query(TABLE, null, KEY_IDENTIFIER + " = ?"
-					+ " AND " + KEY_KIND + " = ? ", new String[] { identifier,
-					kind }, null, null, null, null);
-
-			if (c.isClosed())
-				Ln.d("Opening Cursor failed");
-
-			return c;
-		} finally {
-			if (sql_db != null)
-				sql_db.close();
-		}
-	}
+	// public Cursor get(String identifier, String kind) {
+	// if (identifier == null || kind == null)
+	// return null;
+	//
+	// return getByEntityIdentifierAndKind(identifier, kind);
+	//
+	// // Cursor matches = getByEntityIdentifier(identifier);
+	// // // Make sure we only have one entity match
+	// // if(matches.getCount() > 1)
+	// // {
+	// // Ln.d("Found multiple (%d) entities for the identifier: %s",
+	// // matches.getCount(), identifier);
+	// // //return null;
+	// // }
+	// // if(!matches.moveToFirst())
+	// // return null;
+	// // Long entityid =
+	// // matches.getLong(matches.getColumnIndexOrThrow(KEY_ENTITYID));
+	// // // Must have worked
+	// // return entity_provider.get().entityid(entityid);
+	// }
+	//
+	// private Cursor getByEntityIdentifier(String identifier) {
+	// // Open a connection to the database
+	// SQLiteDatabase sql_db = db.getReadableDatabase();
+	// try {
+	// // Grab all contacts for identifier
+	// Cursor c = sql_db.query(TABLE, null, KEY_IDENTIFIER + " = ?",
+	// new String[] { identifier }, null, null, null, null);
+	//
+	// if (c.isClosed())
+	// Ln.d("Opening Cursor failed");
+	//
+	// return c;
+	// } finally {
+	// if (sql_db != null)
+	// sql_db.close();
+	// }
+	// }
+	//
+	// private Cursor getByEntityIdentifierAndKind(String identifier, String
+	// kind) {
+	// // Open a connection to the database
+	// SQLiteDatabase sql_db = db.getReadableDatabase();
+	// try {
+	// // Grab all contacts
+	// Cursor c = sql_db.query(TABLE, null, KEY_IDENTIFIER + " = ?"
+	// + " AND " + KEY_KIND + " = ? ", new String[] { identifier,
+	// kind }, null, null, null, null);
+	//
+	// if (c.isClosed())
+	// Ln.d("Opening Cursor failed");
+	//
+	// return c;
+	// } finally {
+	// if (sql_db != null)
+	// sql_db.close();
+	// }
+	// }
 
 	// @Override
 	// public Cursor get(Entity owner, String kind) {
@@ -299,6 +294,37 @@ public class IdentifierStore implements IIdentifierStore {
 	}
 
 	public Entity entityFromCursor(Cursor c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Cursor search(Entity owner) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Cursor search(Entity owner, Identifier kind) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Cursor search(Identifier identifier) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void add(Entity to, Identifier identifier) {
+		// TODO Auto-generated method stub
+		
+
+	}
+
+	@Override
+	public Identifier fromCursor(Cursor c) {
 		// TODO Auto-generated method stub
 		return null;
 	}

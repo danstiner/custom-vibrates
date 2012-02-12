@@ -7,7 +7,7 @@ class InternalStorageUtil {
 	/**
 	 * Gives back a globally unique loader id
 	 * 
-	 * @return
+	 * @return Id globally unique in this app
 	 */
 	static int getNextLoaderId() {
 		return msNextLoaderId++;

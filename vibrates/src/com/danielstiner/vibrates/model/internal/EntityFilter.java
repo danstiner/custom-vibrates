@@ -25,6 +25,11 @@ public class EntityFilter implements IEntityFilter {
 	public Entity.Kind getKind() {
 		return mKind;
 	}
+	
+	@Override
+	public void refresh() {
+		this.onUpdate();
+	}
 
 	public IEntityFilter setSortOrder() {
 		// mSortOrder;

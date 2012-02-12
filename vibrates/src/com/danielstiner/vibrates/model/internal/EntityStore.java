@@ -3,18 +3,124 @@ package com.danielstiner.vibrates.model.internal;
 import java.util.Arrays;
 import java.util.List;
 
+import roboguice.inject.ContextScopedProvider;
+import roboguice.inject.ContextSingleton;
 import roboguice.util.Ln;
+import android.app.Application;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
+import android.net.Uri;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 
 import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.Pattern;
 import com.danielstiner.vibrates.model.Entities;
+import com.danielstiner.vibrates.model.IEntityFilter;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+@ContextSingleton
 public class EntityStore implements IEntityStore, IPatternStore {
+
+	@Inject
+	private Provider<Entity> mEntityProvider;
+
+	@Inject
+	private Application mContext;
+
+	@Inject
+	private ContextScopedProvider<ContentResolver> mContentResolverProvider;
+
+	// FIXME
+
+	@Override
+	public Entity fromCursor(Cursor c) {
+		Entity e = mEntityProvider.get();
+
+		e.entityid(c.getLong(c.getColumnIndexOrThrow(Entities.ENTITY_ID)));
+		e.setKind(Entity.Kind.fromString(c.getString(c
+				.getColumnIndexOrThrow(Entities.KIND))));
+		e.setName(c.getString(c.getColumnIndexOrThrow(Entities.NAME)));
+		e.setNotifyCount(c.getInt(c
+				.getColumnIndexOrThrow(Entities.NOTIFY_COUNT)));
+		e.setPattern(Pattern.fromString(c.getString(c
+				.getColumnIndexOrThrow(Entities.PATTERN))));
+
+		return e;
+	}
+
+	@Override
+	public void search(LoaderManager loaderManager, IEntityFilter filter,
+			ISearchCallback callback) {
+
+		Loader<Cursor> l = loaderManager.getLoader(filter.getLoaderId());
+		LoaderCallbacks<Cursor> lc = new EntitySearchLoaderCallbacks(mContext)
+				.setFilter(filter).setCallback(callback);
+
+		if (l == null)
+			loaderManager.initLoader(filter.getLoaderId(), null, lc);
+		else
+			loaderManager.restartLoader(filter.getLoaderId(), null, lc);
+	}
+
+	public Entity create(String name, long[] pattern, Entity.Kind type) {
+		Uri created_uri = null;
+
+		try {
+			// Get a content resolver to work with
+			ContentResolver cr = mContentResolverProvider.get(mContext);
+
+			// Perform insert of actual entity
+			ContentValues entity_values = new ContentValues(4);
+			entity_values.put(KEY_NAME, name);
+			entity_values.put(KEY_KIND, type.toString());
+			entity_values.put(KEY_PATTERN, stringify(pattern));
+			entity_values.put(KEY_NOTIFY_COUNT, 0);
+
+			created_uri = cr.insert(Entities.CONTENT_URI, entity_values);
+
+		} catch (Exception tr) {
+			Ln.d(tr, "Create entity failed.");
+		}
+
+		// Get an entity instance to represent this new entity
+		Entity e = this.getEntity(created_uri);
+
+		// TODO error handling
+		return e;
+	}
+
+	public void delete(Entity entity) {
+		// First open a connection to the database
+		// SQLiteDatabase db = _db.getWritableDatabase();
+		// Attempt the deletion of all relevant records
+		try {
+			// Get a content resolver to work with
+			ContentResolver cr = mContentResolverProvider.get(mContext);
+
+			// TODO Don't forget about associated lookups
+
+			// Perform removal
+			int deleteCount = cr.delete(Entities.CONTENT_URI, KEY_ID + " == ?",
+					new String[] { entity.entityid().toString() });
+
+			// Check if we actually removed a row
+			if (deleteCount == 0) {
+				Ln.d("Delete entity failed.");
+			}
+
+		} catch (Exception tr) {
+			Ln.e(tr, "Delete entity failed.");
+		}
+	}
+
+	private Entity getEntity(Uri created_uri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	static final String NS = com.danielstiner.vibrates.Vibrates.NS + "."
 			+ "storage";
@@ -37,19 +143,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	protected static final String EXTRA_CACHE_KEY_NOTIFY_COUNT = CLASSNAME
 			+ "." + KEY_NOTIFY_COUNT;
 
-	@Inject
-	private IDatabase _db;
-
-	private Provider<Entity> entity_provider;
-
-	// @Inject
-	// private Context context;
-
-	@Inject
-	public EntityStore(Provider<Entity> entity_provider) {
-		this.entity_provider = entity_provider;
-	}
-
 	// /**
 	// *
 	// * @param c
@@ -60,66 +153,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	// return ContactsContract.Contacts.getLookupUri(c.entityid(),
 	// c.identifier());
 	// }
-
-	public Entity create(String name, long[] pattern, Entity.Kind type) {
-		long created_id = -2;
-		// First open a connection to the database
-		SQLiteDatabase db = _db.getWritableDatabase();
-		try {
-			// Perform insert of actual entity
-			ContentValues entity_values = new ContentValues(4);
-			entity_values.put(KEY_NAME, name);
-			entity_values.put(KEY_KIND, type.toString());
-			entity_values.put(KEY_PATTERN, stringify(pattern));
-			entity_values.put(KEY_NOTIFY_COUNT, 0);
-
-			created_id = db.insertOrThrow(TABLE, null, entity_values);
-
-		} catch (Exception tr) {
-			Ln.d(tr, "Create entity failed.");
-		} finally {
-			if (db != null)
-				db.close();
-		}
-
-		// Get an entity instance to represent this new entity
-		Entity e = entity_provider.get();
-		e.entityid(created_id);
-
-		Bundle created_extras = e.getExtras();
-		created_extras.putString(EXTRA_CACHE_KEY_NAME, name);
-		created_extras.putString(EXTRA_CACHE_KEY_KIND, type.toString());
-		created_extras.putString(EXTRA_CACHE_KEY_PATTERN, pattern.toString());
-		created_extras.putInt(EXTRA_CACHE_KEY_NOTIFY_COUNT, 0);
-
-		// TODO error handling
-		return e;
-	}
-
-	public void delete(Entity entity) {
-		// First open a connection to the database
-		SQLiteDatabase db = _db.getWritableDatabase();
-		// Attempt the deletion of all relevant records
-		try {
-
-			// TODO Don't forget about associated lookups
-
-			// Perform removal
-			int deleteCount = db.delete(TABLE, KEY_ID + " == ?",
-					new String[] { entity.entityid().toString() });
-
-			// Check if we actually removed a row
-			if (deleteCount == 0) {
-				// Log.d(DEBUG_TAG, "Delete contact failed.", db.de);
-			}
-
-		} catch (Exception tr) {
-			Ln.e(tr, "Delete contact failed.");
-		} finally {
-			if (db != null)
-				db.close();
-		}
-	}
 
 	//
 	// @Override
@@ -139,25 +172,25 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	// }
 	// }
 
-	private Cursor getCursor(Long id) {
-		Cursor c;
-		// Open a connection to the database
-		SQLiteDatabase sql_db = _db.getReadableDatabase();
-		try {
-			// Grab all contacts
-			c = sql_db.query(TABLE, new String[] { KEY_ID, KEY_NAME, KEY_KIND,
-					KEY_PATTERN, KEY_NOTIFY_COUNT }, KEY_ID + " = ?",
-					new String[] { id.toString() }, null, null, null);
-
-			if (c.isClosed())
-				Ln.d("Opening Cursor failed");
-
-		} finally {
-			if (sql_db != null)
-				sql_db.close();
-		}
-		return c;
-	}
+	// private Cursor getCursor(Long id) {
+	// Cursor c;
+	// // Open a connection to the database
+	// SQLiteDatabase sql_db = _db.getReadableDatabase();
+	// try {
+	// // Grab all contacts
+	// c = sql_db.query(TABLE, new String[] { KEY_ID, KEY_NAME, KEY_KIND,
+	// KEY_PATTERN, KEY_NOTIFY_COUNT }, KEY_ID + " = ?",
+	// new String[] { id.toString() }, null, null, null);
+	//
+	// if (c.isClosed())
+	// Ln.d("Opening Cursor failed");
+	//
+	// } finally {
+	// if (sql_db != null)
+	// sql_db.close();
+	// }
+	// return c;
+	// }
 
 	// @Override
 	// public Entity fromCursor(Cursor c) {
@@ -223,14 +256,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	// }
 	// }
 
-	public String getDisplayName(Entity entity) {
-		// update cache first if needed
-		if (!entity.getExtras().containsKey(EXTRA_CACHE_KEY_NAME))
-			entity = get(entity.entityid());
-
-		return entity.getExtras().getString(EXTRA_CACHE_KEY_NAME);
-	}
-
 	// @Override
 	// public void setPattern(Entity entity, long[] pattern) {
 	// // Open a connection to the database
@@ -252,32 +277,6 @@ public class EntityStore implements IEntityStore, IPatternStore {
 	// if (db != null)
 	// db.close();
 	// }
-	// }
-
-	// @Override
-	// public long[] getPattern(Entity entity) {
-	// // update cache first if needed
-	// if (!entity.getExtras().containsKey(EXTRA_CACHE_KEY_PATTERN))
-	// entity = get(entity.entityid());
-	//
-	// // Unpack pattern from database
-	// // should be a comma separated list of longs
-	// String pattern_packed = entity.getExtras().getString(
-	// EXTRA_CACHE_KEY_PATTERN);
-	// if (pattern_packed == null)
-	// return null;
-	// String[] pattern_parts = pattern_packed.split(",");
-	// long[] pattern = new long[pattern_parts.length];
-	//
-	// try {
-	// for (int i = 0; i < pattern.length; i++)
-	// pattern[i] = Long.parseLong(pattern_parts[i].trim());
-	// } catch (Exception e) {
-	// Ln.d(e, "Could not parse pattern '%s' from database.",
-	// pattern_packed);
-	// }
-	//
-	// return pattern;
 	// }
 
 	private String stringify(long[] pattern) {
@@ -304,12 +303,4 @@ public class EntityStore implements IEntityStore, IPatternStore {
 
 	}
 
-	// @Override
-	// public String getKind(Entity entity) {
-	// // update cache first if needed
-	// if (!entity.getExtras().containsKey(EXTRA_CACHE_KEY_KIND))
-	// entity = get(entity.entityid());
-	//
-	// return entity.getExtras().getString(EXTRA_CACHE_KEY_KIND);
-	// }
 }

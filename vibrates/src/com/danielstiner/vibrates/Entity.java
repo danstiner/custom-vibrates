@@ -3,7 +3,6 @@
  */
 package com.danielstiner.vibrates;
 
-import android.os.Bundle;
 
 public class Entity {
 
@@ -22,6 +21,20 @@ public class Entity {
 		public String toString() {
 			return mName;
 		}
+		
+		public static Kind fromString(String name) {
+			
+			for(Kind k : Entity.Kind.values())
+			{
+				if(k.mName.equals(name))
+					return k;
+			}
+			
+			throw new IllegalArgumentException(name + " not a valid kind name");
+			
+		}
+		
+		
 	}
 
 	static final String CLASSNAME = com.danielstiner.vibrates.Vibrates.NS + "."
@@ -42,7 +55,13 @@ public class Entity {
 
 	private Long _id;
 
-	private Bundle _extras;
+	private Kind mKind;
+
+	private int mNotify;
+
+	private String mName;
+
+	private Pattern mPattern;
 
 	/**
 	 * Create default entity representing nobody in particular
@@ -59,20 +78,30 @@ public class Entity {
 
 	public Entity entityid(Long entityid) {
 		_id = entityid;
-		getExtras().putLong(EXTRA_KEY_ID, entityid);
 		return this;
 	}
 
-	/**
-	 * Get a map of extra data about the entity, generally used by EntityManager
-	 * to cache information
-	 * 
-	 * @return Bundle of extra information describing the entity
-	 */
-	public Bundle getExtras() {
-		if (_extras == null)
-			_extras = new Bundle();
+	public void setKind(Kind kind) {
+		this.mKind = kind;
+	}
 
-		return _extras;
+	public void setName(String name) {
+		this.mName = name;
+	}
+
+	public void setNotifyCount(int count) {
+		this.mNotify = count;
+	}
+
+	public void setPattern(Pattern pattern) {
+		this.mPattern = pattern;
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public Pattern getPattern() {
+		return mPattern;
 	}
 }

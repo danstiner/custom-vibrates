@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.danielstiner.vibrates.model.internal.Database;
 import com.danielstiner.vibrates.model.internal.EntityProvider;
 import com.danielstiner.vibrates.model.internal.IDatabase;
 
@@ -23,13 +24,15 @@ public final class Entities implements BaseColumns {
 	public static final String NAME = "name";
 	public static final String PATTERN = "pattern";
 	public static final String NOTIFY_COUNT = "notified";
+	public static final String COL_CREATOR = "creator";
 
-	/** Monotonically increasing */
-	public static final int VERSION = 11;
+	public static final int VERSION = Database.VERSION;
 
 	public static final String TABLE = "entities";
 
 	static class DatabaseHelper implements IDatabase.IHelper {
+		
+		private static final int V_ADD_CREATOR_FIELD = 20;
 
 		public void onCreate(SQLiteDatabase db) {
 			// Create entity table
@@ -41,7 +44,9 @@ public final class Entities implements BaseColumns {
 		}
 
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+			if (oldVersion < V_ADD_CREATOR_FIELD
+					&& V_ADD_CREATOR_FIELD <= newVersion)
+				db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN " + COL_CREATOR + " string;");
 		}
 
 		public int version() {
