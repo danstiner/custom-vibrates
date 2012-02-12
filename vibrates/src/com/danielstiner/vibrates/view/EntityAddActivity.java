@@ -83,8 +83,9 @@ public class EntityAddActivity extends RoboFragmentActivity {
 				this.setResult(RESULT_NO_ADD);
 			}
 		}
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
+
+		this.setResult(RESULT_OK);
+		this.finish();
 	}
 
 }
