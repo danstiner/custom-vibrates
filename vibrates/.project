@@ -3,6 +3,7 @@
 	<name>vibrates</name>
 	<comment></comment>
 	<projects>
+		<project>library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

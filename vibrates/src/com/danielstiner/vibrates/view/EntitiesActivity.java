@@ -1,14 +1,15 @@
 package com.danielstiner.vibrates.view;
 
 import roboguice.activity.RoboFragmentActivity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.ArrayAdapter;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import android.app.ActionBar;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.R;
@@ -91,7 +92,6 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 	private OnMenuItemClickListener mOnMenuAddClick = new OnMenuItemClickListener() {
 
-		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 			// Only fires for add entity button
 			EntityAddActivity.show(mSelectedKind, EntitiesActivity.this, EntitiesActivity.ACTIVITY_RESULT_ADD);
@@ -112,7 +112,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entities);
 
-		mActionBar = getSupportActionBar();
+		mActionBar = getActionBar();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
 				| ActionBar.DISPLAY_SHOW_HOME);
@@ -122,7 +122,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 				android.R.layout.simple_dropdown_item_1line);
 
 		list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		getSupportActionBar().setListNavigationCallbacks(list, mNavListener);
+		getActionBar().setListNavigationCallbacks(list, mNavListener);
 
 		restoreState(savedInstanceState);
 
@@ -134,7 +134,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 		// Restore selected navigation list element
 		if (savedInstanceState.containsKey(STATE_NAV_INDEX))
-			getSupportActionBar().setSelectedNavigationItem(
+			getActionBar().setSelectedNavigationItem(
 					savedInstanceState.getInt(STATE_NAV_INDEX));
 	}
 
@@ -143,7 +143,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		super.onSaveInstanceState(outState);
 
 		// Save selected navigation list element
-		outState.putInt(STATE_NAV_INDEX, getSupportActionBar()
+		outState.putInt(STATE_NAV_INDEX, getActionBar()
 				.getSelectedNavigationIndex());
 	}
 
@@ -187,5 +187,10 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		
 		if(entities_frag != null)
 			entities_frag.setKind(kind);
+	}
+
+	public static void show(Context context) {
+		// TODO Auto-generated method stub
+		
 	}
 }

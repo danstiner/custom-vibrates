@@ -54,7 +54,7 @@ public class ListEntitiesFragment extends RoboListFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(android.R.layout.list_content, null);
+		return inflater.inflate(R.layout.entity_list, null);
 	}
 
 	// Called after onCreateView

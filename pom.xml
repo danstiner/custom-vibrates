@@ -7,42 +7,61 @@
 	<artifactId>vibrates-parent</artifactId>
 	<version>0.8.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>vibrates - Parent</name>
-
+	<name>vibrates-parent</name>
+	<description>Contact Vibrates app</description>
+	<issueManagement>
+        <url>https://github.com/danstiner/contact-vibrates/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+    <licenses>
+        <license>
+            <name>Apache V2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+	<scm>
+        <url>https://github.com/danstiner/contact-vibrates</url>
+        <connection>scm:git:git://github.com/danstiner/contact-vibrates.git</connection>
+        <developerConnection>scm:git:git@github.com:danstiner/contact-vibrates.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <email>daniel.stiner@gmail.com</email>
+            <name>Daniel Stiner</name>
+            <url>https://github.com/danstiner</url>
+            <id>danstiner</id>
+        </developer>
+    </developers>
+    
 	<modules>
 		<module>vibrates</module>
 		<module>vibrates-it</module>
 	</modules>
 
-	<dependencies>
-		<!-- <dependency> <groupId>com.google.inject</groupId> <artifactId>guice</artifactId> 
-			<classifier>no_aop</classifier> <version>3.0</version> </dependency> <dependency> 
-			<groupId>com.actionbarsherlock</groupId> <artifactId>library</artifactId> 
-			<version>4.0.0-SNAPSHOT</version> <type>apklib</type> </dependency> <dependency> 
-			<groupId>com.google.android</groupId> <artifactId>android</artifactId> <version>4.0.1.2</version> 
-			<scope>provided</scope> </dependency> <dependency> <groupId>org.roboguice</groupId> 
-			<artifactId>roboguice</artifactId> <version>2.0b3</version> <scope>compile</scope> 
-			<exclusions> <exclusion> <groupId>android.support</groupId> <artifactId>compatibility-v4</artifactId> 
-			</exclusion> </exclusions> </dependency> <dependency> <groupId>com.googlecode.libphonenumber</groupId> 
-			<artifactId>libphonenumber</artifactId> <version>4.5</version> </dependency> -->
-	</dependencies>
+	<repositories>
+  <repository>
+    <id>oss-sonatype</id>
+    <name>oss-sonatype</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+</repositories>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>com.google.android</groupId>
 				<artifactId>android</artifactId>
-				<version>
-                 4.0.1.2
-                                </version>
+				<version>4.0.1.2</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.google.android</groupId>
 				<artifactId>android-test</artifactId>
-				<version>
-                 4.0.1.2
-                                </version>
+				<version>4.0.1.2</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -277,23 +296,6 @@
 			</properties>
 		</profile>
 	</profiles>
-
-	<repositories>
-		<repository>
-			<id>jakewharton</id>
-			<name>Action Bar Sherlock - jakewharton</name>
-			<layout>default</layout>
-			<url>http://r.jakewharton.com/maven/release/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>jakewharton-snapshot</id>
-			<name>Action Bar Sherlock Snapshots - jakewharton</name>
-			<url>http://r.jakewharton.com/maven/snapshot/</url>
-		</repository>
-	</repositories>
 
 
 </project>
