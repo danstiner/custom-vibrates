@@ -3,5 +3,8 @@
     <string-array name="roboguice_modules">
     <item>com.danielstiner.vibrates.model.StorageModule</item>
     <item>com.danielstiner.vibrates.view.ViewModule</item>
+    <item>com.danielstiner.vibrates.notify.NotifyModule</item>
+    <item>com.danielstiner.vibrates.settings.SettingsModule</item>
+    <item>com.danielstiner.vibrates.service.ServiceModule</item>
   </string-array>
 </resources>

@@ -24,7 +24,7 @@
 	    	android:layout_height="wrap_content"
 	    	android:textSize="11pt"
 	    	/>
-    	<com.danielstiner.vibrates.view.PatternView
+    	<com.danielstiner.vibrates.view.components.PatternView
 	    	android:id="@+id/entitylist_row_pattern"
 	    	android:layout_width="match_parent"
 	    	android:layout_height="20px"

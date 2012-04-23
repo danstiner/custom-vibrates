@@ -74,7 +74,7 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		mManager = (mManager != null) ? mManager : mManagerProvider
 				.get(mContextProvider.get());
 		mAdapter = (mAdapter != null) ? mAdapter : mAdapterProvider
-				.get(getActivity().getBaseContext());
+				.get(getActivity().getApplicationContext());
 
 		getListView().setAdapter(mAdapter);
 

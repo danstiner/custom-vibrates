@@ -1,7 +1,9 @@
 package com.danielstiner.vibrates.view;
 
 import roboguice.activity.RoboFragmentActivity;
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -9,11 +11,11 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.ArrayAdapter;
 
-import android.app.ActionBar;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.Vibrates;
+import com.danielstiner.vibrates.settings.Preferences;
 import com.danielstiner.vibrates.view.fragments.EditEntity;
 import com.danielstiner.vibrates.view.fragments.IListEntitiesFragment;
 import com.danielstiner.vibrates.view.fragments.ListEntitiesFragment;
@@ -94,11 +96,22 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 		public boolean onMenuItemClick(MenuItem item) {
 			// Only fires for add entity button
-			EntityAddActivity.show(mSelectedKind, EntitiesActivity.this, EntitiesActivity.ACTIVITY_RESULT_ADD);
-			
+			EntityAddActivity.show(mSelectedKind, EntitiesActivity.this,
+					EntitiesActivity.ACTIVITY_RESULT_ADD);
+
 			return true;
 		}
-		
+
+	};
+
+	private OnMenuItemClickListener mOnMenuPrefClick = new OnMenuItemClickListener() {
+
+		public boolean onMenuItemClick(MenuItem item) {
+			Preferences.show(EntitiesActivity.this);
+
+			return true;
+		}
+
 	};
 
 	private ActionBar mActionBar;
@@ -158,6 +171,14 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 		menu.add("Search")
 				.setIcon(R.drawable.ic_action_search)
+				.setOnMenuItemClickListener(mOnMenuPrefClick)
+				.setShowAsAction(
+						MenuItem.SHOW_AS_ACTION_IF_ROOM
+								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+		menu.add("Preferences")
+				.setIcon(R.drawable.ic_action_search)
+				.setOnMenuItemClickListener(mOnMenuPrefClick)
 				.setShowAsAction(
 						MenuItem.SHOW_AS_ACTION_IF_ROOM
 								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -173,24 +194,24 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 				.findFragmentById(R.id.entity_edit_fragment);
 
 		if (editEntity == null || !editEntity.isInLayout()) {
-			EntityDetail.show(e, getApplicationContext());
+			EntityDetail.show(e, (Context) this);
 		} else {
 			editEntity.onEntitySelected(e);
 		}
 	}
-	
+
 	private void setKind(Entity.Kind kind) {
-		
+
 		IListEntitiesFragment entities_frag = loadChildFragment();
-		
+
 		this.mSelectedKind = kind;
-		
-		if(entities_frag != null)
+
+		if (entities_frag != null)
 			entities_frag.setKind(kind);
 	}
 
 	public static void show(Context context) {
-		// TODO Auto-generated method stub
-		
+		Intent i = new Intent(context, EntitiesActivity.class);
+		context.startActivity(i);
 	}
 }

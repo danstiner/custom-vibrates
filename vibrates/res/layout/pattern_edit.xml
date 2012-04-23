@@ -19,7 +19,7 @@
 		android:layout_height="wrap_content"
   		android:layout_marginBottom="40px"
   		/>
-  	<com.danielstiner.vibrates.views.VibratePatternView
+  	<com.danielstiner.vibrates.view.components.PatternView
     	android:id="@+id/pattern_edit_patternview"
     	android:layout_width="fill_parent"
     	android:layout_height="30px"

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.model.IDataModel;
-import com.danielstiner.vibrates.view.PatternView;
+import com.danielstiner.vibrates.view.components.PatternView;
 import com.google.inject.Inject;
 
 public class EntityCursorAdapter extends CursorAdapter {

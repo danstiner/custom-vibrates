@@ -10,6 +10,13 @@ import com.danielstiner.vibrates.model.internal.IdentifierProvider;
 
 public final class Identifiers implements BaseColumns {
 
+	public static class Common
+	{
+
+		public static final String Name = null;
+		
+	}
+
 	public Identifiers() {
 
 	}

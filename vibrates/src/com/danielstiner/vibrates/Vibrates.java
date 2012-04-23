@@ -1,6 +1,8 @@
 package com.danielstiner.vibrates;
 
-public class Vibrates {
+import android.app.Application;
+
+public class Vibrates extends Application {
 	/**  */
 	public static final String NS = "com.danielstiner.vibrates";
 
