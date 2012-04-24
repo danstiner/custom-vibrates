@@ -53,7 +53,8 @@ public class PatternView extends View {
 		pattern_border_paint.setAlpha(50);
 
 		pattern_vibrate_paint.setColor(Color.LTGRAY);
-		oversized_vibrate_paint.setColor(Color.WHITE);
+		oversized_vibrate_paint.setColor(Color.LTGRAY);
+		oversized_vibrate_paint.setAlpha(85);
 
 		pattern_wait_paint.setColor(Color.BLACK);
 		pattern_wait_paint.setAlpha(0);
