@@ -1,6 +1,8 @@
 package com.danielstiner.vibrates.model.internal;
 
 import roboguice.content.RoboContentProvider;
+import roboguice.inject.ContextScopedProvider;
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -8,6 +10,7 @@ import android.net.Uri;
 
 import com.danielstiner.vibrates.model.Entities;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 public class EntityProvider extends RoboContentProvider {
 
@@ -26,7 +29,10 @@ public class EntityProvider extends RoboContentProvider {
 	private static final String TABLE = Entities.TABLE;
 
 	@Inject
-	private IDatabase mDatabase;
+	private ContextScopedProvider<IDatabase> mDatabaseProvider;
+	
+	@Inject
+	private Provider<Application> mContextProvider;
 
 	@Override
 	public boolean onCreate() {
@@ -39,7 +45,7 @@ public class EntityProvider extends RoboContentProvider {
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 
 		if (CONTENT_URI.equals(uri)) {
-			return mDatabase.getWritableDatabase().delete(TABLE, selection, selectionArgs);
+			return mDatabaseProvider.get(mContextProvider.get()).getWritableDatabase().delete(TABLE, selection, selectionArgs);
 			// groupBy,
 			// having,
 			// orderBy)
@@ -57,7 +63,7 @@ public class EntityProvider extends RoboContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		if (CONTENT_URI.equals(uri)) {
-			long insert_id = mDatabase.getWritableDatabase().insert(TABLE,
+			long insert_id = mDatabaseProvider.get(mContextProvider.get()).getWritableDatabase().insert(TABLE,
 					null, values);
 
 			if (insert_id < 0)
@@ -81,7 +87,7 @@ public class EntityProvider extends RoboContentProvider {
 			String[] selectionArgs, String sortOrder) {
 
 		if (CONTENT_URI.equals(uri)) {
-			return mDatabase.getReadableDatabase().query(TABLE, projection,
+			return mDatabaseProvider.get(mContextProvider.get()).getReadableDatabase().query(TABLE, projection,
 					selection, selectionArgs, null, null, null);
 			// groupBy,
 			// having,
