@@ -3,7 +3,7 @@ package com.danielstiner.vibrates.view.fragments;
 import roboguice.fragment.RoboFragment;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.view.OnEntitySelectedListener;
+import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 
 public class EditEntity extends RoboFragment implements
 		OnEntitySelectedListener {

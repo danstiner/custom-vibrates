@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.danielstiner.vibrates.Entity;
@@ -21,8 +21,8 @@ import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.model.StorageUtil;
 import com.danielstiner.vibrates.view.EntitiesActivity;
-import com.danielstiner.vibrates.view.OnEntitySelectedListener;
 import com.danielstiner.vibrates.view.model.EntityCursorAdapter;
+import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -30,6 +30,8 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		IListEntitiesFragment, OnEntitySelectedListener {
 
 	private static final int CONTEXTMENU_DELETE = 1;
+
+	private static final int MENU_ADD_ACTION = Menu.FIRST;
 
 	@Inject
 	private ContextScopedProvider<IDataModel> mManagerProvider;
@@ -47,6 +49,8 @@ public class ListEntitiesFragment extends RoboListFragment implements
 	@Inject
 	private Provider<Application> mContextProvider;
 
+	private MenuItem mMenuAddAction;
+
 	public ListEntitiesFragment() {
 
 	}
@@ -62,7 +66,7 @@ public class ListEntitiesFragment extends RoboListFragment implements
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		// Injects members through roboguice
 		super.onViewCreated(view, savedInstanceState);
-		
+
 		registerForContextMenu(getListView());
 	}
 
@@ -123,8 +127,9 @@ public class ListEntitiesFragment extends RoboListFragment implements
 
 		// Try and talk to parent activity
 		if (a instanceof EntitiesActivity) {
-			((EntitiesActivity) a).onEntitySelected(e);
+			((OnEntitySelectedListener) a).onEntitySelected(e);
 		}
+
 	}
 
 	@Override
@@ -133,12 +138,6 @@ public class ListEntitiesFragment extends RoboListFragment implements
 				|| !mEntityFilter.getKind().equals(kind)) {
 			mEntityFilter.setKind(kind);
 		}
-	}
-
-	public void refresh() {
-		if (mEntityFilter == null)
-			mEntityFilter.refresh();
-
 	}
 
 }

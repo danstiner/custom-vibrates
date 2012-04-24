@@ -15,10 +15,11 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.Vibrates;
-import com.danielstiner.vibrates.settings.Preferences;
 import com.danielstiner.vibrates.view.fragments.EditEntity;
 import com.danielstiner.vibrates.view.fragments.IListEntitiesFragment;
 import com.danielstiner.vibrates.view.fragments.ListEntitiesFragment;
+import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
+import com.danielstiner.vibrates.view.model.OnMenuSettingsClickListener;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -92,7 +93,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		return mEntitiesFragment;
 	}
 
-	private OnMenuItemClickListener mOnMenuAddClick = new OnMenuItemClickListener() {
+	private OnMenuItemClickListener mOnMenuAddEntityClick = new OnMenuItemClickListener() {
 
 		public boolean onMenuItemClick(MenuItem item) {
 			// Only fires for add entity button
@@ -104,21 +105,13 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 	};
 
-	private OnMenuItemClickListener mOnMenuPrefClick = new OnMenuItemClickListener() {
-
-		public boolean onMenuItemClick(MenuItem item) {
-			Preferences.show(EntitiesActivity.this);
-
-			return true;
-		}
-
-	};
-
 	private ActionBar mActionBar;
 
 	private Entity mSelectedEntity;
 
 	private Kind mSelectedKind;
+
+	private MenuItem mMenuAddAction;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -162,28 +155,36 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add("Add")
-				.setIcon(R.drawable.ic_action_add)
-				.setOnMenuItemClickListener(mOnMenuAddClick)
-				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		menu.add("Search")
-				.setIcon(R.drawable.ic_action_search)
-				.setOnMenuItemClickListener(mOnMenuPrefClick)
-				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_IF_ROOM
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		mMenuAddAction = menu.add(Menu.FIRST, Menu.FIRST, Menu.FIRST, "Add")
+				.setOnMenuItemClickListener(mOnMenuAddEntityClick);
+		mMenuAddAction.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-		menu.add("Preferences")
-				.setIcon(R.drawable.ic_action_search)
-				.setOnMenuItemClickListener(mOnMenuPrefClick)
+		menu.add(Menu.NONE, Menu.NONE, Menu.CATEGORY_ALTERNATIVE, "Search")
+				.setIcon(R.drawable.action_search)
 				.setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_IF_ROOM
-								| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+						MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+		menu.add(Menu.NONE, Menu.NONE, Menu.CATEGORY_CONTAINER, "Settings")
+				.setIcon(R.drawable.action_settings)
+				.setOnMenuItemClickListener(OnMenuSettingsClickListener.getInstance(this))
+				.setShowAsAction(
+						MenuItem.SHOW_AS_ACTION_NEVER);
 
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		this.refresh();
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private void refresh() {
+		// Forces refresh
+		this.setKind(mSelectedKind);
 	}
 
 	@Override
@@ -205,9 +206,27 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		IListEntitiesFragment entities_frag = loadChildFragment();
 
 		this.mSelectedKind = kind;
+		
+		updateAddAction();
 
 		if (entities_frag != null)
 			entities_frag.setKind(kind);
+	}
+	
+	private void updateAddAction() {
+
+		if (mMenuAddAction == null) {
+			// Do nothing
+		} else if (mSelectedKind == Kind.Contact) {
+			mMenuAddAction.setIcon(R.drawable.social_add_person);
+			mMenuAddAction.setTitle("Add Contact");
+		} else if (mSelectedKind == Kind.Group) {
+			mMenuAddAction.setIcon(R.drawable.social_add_group);
+			mMenuAddAction.setTitle("Add Group");
+		} else if (mSelectedKind == Kind.App) {
+			mMenuAddAction.setIcon(R.drawable.av_add_to_queue);
+			mMenuAddAction.setTitle("Add App");
+		}
 	}
 
 	public static void show(Context context) {

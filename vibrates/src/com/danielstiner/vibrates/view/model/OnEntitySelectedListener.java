@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.view;
+package com.danielstiner.vibrates.view.model;
 
 import com.danielstiner.vibrates.Entity;
 
