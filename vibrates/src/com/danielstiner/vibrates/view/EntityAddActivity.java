@@ -28,6 +28,12 @@ public class EntityAddActivity extends RoboFragmentActivity {
 		i.putExtra(ENTITY_KIND_KEY, kind.toString());
 		forActivity.startActivityForResult(i, requestCode);
 	}
+	
+	public static void show(Entity.Kind kind, Context context) {
+		Intent i = new Intent(context, EntityAddActivity.class);
+		i.putExtra(ENTITY_KIND_KEY, kind.toString());
+		context.startActivity(i);
+	}
 
 	@Inject
 	private ContextScopedProvider<IDataModel> mModelProvider;
