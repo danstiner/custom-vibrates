@@ -15,6 +15,7 @@ public class NotificationTypes {
 			"email");
 
 	public static final String CHAT_TEXT = particularizeType(CHAT, "text");
+	public static final String CHAT_IM = particularizeType(CHAT_TEXT, "im");
 	public static final String CHAT_MMS = particularizeType(CHAT_TEXT, "MMS");
 	public static final String CHAT_SMS = particularizeType(CHAT_TEXT, "SMS");
 
