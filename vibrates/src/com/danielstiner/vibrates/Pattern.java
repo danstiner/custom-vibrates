@@ -6,6 +6,13 @@ import java.util.List;
 
 public class Pattern {
 
+	public static final Pattern NONE;
+	static {
+		Pattern p = new Pattern();
+		p.setPattern(new long[] {0,0});
+		NONE = p;
+	}
+	
 	private long[] pattern;
 
 	public List<Long> asList() {
