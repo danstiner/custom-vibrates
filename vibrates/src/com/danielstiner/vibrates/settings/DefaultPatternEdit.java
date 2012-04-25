@@ -4,7 +4,7 @@ import roboguice.activity.RoboActivity;
 import android.content.Intent;
 
 import com.danielstiner.vibrates.Pattern;
-import com.danielstiner.vibrates.view.fragments.PatternEdit;
+import com.danielstiner.vibrates.view.PatternEditActivity;
 import com.google.inject.Inject;
 
 public class DefaultPatternEdit extends RoboActivity {
@@ -32,7 +32,7 @@ public class DefaultPatternEdit extends RoboActivity {
 			if (resultCode == RESULT_OK && data != null) {
 				// TODO
 				user_settings.defaultPattern(new Pattern().setPattern(data
-						.getLongArrayExtra(PatternEdit.EXTRA_KEY_PATTERN)));
+						.getLongArrayExtra(PatternEditActivity.EXTRA_KEY_PATTERN)));
 			}
 			finish();
 			break;
@@ -41,8 +41,8 @@ public class DefaultPatternEdit extends RoboActivity {
 
 	private void editPattern() {
 		// TODO
-		Intent i = new Intent(this, PatternEdit.class);
-		i.putExtra(PatternEdit.EXTRA_KEY_PATTERN, user_settings
+		Intent i = new Intent(this, PatternEditActivity.class);
+		i.putExtra(PatternEditActivity.EXTRA_KEY_PATTERN, user_settings
 				.defaultPattern().asArray());
 		startActivityForResult(i, ACTIVITY_PATTERN_EDIT);
 	}

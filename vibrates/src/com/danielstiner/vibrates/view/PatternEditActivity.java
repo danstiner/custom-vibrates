@@ -1,4 +1,4 @@
-package com.danielstiner.vibrates.view.fragments;
+package com.danielstiner.vibrates.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ import com.danielstiner.vibrates.util.PatternEditManager;
 import com.danielstiner.vibrates.view.components.PatternView;
 import com.google.inject.Inject;
 
-public class PatternEdit extends RoboActivity {
+public class PatternEditActivity extends RoboActivity {
 
 	private static final String NS = com.danielstiner.vibrates.Vibrates.NS
 			+ "." + "views";
