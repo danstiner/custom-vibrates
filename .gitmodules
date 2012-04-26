@@ -1,0 +1,3 @@
+[submodule "vibrates/lib/ActionBarSherlock"]
+	path = vibrates/lib/ActionBarSherlock
+	url = git://github.com/JakeWharton/ActionBarSherlock.git
