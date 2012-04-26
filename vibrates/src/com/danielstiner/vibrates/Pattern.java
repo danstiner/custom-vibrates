@@ -38,6 +38,9 @@ public class Pattern {
 	}
 
 	public static Pattern fromString(String pattern_packed) {
+		
+		if(pattern_packed == null)
+			return null;
 
 		String[] pattern_parts = pattern_packed.split(",");
 		long[] pattern = new long[pattern_parts.length];

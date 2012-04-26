@@ -2,49 +2,57 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<parent>
-		<groupId>com.danielstiner</groupId>
-		<artifactId>vibrates-parent</artifactId>
-		<version>0.8.0-SNAPSHOT</version>
-	</parent>
-
 	<groupId>com.danielstiner</groupId>
 	<artifactId>vibrates</artifactId>
 	<version>0.8.0-SNAPSHOT</version>
 	<packaging>apk</packaging>
-	<name>Contact Vibrartes - Application</name>
+	<name>Contact Vibrates - Application</name>
+	
+	<parent>
+		<groupId>com.danielstiner</groupId>
+		<artifactId>vibrates-parent</artifactId>
+		<version>0.8.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	
 
 	<dependencies>
-		<!-- <dependency>
-			<groupId>com.actionbarsherlock</groupId>
-			<artifactId>library</artifactId>
-			<version>4.0.0</version>
-			<type>apklib</type>
-		</dependency> -->
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>library</artifactId>
+			<version>4.0.0</version>
+			<type>apklib</type>
+		</dependency>
+		<!-- https://github.com/rtyley/roboguice-sherlock -->
+		<dependency>
+			<groupId>com.github.rtyley</groupId>
+			<artifactId>roboguice-sherlock</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- <dependency>
 			<groupId>org.roboguice</groupId>
 			<artifactId>roboguice</artifactId>
 			<version>2.0-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
-  <groupId>com.google.inject</groupId>
-  <artifactId>guice</artifactId>
-  <version>3.0</version>
-  <classifier>no_aop</classifier>
-</dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+			<classifier>no_aop</classifier>
+		</dependency>
 		<dependency>
 			<groupId>com.googlecode.libphonenumber</groupId>
 			<artifactId>libphonenumber</artifactId>
 			<version>4.5</version>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src</sourceDirectory>
@@ -87,7 +95,7 @@
 				<version>3.0.0</version>
 				<configuration>
 					<sdk>
-						<platform>15</platform>
+						<platform>14</platform>
 					</sdk>
 					<deleteConflictingFiles>true</deleteConflictingFiles>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
@@ -111,13 +119,6 @@
 				<extensions>true</extensions>
 				<executions>
 					<execution>
-						<id>manifestUpdate</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>manifest-update</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>alignApk</id>
 						<phase>package</phase>
 						<goals>
@@ -127,79 +128,13 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											com.jayway.maven.plugins.android.generation2
-										</groupId>
-										<artifactId>
-											android-maven-plugin
-										</artifactId>
-										<versionRange>
-											[3.0.0,)
-										</versionRange>
-										<goals>
-											<goal>manifest-update</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-	<!-- <build> <plugins> <plugin> <groupId>com.jayway.maven.plugins.android.generation2</groupId> 
-		<artifactId>android-maven-plugin</artifactId> <extensions>true</extensions> 
-		</plugin> </plugins> </build> <profiles> <profile> <id>release</id> <build> 
-		<plugins> <plugin> <groupId>com.pyx4me</groupId> <artifactId>proguard-maven-plugin</artifactId> 
-		<executions> <execution> <id>process-classes-with-proguard</id> <phase>process-classes</phase> 
-		<goals> <goal>proguard</goal> </goals> <configuration> <proguardVersion>4.4</proguardVersion> 
-		<maxMemory>256m</maxMemory> <injar>android-classes</injar> <libs> <lib>${rt.jar.path}</lib> 
-		<lib>${jsse.jar.path}</lib> </libs> <obfuscate>true</obfuscate> <addMavenDescriptor>false</addMavenDescriptor> 
-		<proguardInclude>${project.basedir}/proguard.conf</proguardInclude> </configuration> 
-		</execution> </executions> <dependencies> <dependency> <groupId>net.sf.proguard</groupId> 
-		<artifactId>proguard</artifactId> <version>4.4</version> <scope>runtime</scope> 
-		</dependency> </dependencies> </plugin> <plugin> <artifactId>maven-jarsigner-plugin</artifactId> 
-		<executions> <execution> <id>sign-application-apk</id> <phase>package</phase> 
-		<goals> <goal>sign</goal> <goal>verify</goal> </goals> </execution> </executions> 
-		</plugin> <plugin> <groupId>com.jayway.maven.plugins.android.generation2</groupId> 
-		<artifactId>android-maven-plugin</artifactId> <executions> <execution> <id>zipalign-application-apk</id> 
-		<phase>package</phase> <goals> <goal>zipalign</goal> </goals> </execution> 
-		</executions> <configuration> <zipalign> <verbose>true</verbose> <inputApk>${project.build.directory}/${project.artifactId}-${project.version}.apk</inputApk> 
-		<outputApk>${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk</outputApk> 
-		</zipalign> <sign> <debug>false</debug> </sign> </configuration> </plugin> 
-		<plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>build-helper-maven-plugin</artifactId> 
-		<configuration> <artifacts> <artifact> <file>${project.build.directory}/proguard_map.txt</file> 
-		<type>map</type> <classifier>release</classifier> </artifact> </artifacts> 
-		</configuration> <executions> <execution> <id>attach-signed-aligned</id> 
-		<phase>package</phase> <goals> <goal>attach-artifact</goal> </goals> </execution> 
-		</executions> </plugin> </plugins> </build> </profile> </profiles> -->
 
 	<repositories>
 
 		<repository>
 			<id>ActionBarSherlock</id>
 			<url>http://r.jakewharton.com/maven/snapshot/</url>
-		</repository>
-		<repository>
-			<id>acra-releases</id>
-			<url>http://acra.googlecode.com/svn/repository/releases</url>
 		</repository>
 		<repository>
 			<id>oss.sonatype.org</id>

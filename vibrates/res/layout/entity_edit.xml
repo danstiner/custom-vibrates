@@ -71,7 +71,7 @@
 				android:layout_gravity="center_horizontal"
 		  		android:layout_marginBottom="60px"
 		  		/>
-	  		<com.danielstiner.vibrates.views.VibratePatternView
+	  		<com.danielstiner.vibrates.view.components.PatternView
 		    	android:id="@+id/entity_edit_pattern"
 		    	android:layout_width="match_parent"
 			    android:layout_height="22px"

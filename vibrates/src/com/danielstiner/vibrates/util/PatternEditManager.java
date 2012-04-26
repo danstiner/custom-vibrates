@@ -92,6 +92,10 @@ public class PatternEditManager {
 	public void playPattern() {
 		_vibratr.vibrate(this.getPattern().asArray(), -1);
 	}
+	
+	public void stopPlay() {
+		_vibratr.cancel();
+	}
 
 	public void press() {
 

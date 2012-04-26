@@ -1,27 +1,27 @@
 package com.danielstiner.vibrates.view.model;
 
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.danielstiner.vibrates.settings.Preferences;
-import com.danielstiner.vibrates.view.EntitiesActivity;
 
 import android.content.Context;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 
-public class OnMenuSettingsClickListener implements OnMenuItemClickListener {
-	
+public class OnMenuSettingsClickListener implements
+		com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener {
+
 	private Context mContext;
 
 	public OnMenuSettingsClickListener(Context context) {
 		this.mContext = context;
 	}
 
-	public static OnMenuSettingsClickListener getInstance(Context context)
-	{
+	public static OnMenuItemClickListener getInstance(
+			Context context) {
 		return new OnMenuSettingsClickListener(context);
 	}
 
 	@Override
-	public boolean onMenuItemClick(MenuItem paramMenuItem) {
+	public boolean onMenuItemClick(MenuItem arg0) {
 		Preferences.show(mContext);
 
 		return true;

@@ -104,4 +104,8 @@ public class Entity {
 	public Pattern getPattern() {
 		return mPattern;
 	}
+	
+	public Kind getKind() {
+		return mKind;
+	}
 }

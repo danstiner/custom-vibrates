@@ -1,16 +1,15 @@
 package com.danielstiner.vibrates.view;
 
-import roboguice.activity.RoboFragmentActivity;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.ArrayAdapter;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.R;
@@ -20,10 +19,11 @@ import com.danielstiner.vibrates.view.fragments.IListEntitiesFragment;
 import com.danielstiner.vibrates.view.fragments.ListEntitiesFragment;
 import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.danielstiner.vibrates.view.model.OnMenuSettingsClickListener;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class EntitiesActivity extends RoboFragmentActivity implements
+public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 		OnEntitySelectedListener {
 
 	private static final String CLASSNAME = Vibrates.NS + "view.Entities";
@@ -118,7 +118,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.entities);
 
-		mActionBar = getActionBar();
+		mActionBar = getSupportActionBar();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		mActionBar.setDisplayOptions(ActionBar.DISPLAY_USE_LOGO
 				| ActionBar.DISPLAY_SHOW_HOME);
@@ -128,7 +128,7 @@ public class EntitiesActivity extends RoboFragmentActivity implements
 				android.R.layout.simple_dropdown_item_1line);
 
 		list.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		getActionBar().setListNavigationCallbacks(list, mNavListener);
+		mActionBar.setListNavigationCallbacks(list, mNavListener);
 
 		restoreState(savedInstanceState);
 
