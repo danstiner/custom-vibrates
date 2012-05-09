@@ -9,10 +9,10 @@ public class Pattern {
 	public static final Pattern NONE;
 	static {
 		Pattern p = new Pattern();
-		p.setPattern(new long[] {0,0});
+		p.setPattern(new long[] { 0, 0 });
 		NONE = p;
 	}
-	
+
 	private long[] pattern;
 
 	public List<Long> asList() {
@@ -37,9 +37,13 @@ public class Pattern {
 		return pattern.clone();
 	}
 
+	public static Pattern fromArray(long[] pattern) {
+		return new Pattern().setPattern(pattern);
+	}
+
 	public static Pattern fromString(String pattern_packed) {
-		
-		if(pattern_packed == null)
+
+		if (pattern_packed == null)
 			return null;
 
 		String[] pattern_parts = pattern_packed.split(",");

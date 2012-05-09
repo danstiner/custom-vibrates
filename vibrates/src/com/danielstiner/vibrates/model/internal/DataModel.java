@@ -19,6 +19,7 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.Identifier;
 import com.danielstiner.vibrates.Pattern;
+import com.danielstiner.vibrates.model.Entities;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.util.PatternUtil;
@@ -136,7 +137,7 @@ public class DataModel implements IDataModel {
 			return null;
 
 		// Generate a default contact pattern
-		long[] pattern = PatternUtil.generate(name);
+		Pattern pattern = Pattern.fromArray(PatternUtil.generate(name));
 
 		Entity e = create(lookup, name, pattern, Entity.Kind.Contact);
 
@@ -161,6 +162,8 @@ public class DataModel implements IDataModel {
 	@Override
 	public Uri getContactUri(Entity e) {
 		// TODO Auto-generated method stub
+		// return ContactsContract.Contacts.getLookupUri(c.entityid(),
+		// c.identifier());
 		return null;
 	}
 
@@ -172,18 +175,20 @@ public class DataModel implements IDataModel {
 
 	@Override
 	public Pattern getPattern(Entity e) {
-		// TODO Auto-generated method stub
-		return null;
+		if (e == null)
+			return (Pattern) null;
+		else
+			return e.getPattern();
 	}
-	
+
 	@Override
 	public void remove(Entity entity) {
 		getEntityStore().delete(entity);
-		
+
 		// TODO remove identifiers
 	}
 
-	private Entity create(String identifier, String name, long[] pattern,
+	private Entity create(String identifier, String name, Pattern pattern,
 			Kind kind) {
 		// First first see if such an entity already exists
 		Entity entity = getEntity(identifier, kind);
@@ -203,6 +208,16 @@ public class DataModel implements IDataModel {
 		// getIdentifierManager().add(entity, name);
 
 		return entity;
+	}
+
+	@Override
+	public Entity getEntity(long id) {
+		return getEntityStore().get(id);
+	}
+
+	@Override
+	public void update(Entity entity) {
+		getEntityStore().update(entity);
 	}
 
 	private IEntityStore getEntityStore() {

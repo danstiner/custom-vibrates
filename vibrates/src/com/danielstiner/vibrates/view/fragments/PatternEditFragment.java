@@ -5,19 +5,19 @@ import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.danielstiner.vibrates.Pattern;
 import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.util.Callback;
 import com.danielstiner.vibrates.util.PatternEditManager;
-import com.danielstiner.vibrates.view.EntitiesActivity;
 import com.danielstiner.vibrates.view.components.PatternView;
-import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.google.inject.Inject;
 
-public class PatternEditFragment extends RoboFragment implements IPatternEdit {
+public class PatternEditFragment extends RoboFragment implements
+		IPatternEditFragment {
 
 	public interface ContainerActivityInterface {
 		public void onPatternChanged(Pattern p, PatternEditFragment in);
@@ -28,13 +28,16 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 	private static final String CLASSNAME = NS + "." + "VibratePatternEdit";
 	private static final String EXTRA_KEY_PATTERN = CLASSNAME + "." + "pattern";
 
-	@InjectView(R.id.pattern)
+	@InjectView(R.id.patternview)
 	private PatternView mPatternView;
+
+	@InjectView(R.id.fragment_container)
+	private LinearLayout mLayout;
 
 	@Inject
 	private PatternEditManager mEditManager;
 
-	private Pattern mPattern = Pattern.NONE;
+	//private Pattern mPattern = Pattern.NONE;
 
 	public PatternEditFragment() {
 
@@ -51,8 +54,6 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 			@Override
 			public void run() {
 				// Got new complete pattern
-				PatternEditFragment.this.mPattern = PatternEditFragment.this.mEditManager
-						.getPattern();
 				onNewPattern();
 			}
 		});
@@ -62,13 +63,13 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putString(mPattern.toString(), EXTRA_KEY_PATTERN);
+		outState.putString(mEditManager.getPattern().toString(), EXTRA_KEY_PATTERN);
 	}
 
 	protected void onNewPattern() {
 
 		if (mPatternView != null)
-			mPatternView.setPattern(mPattern);
+			mPatternView.setPattern(mEditManager.getPattern());
 
 		// Preview the current pattern
 		mEditManager.playPattern();
@@ -76,7 +77,7 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 		// Try and talk to parent activity
 		ContainerActivityInterface cai = getContainer();
 		if (cai != null)
-			cai.onPatternChanged(mPattern, this);
+			cai.onPatternChanged(mEditManager.getPattern(), this);
 	}
 
 	@Override
@@ -90,8 +91,8 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 	private ContainerActivityInterface getContainer() {
 
 		Activity activity = getActivity();
-		
-		if(activity == null)
+
+		if (activity == null)
 			return null;
 
 		try {
@@ -105,7 +106,11 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.pattern_edit, container);
+		if (container == null)
+			return null;
+
+		return inflater.inflate(R.layout.fragment_pattern_edit, container,
+				false);
 	}
 
 	// Called after onCreateView
@@ -115,26 +120,32 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 		super.onViewCreated(view, savedInstanceState);
 
 		if (mPatternView != null)
-			mPatternView.setPattern(mPattern);
+			mPatternView.setPattern(mEditManager.getPattern());
 
 		// TODO attach touch handlers
-	}
+		mLayout.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_DOWN) {
+					PatternEditFragment.this.mEditManager.press();
+				} else if (event.getAction() == MotionEvent.ACTION_UP) {
+					PatternEditFragment.this.mEditManager.release();
+				}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setRetainInstance(true);
+				PatternEditFragment.this.mPatternView.setPattern(PatternEditFragment.this.mEditManager.getPattern());
 
+				return true;
+			}
+		});
 	}
 
 	@Override
 	public void setPattern(Pattern pattern, boolean play) {
-		mPattern = pattern;
+		mEditManager.setPattern(pattern);
 
 		if (mPatternView != null)
-			mPatternView.setPattern(mPattern);
-
-		mEditManager.setPattern(pattern);
+			mPatternView.setPattern(mEditManager.getPattern());
 
 		// Preview the current pattern
 		if (play)
@@ -151,7 +162,7 @@ public class PatternEditFragment extends RoboFragment implements IPatternEdit {
 
 	@Override
 	public Pattern getPattern() {
-		return mPattern;
+		return mEditManager.getPattern();
 	}
 
 	private Pattern getSavedPattern(Bundle savedState) {

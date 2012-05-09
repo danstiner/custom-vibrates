@@ -1,5 +1,7 @@
 package com.danielstiner.vibrates.model.internal;
 
+import java.util.List;
+
 import android.database.sqlite.SQLiteDatabase;
 
 public interface IDatabase {
@@ -11,10 +13,8 @@ public interface IDatabase {
 	public interface IHelper {
 
 		void onCreate(SQLiteDatabase db);
-
-		void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
-
-		int version();
+		
+		List<Migration> getMigrations();
 	}
 
 }

@@ -6,37 +6,30 @@
   android:orientation="vertical"
   android:gravity="center_horizontal">
   <LinearLayout
-  	android:layout_width="wrap_content"
+  	android:layout_width="fill_parent"
   	android:layout_height="wrap_content"
   	android:layout_gravity="center"
   	android:orientation="vertical"
   	android:gravity="center"
-  	android:padding="50px"
+  	android:padding="20dp"
+  	android:id="@+id/fragment_container"
   	>
   	<TextView
   		android:text="@string/pattern_edit_premessage"
   		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-  		android:layout_marginBottom="40px"
+  		android:layout_marginBottom="30dp"
   		/>
   	<com.danielstiner.vibrates.view.components.PatternView
     	android:id="@+id/patternview"
     	android:layout_width="fill_parent"
-    	android:layout_height="30px"
+    	android:layout_height="20dp"
     	/>
-    <TextView
-  		android:text="@string/pattern_edit_postmessage"
-  		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-  		android:layout_marginTop="30px"
-  		/>
+
+  	<Spinner
+  	    android:id="@+id/spinner"
+  	    android:layout_width="match_parent"
+  	    android:layout_height="wrap_content" />
+
   </LinearLayout>
-  <Button
-  	android:id="@+id/pattern_edit_clear_button"
-	android:text="Clear Vibrate Pattern"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-	android:layout_gravity="bottom|center_horizontal"
-	android:layout_marginBottom="40px"
-	/>
 </FrameLayout>

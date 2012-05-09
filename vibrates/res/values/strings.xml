@@ -36,7 +36,7 @@
     <string name="menu_add_title">Add..</string>
     <string name="menu_settings_title">Settings</string>
     <string name="message_identifierlist_empty">No unknown identifiers. All recent phone numbers, email addresses, etc belonged to a contact on this phone.</string>
-	<string name="pattern_edit_premessage">Tap the screen to create a new pattern</string>
+	<string name="pattern_edit_premessage">Tap to create pattern</string>
 	<string name="pattern_edit_postmessage">Press back to finish</string>
 	<string name="toast_forcesilent">Custom Vibrates: Kept phone in vibrate mode based on your preferences.</string>
 	<string name="edit_pattern_premessage">Tap to create pattern</string>

@@ -1,5 +1,10 @@
 package com.danielstiner.vibrates.model.internal;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import roboguice.inject.ContextSingleton;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,8 +53,51 @@ public class Database implements IDatabase {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			List<Migration> migrations = new ArrayList<Migration>();
+			
+			// Get all possible migrations
 			for (IHelper helper : mTableHelpers) {
-				helper.onUpgrade(db, oldVersion, newVersion);
+				migrations.addAll(helper.getMigrations());
+			}
+			
+			// Sort them to go from version 0 up
+			Collections.sort(migrations, new Comparator<Migration>() {
+
+				@Override
+				public int compare(Migration lhs, Migration rhs) {
+					return new Integer(lhs.version()).compareTo(rhs.version());
+				}
+			});
+			
+			// Apply them all, they will know whether they are applicable
+			for(Migration m : migrations)
+			{
+				m.apply(db, oldVersion, newVersion);
+			}
+		}
+		
+		@Override
+		public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			List<Migration> migrations = new ArrayList<Migration>();
+			
+			// Get all possible migrations
+			for (IHelper helper : mTableHelpers) {
+				migrations.addAll(helper.getMigrations());
+			}
+			
+			// Sort them to go down to version 0
+			Collections.sort(migrations, new Comparator<Migration>() {
+
+				@Override
+				public int compare(Migration lhs, Migration rhs) {
+					return -1 * new Integer(lhs.version()).compareTo(rhs.version());
+				}
+			});
+			
+			// Apply them all, they will know whether they are applicable
+			for(Migration m : migrations)
+			{
+				m.apply(db, oldVersion, newVersion);
 			}
 		}
 

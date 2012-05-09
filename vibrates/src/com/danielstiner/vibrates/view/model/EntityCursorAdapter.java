@@ -82,7 +82,7 @@ public class EntityCursorAdapter extends CursorAdapter {
 		int pos = c.getPosition();
 
 		// Try move to given position
-		if (!c.move(position)) {
+		if (!c.moveToPosition(position)) {
 			c.move(pos);
 			return null;
 		}

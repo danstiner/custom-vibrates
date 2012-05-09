@@ -1,5 +1,8 @@
 package com.danielstiner.vibrates.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -7,14 +10,14 @@ import android.provider.BaseColumns;
 import com.danielstiner.vibrates.model.internal.Database;
 import com.danielstiner.vibrates.model.internal.IDatabase;
 import com.danielstiner.vibrates.model.internal.IdentifierProvider;
+import com.danielstiner.vibrates.model.internal.Migration;
 
 public final class Identifiers implements BaseColumns {
 
-	public static class Common
-	{
+	public static class Common {
 
 		public static final String Name = null;
-		
+
 	}
 
 	public Identifiers() {
@@ -38,8 +41,6 @@ public final class Identifiers implements BaseColumns {
 
 	static class DatabaseHelper implements IDatabase.IHelper {
 
-		private static final int V_ADD_CREATOR_FIELD = 19;
-
 		public void onCreate(SQLiteDatabase db) {
 			// Create lookup table
 			String lookup_sql = "CREATE TABLE " + TABLE + " ( " + COL_ID
@@ -49,14 +50,20 @@ public final class Identifiers implements BaseColumns {
 			db.execSQL(lookup_sql);
 		}
 
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			if (oldVersion < V_ADD_CREATOR_FIELD
-					&& V_ADD_CREATOR_FIELD <= newVersion)
-				db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN " + COL_CREATOR + " string;");
-		}
+		@Override
+		public List<Migration> getMigrations() {
+			return Arrays.asList(new Migration[] { new Migration() {
+				@Override
+				protected int version() {
+					return 19;
+				}
 
-		public int version() {
-			return VERSION;
+				@Override
+				protected void up(SQLiteDatabase db) {
+					db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN "
+							+ COL_CREATOR + " string;");
+				}
+			} });
 		}
 
 	}

@@ -24,7 +24,7 @@ public class Preferences extends RoboPreferenceActivity {
 
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			EntitiesActivity.show(this);
+			Preferences.this.finish();
 		}
 		
 		return super.onOptionsItemSelected(item);

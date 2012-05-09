@@ -1,13 +1,15 @@
 package com.danielstiner.vibrates.util;
 
+import com.danielstiner.vibrates.Pattern;
+
 public class PatternUtil {
 
 	// milliseconds per dit to use
 	// private static final long MORSE_MULTIPLIER = 89;
-	private static final long MORSE_MULTIPLIER = 104;
+	private static final long MORSE_MULTIPLIER = 89;
 
 	// number of letters to use when morsifying a name or such
-	private static final int MAX_MORSE = 2;
+	private static final int MAX_MORSE = 1;
 
 	public static long[] generate(String text) {
 		// Null check
@@ -31,6 +33,13 @@ public class PatternUtil {
 	}
 
 	public static boolean isValid(long[] pattern) {
+		if (pattern == null)
+			return false;
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	public static boolean isValid(Pattern pattern) {
 		if (pattern == null)
 			return false;
 		// TODO Auto-generated method stub

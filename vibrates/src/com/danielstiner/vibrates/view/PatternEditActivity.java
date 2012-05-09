@@ -28,7 +28,7 @@ public class PatternEditActivity extends RoboActivity {
 	private static final int CONTENT_VIEW = R.layout.pattern_edit;
 	protected static final long[] PATTERN_EMPTY = new long[] { 0, 0 };
 
-	@InjectView(R.id.pattern_edit_patternview)
+	@InjectView(R.id.patternview)
 	private PatternView pattern_view;
 
 	@InjectView(R.id.pattern_edit_clear_button)

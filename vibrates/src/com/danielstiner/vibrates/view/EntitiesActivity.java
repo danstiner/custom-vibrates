@@ -17,14 +17,13 @@ import com.danielstiner.vibrates.Vibrates;
 import com.danielstiner.vibrates.view.fragments.EditEntity;
 import com.danielstiner.vibrates.view.fragments.IListEntitiesFragment;
 import com.danielstiner.vibrates.view.fragments.ListEntitiesFragment;
-import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.danielstiner.vibrates.view.model.OnMenuSettingsClickListener;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 public class EntitiesActivity extends RoboSherlockFragmentActivity implements
-		OnEntitySelectedListener {
+		ListEntitiesFragment.ContainerActivityInterface {
 
 	private static final String CLASSNAME = Vibrates.NS + "view.Entities";
 

@@ -1,12 +1,18 @@
 package com.danielstiner.vibrates.model;
 
+import java.util.Arrays;
+import java.util.List;
+
+import android.content.ContentUris;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.model.internal.Database;
 import com.danielstiner.vibrates.model.internal.EntityProvider;
 import com.danielstiner.vibrates.model.internal.IDatabase;
+import com.danielstiner.vibrates.model.internal.Migration;
 
 public final class Entities implements BaseColumns {
 
@@ -24,16 +30,23 @@ public final class Entities implements BaseColumns {
 	public static final String NAME = "name";
 	public static final String PATTERN = "pattern";
 	public static final String NOTIFY_COUNT = "notified";
-	public static final String COL_CREATOR = "creator";
+	public static final String CREATOR = "creator";
 
 	public static final int VERSION = Database.VERSION;
 
 	public static final String TABLE = "entities";
 
-	static class DatabaseHelper implements IDatabase.IHelper {
-		
-		private static final int V_ADD_CREATOR_FIELD = 20;
+	public static Uri getEntityUri(long entity_id) {
+		return ContentUris.withAppendedId(CONTENT_URI, entity_id);
+	}
 
+	public static Uri getEntityUri(Entity entity) {
+		return ContentUris.withAppendedId(CONTENT_URI, entity.entityid());
+	}
+
+	static class DatabaseHelper implements IDatabase.IHelper {
+
+		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// Create entity table
 			String entity_sql = "CREATE TABLE " + TABLE + " ( " + ENTITY_ID
@@ -43,14 +56,20 @@ public final class Entities implements BaseColumns {
 			db.execSQL(entity_sql);
 		}
 
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			if (oldVersion < V_ADD_CREATOR_FIELD
-					&& V_ADD_CREATOR_FIELD <= newVersion)
-				db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN " + COL_CREATOR + " string;");
-		}
+		@Override
+		public List<Migration> getMigrations() {
+			return Arrays.asList(new Migration[] { new Migration() {
+				@Override
+				protected int version() {
+					return 20;
+				}
 
-		public int version() {
-			return VERSION;
+				@Override
+				protected void up(SQLiteDatabase db) {
+					db.execSQL("ALTER TABLE " + TABLE + " ADD COLUMN "
+							+ CREATOR + " string;");
+				}
+			} });
 		}
 
 	}

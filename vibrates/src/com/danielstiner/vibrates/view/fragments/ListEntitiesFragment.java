@@ -21,6 +21,7 @@ import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.model.StorageUtil;
 import com.danielstiner.vibrates.view.EntitiesActivity;
+import com.danielstiner.vibrates.view.fragments.PatternEditFragment.ContainerActivityInterface;
 import com.danielstiner.vibrates.view.model.EntityCursorAdapter;
 import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.google.inject.Inject;
@@ -28,6 +29,11 @@ import com.google.inject.Provider;
 
 public class ListEntitiesFragment extends RoboListFragment implements
 		IListEntitiesFragment, OnEntitySelectedListener {
+	
+	public interface ContainerActivityInterface {
+		public void onEntitySelected(Entity e);
+	}
+	
 
 	private static final int CONTEXTMENU_DELETE = 1;
 
@@ -85,6 +91,29 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		StorageUtil.searchIntoAdapter(getLoaderManager(), mManager,
 				mEntityFilter, mAdapter);
 	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// Force correct container type
+		getContainer();
+	}
+	
+	private ContainerActivityInterface getContainer() {
+
+		Activity activity = getActivity();
+		
+		if(activity == null)
+			return null;
+
+		try {
+			return (ContainerActivityInterface) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement ContainerActivityInterface");
+		}
+	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
@@ -123,12 +152,11 @@ public class ListEntitiesFragment extends RoboListFragment implements
 
 	@Override
 	public void onEntitySelected(Entity e) {
-		Activity a = getActivity();
 
 		// Try and talk to parent activity
-		if (a instanceof EntitiesActivity) {
-			((OnEntitySelectedListener) a).onEntitySelected(e);
-		}
+		ContainerActivityInterface cai = getContainer();
+		if (cai != null)
+			cai.onEntitySelected(e);
 
 	}
 

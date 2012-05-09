@@ -33,9 +33,13 @@ public interface IDataModel {
 
 	Entity getEntity(String identifier, Kind kindGroup);
 
-	Pattern getPattern(Entity e);
-
 	void remove(Entity entity);
+
+	Entity getEntity(long id);
+
+	void update(Entity entity);
+
+	Pattern getPattern(Entity e);
 
 //	/**
 //	 * 
