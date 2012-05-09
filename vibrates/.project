@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>vibrates</name>
+	<name>com.danielstiner.vibrates</name>
 	<comment></comment>
 	<projects>
-		<project>library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
