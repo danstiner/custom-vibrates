@@ -4,9 +4,9 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/android-compatability"/>
-	<classpathentry kind="lib" path="/home/stiner/Projects/android-sdk/extras/android/compatibility/v13/android-support-v13.jar"/>
+	<classpathentry kind="lib" path="lib/android-support-v13.jar"/>
 	<classpathentry kind="lib" path="lib/guice-2.0-no_aop.jar"/>
-	<classpathentry kind="lib" path="lib/roboguice-1.1.2.jar" sourcepath="/home/stiner/Projects/Android/Shared/roboguice-1.1.2-sources.jar"/>
+	<classpathentry kind="lib" path="lib/roboguice-1.1.2.jar" />
 	<classpathentry kind="lib" path="lib/libphonenumber-4.4.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
