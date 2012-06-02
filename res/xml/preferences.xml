@@ -19,7 +19,7 @@
     	android:key="defaultpattern"
     	android:title="Default Vibrate Pattern"
     	android:summary="Edit default vibration pattern">
-    	<intent android:data="settings://vibrates.danielstiner.com/defaults/pattern" android:action="android.intent.action.VIEW"  />
+    	<intent android:action=".settings.DefaultPatternEdit" />
     </PreferenceScreen>
     <!-- <PreferenceCategory android:key="servicepatterns" android:title="Service-specific">
         <ListPreference android:title="Pattern" android:key="servicepatternconcat"></ListPreference>
@@ -44,5 +44,11 @@
     	android:title="System Accessibility Menu"
     	android:summary="To enable Google Voice integration">
     	<intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
+    </PreferenceScreen>
+    <PreferenceScreen
+    	android:key="backup"
+    	android:title="Backup to SD card"
+    	android:summary="Save copy of custom patterns to external storage">
+    	<intent android:action=".settings.Backup" />
     </PreferenceScreen>
 </PreferenceScreen>

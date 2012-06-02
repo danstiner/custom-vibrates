@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:installLocation="auto"
-      package="com.danielstiner.vibrates" android:versionName="0.1.3" android:versionCode="38">
+      package="com.danielstiner.vibrates" android:versionName="0.2.0" android:versionCode="39">
+      
+    <!-- Backups -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    
 	<uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
 	<!-- Know about incoming calls and the number they are coming from -->
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
@@ -29,6 +34,7 @@
 	<uses-permission android:name="android.media.VOLUME_CHANGED_ACTION"></uses-permission> -->
 	
 	<!-- Targeting my handset (Samsung Galaxy S), but trying to reasonably support older versions -->
+	<!-- Require API 7 for external storage getExternalFilesDir -->
 	<uses-sdk android:targetSdkVersion="10" android:minSdkVersion="7"></uses-sdk>
     <application android:label="@string/app_name" android:name="Vibrates" android:icon="@drawable/launcher_icon">
         <activity android:label="@string/app_name" android:name="com.danielstiner.vibrates.views.EntityList">
@@ -98,14 +104,20 @@
         <activity android:name="com.danielstiner.vibrates.settings.Preferences"></activity>
         <activity android:name=".settings.ServiceSettings">
             <intent-filter>
-                <data android:host="vibrates.danielstiner.com" android:scheme="settings" android:pathPattern="defaults/pattern"></data>
+                <data android:host="vibrates.danielstiner.com" android:scheme="settings" android:pathPrefix="services"></data>
+                <action android:name="android.intent.action.VIEW"></action>
+            </intent-filter>
+        </activity>
+        <activity android:name=".settings.Backup">
+            <intent-filter>
+                <action android:name=".settings.Backup" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW"></action>
             </intent-filter>
         </activity>
         <activity android:name=".settings.DefaultPatternEdit">
             <intent-filter>
-                <data android:host="vibrates.danielstiner.com" android:scheme="settings"></data>
+                <action android:name=".settings.DefaultPatternEdit" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW"></action>
             </intent-filter>
