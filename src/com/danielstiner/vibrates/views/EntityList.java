@@ -1,63 +1,61 @@
 package com.danielstiner.vibrates.views;
 
 import roboguice.inject.InjectView;
-import roboguice.util.Ln;
-
-import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.database.IEntityManager;
-import com.danielstiner.vibrates.database.IManager;
-import com.danielstiner.vibrates.settings.Preferences;
-import com.google.inject.Inject;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+
+import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.database.IManager;
+import com.danielstiner.vibrates.settings.Preferences;
+import com.google.inject.Inject;
 
 public class EntityList extends CoreListActivity {
-	
-	@Inject IManager manager;
-	
-	//@InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
-	@InjectView(R.id.entitylist_empty_manualstart) Button manualSetupButton;
+
+	@Inject
+	IManager manager;
+
+	// @InjectView(R.id.entitylist_empty_automajic) Button automajicButton;
+	@InjectView(R.id.entitylist_empty_manualstart)
+	Button manualSetupButton;
 
 	private static final int CONTEXTMENU_DELETE_ID = 1;
 	private static final int OPTIONS_INSERT_ID = 2;
-	//private static final int ACTIVITY_CREATE = 3;
+	// private static final int ACTIVITY_CREATE = 3;
 	private static final int ACTIVITY_EDIT = 4;
-	
+
 	private static final int CONTENT_VIEW = R.layout.entity_list;
-	
+
 	private static final int ACTIVITY_ADD_CONTACT_CHOOSE = 5;
 
 	private static final int ACTIVITY_ADD_GROUP = 6;
 
 	private Cursor mContactsCursor;
-	
+
 	private EntityListCursorAdapter mContactsCursorAdapter;
-	
+
 	private Intent intentStartManualSetup;
 
 	// Called when the activity is first created.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		intentStartManualSetup = new Intent(this, ManualSetup.class);
 	}
-	
+
 	@Override
 	protected void initEmptyView() {
 		manualSetupButton.setOnClickListener(new View.OnClickListener() {
@@ -70,10 +68,11 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.contactlistmenu, menu);
-	    return super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.contactlistmenu, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -104,9 +103,10 @@ public class EntityList extends CoreListActivity {
 		case CONTEXTMENU_DELETE_ID:
 			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 					.getMenuInfo();
-			// TODO Not a great method for linking row in list to database delete
-			mContactsCursor.moveToPosition((int)info.position);
-			
+			// TODO Not a great method for linking row in list to database
+			// delete
+			mContactsCursor.moveToPosition((int) info.position);
+
 			manager.remove(manager.getEntity(mContactsCursor));
 			fillList();
 			return true;
@@ -119,7 +119,7 @@ public class EntityList extends CoreListActivity {
 		super.onListItemClick(l, v, position, id);
 
 		mContactsCursor.moveToPosition(position);
-		
+
 		Entity entity = manager.getEntity(mContactsCursor);
 
 		editEntity(entity);
@@ -135,7 +135,7 @@ public class EntityList extends CoreListActivity {
 			break;
 		case ACTIVITY_ADD_CONTACT_CHOOSE:
 			if (resultCode == RESULT_OK && data != null) {
-				Uri contactpath = data.getData();	
+				Uri contactpath = data.getData();
 				editEntity(manager.createFromContactUri(contactpath));
 				fillList();
 			}
@@ -143,7 +143,7 @@ public class EntityList extends CoreListActivity {
 		case ACTIVITY_ADD_GROUP:
 			if (resultCode == RESULT_OK && data != null) {
 				Long groupid = data.getLongExtra(PickGroup.EXTRA_KEY_ID, -1);
-				if(groupid != -1)
+				if (groupid != -1)
 					editEntity(manager.createFromGroupId(groupid.toString()));
 				fillList();
 			}
@@ -153,35 +153,37 @@ public class EntityList extends CoreListActivity {
 
 	@Override
 	protected void fillList() {
-		
+
 		// Close any existing cursors
-		if(mContactsCursor != null)
+		if (mContactsCursor != null)
 			mContactsCursor.close();
 		// Get all of the notes from the database and create the item list
 		mContactsCursor = manager.getEntities();
-		//startManagingCursor(mContactsCursor);
+		// startManagingCursor(mContactsCursor);
 
 		// Now create an array adapter and set it to display using our row
-		mContactsCursorAdapter = new EntityListCursorAdapter(this, mContactsCursor, manager, getInjector());
+		mContactsCursorAdapter = new EntityListCursorAdapter(this,
+				mContactsCursor, manager, getInjector());
 		setListAdapter(mContactsCursorAdapter);
 	}
 
-	
 	private void newContact() {
-		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+		Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+				ContactsContract.Contacts.CONTENT_URI);
 		startActivityForResult(contactPickerIntent, ACTIVITY_ADD_CONTACT_CHOOSE);
 	}
+
 	private void addGroup() {
 		Intent groupPickerIntent = new Intent(this, PickGroup.class);
 		startActivityForResult(groupPickerIntent, ACTIVITY_ADD_GROUP);
 	}
+
 	private void openPreferences() {
 		startActivity(new Intent(this, Preferences.class));
 	}
-	
+
 	private void editEntity(Entity contact) {
-		if(contact != null)
-		{
+		if (contact != null) {
 			// Start contact edit activity
 			Intent i = new Intent(this, EditEntity.class);
 			i.putExtra(Entity.EXTRA_KEY_ID, contact.entityid().longValue());

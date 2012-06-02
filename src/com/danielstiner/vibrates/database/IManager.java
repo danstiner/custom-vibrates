@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.views.EntityListCursorAdapter;
 
 public interface IManager {
 
@@ -24,7 +23,7 @@ public interface IManager {
 	 * @return
 	 */
 	Entity getEntity(String identifier);
-	
+
 	/**
 	 * 
 	 * @return
@@ -59,8 +58,11 @@ public interface IManager {
 
 	/**
 	 * Gives a photo for an entity if at all possible, otherwise returns null
-	 * @param entity Entity instance to grab a photostream for
-	 * @return Stream that can be read out to get the contacts photo, or null if they have none
+	 * 
+	 * @param entity
+	 *            Entity instance to grab a photostream for
+	 * @return Stream that can be read out to get the contacts photo, or null if
+	 *         they have none
 	 */
 	InputStream getPhotoStream(Entity entity);
 

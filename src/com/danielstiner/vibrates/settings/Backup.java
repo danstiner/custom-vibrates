@@ -9,28 +9,26 @@ import com.google.inject.Inject;
 
 public class Backup extends RoboActivity {
 
-	@Inject private BackupUtil backup_util;
-	
+	@Inject
+	private BackupUtil backup_util;
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		boolean result = backup_util.Backup();
-		
-		if(!result)
-		{
+
+		if (!result) {
 			// Failed
 			Toast.makeText(this, "Backup Failed!", Toast.LENGTH_LONG).show();
 			this.setResult(Activity.RESULT_CANCELED);
 			this.finish();
-		}
-		else
-		{
+		} else {
 			// Done.
 			Toast.makeText(this, "Successful Backup", Toast.LENGTH_LONG).show();
 			this.setResult(Activity.RESULT_OK);
 			this.finish();
 		}
 	}
-	
+
 }

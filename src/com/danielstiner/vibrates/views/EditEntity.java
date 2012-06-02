@@ -3,6 +3,15 @@ package com.danielstiner.vibrates.views;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import roboguice.util.Ln;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
+import android.widget.TextView;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.R;
@@ -11,19 +20,6 @@ import com.danielstiner.vibrates.database.IManager;
 import com.danielstiner.vibrates.utility.EntityDisplay;
 import com.danielstiner.vibrates.utility.PatternEditManager;
 import com.google.inject.Inject;
-
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Vibrator;
-import android.provider.ContactsContract;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
-import android.widget.TextView;
 
 public class EditEntity extends RoboActivity {
 

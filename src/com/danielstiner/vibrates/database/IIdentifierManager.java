@@ -1,17 +1,17 @@
 package com.danielstiner.vibrates.database;
 
-import com.danielstiner.vibrates.Entity;
-
 import android.database.Cursor;
+
+import com.danielstiner.vibrates.Entity;
 
 public interface IIdentifierManager {
 
-	//public abstract Cursor getAll();
-	
+	// public abstract Cursor getAll();
+
 	public abstract Cursor getOrphans();
 
 	public abstract Cursor get(Entity owner);
-	
+
 	public abstract Cursor get(Entity owner, String kind);
 
 	public abstract Cursor get(String identifier);
@@ -19,7 +19,7 @@ public interface IIdentifierManager {
 	public abstract void add(Entity to, String identifier, String kind);
 
 	public abstract String identifierFromCursor(Cursor c);
-	
+
 	public abstract String kindFromCursor(Cursor c);
 
 	public abstract int removeAll(Entity entity);
@@ -28,6 +28,6 @@ public interface IIdentifierManager {
 
 	public abstract Entity entityFromCursor(Cursor c);
 
-	//public abstract Entity entityFromCursor(Cursor c);
+	// public abstract Entity entityFromCursor(Cursor c);
 
 }

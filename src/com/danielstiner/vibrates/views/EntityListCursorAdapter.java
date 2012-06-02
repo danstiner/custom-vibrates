@@ -1,11 +1,5 @@
 package com.danielstiner.vibrates.views;
 
-import com.danielstiner.vibrates.Entity;
-import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.database.IEntityManager;
-import com.danielstiner.vibrates.database.IManager;
-import com.google.inject.Injector;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -17,16 +11,22 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.danielstiner.vibrates.Entity;
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.database.IManager;
+import com.google.inject.Injector;
+
 public class EntityListCursorAdapter extends CursorAdapter {
 
 	protected IManager manager;
-	
+
 	// For view management
 	private int layout = R.layout.entity_list_row;
 
-	public EntityListCursorAdapter(Context context, Cursor c, IManager manager, Injector injector) {
+	public EntityListCursorAdapter(Context context, Cursor c, IManager manager,
+			Injector injector) {
 		super(context, c);
-		
+
 		this.manager = manager;
 	}
 
@@ -50,24 +50,27 @@ public class EntityListCursorAdapter extends CursorAdapter {
 
 		// Lets find some info about this contact
 		Entity entity = manager.getEntity(c);
-		
+
 		// Bind in contact name
-		TextView name_text = (TextView)v.findViewById(R.id.entitylist_row_name);
+		TextView name_text = (TextView) v
+				.findViewById(R.id.entitylist_row_name);
 		if (name_text != null) {
 			name_text.setText(manager.getDisplayName(entity));
 		}
-		
+
 		// Bind in contact photo
-		ImageView entity_pic = (ImageView)v.findViewById(R.id.entitylist_row_image);
+		ImageView entity_pic = (ImageView) v
+				.findViewById(R.id.entitylist_row_image);
 		if (entity_pic != null) {
-			entity_pic.setImageDrawable(Drawable.createFromStream(manager.getPhotoStream(entity), "contactphoto"));
+			entity_pic.setImageDrawable(Drawable.createFromStream(
+					manager.getPhotoStream(entity), "contactphoto"));
 		}
-		
+
 		// Bind in default vibrate pattern
-		VibratePatternView pattern_view = (VibratePatternView)v.findViewById(R.id.entitylist_row_pattern);
+		VibratePatternView pattern_view = (VibratePatternView) v
+				.findViewById(R.id.entitylist_row_pattern);
 		if (pattern_view != null) {
 			pattern_view.setPattern(manager.getPattern(entity, null));
 		}
 	}
 }
-

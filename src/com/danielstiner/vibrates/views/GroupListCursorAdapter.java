@@ -1,9 +1,5 @@
 package com.danielstiner.vibrates.views;
 
-import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.database.IManager;
-import com.google.inject.Injector;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -14,15 +10,20 @@ import android.widget.CursorAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
 
+import com.danielstiner.vibrates.R;
+import com.danielstiner.vibrates.database.IManager;
+import com.google.inject.Injector;
+
 public class GroupListCursorAdapter extends CursorAdapter {
-	
+
 	// For view management
 	private int layout = R.layout.group_list_row;
 
-	public GroupListCursorAdapter(Context context, Cursor c, IManager manager, Injector injector) {
+	public GroupListCursorAdapter(Context context, Cursor c, IManager manager,
+			Injector injector) {
 		super(context, c);
-		
-		//this.manager = manager;
+
+		// this.manager = manager;
 	}
 
 	@Override
@@ -44,17 +45,21 @@ public class GroupListCursorAdapter extends CursorAdapter {
 	public void bindView(View v, Context context, Cursor c) {
 
 		// Bind in contact name
-		TextView title_text = (TextView)v.findViewById(R.id.group_list_row_title);
+		TextView title_text = (TextView) v
+				.findViewById(R.id.group_list_row_title);
 		if (title_text != null) {
-			title_text.setText(c.getString(c.getColumnIndexOrThrow(ContactsContract.Groups.TITLE)));
+			title_text.setText(c.getString(c
+					.getColumnIndexOrThrow(ContactsContract.Groups.TITLE)));
 		}
-		
+
 		// Bind in contacts count
-		TextView count_text = (TextView)v.findViewById(R.id.group_list_row_size);
+		TextView count_text = (TextView) v
+				.findViewById(R.id.group_list_row_size);
 		if (count_text != null) {
-			int count = c.getInt(c.getColumnIndexOrThrow(ContactsContract.Groups.SUMMARY_COUNT));
+			int count = c
+					.getInt(c
+							.getColumnIndexOrThrow(ContactsContract.Groups.SUMMARY_COUNT));
 			count_text.setText(Integer.toString(count));
 		}
 	}
 }
-
