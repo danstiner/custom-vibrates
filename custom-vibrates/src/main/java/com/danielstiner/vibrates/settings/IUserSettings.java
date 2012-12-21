@@ -19,4 +19,8 @@ public interface IUserSettings {
 	boolean backgroundService();
 
 	void defaultPattern(Pattern new_pattern);
+
+	boolean welcomed();
+	
+	void welcomed(boolean welcomed);
 }

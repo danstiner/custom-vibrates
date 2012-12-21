@@ -14,6 +14,7 @@ public class UserSettings implements IUserSettings {
 	private static final String KEY_WARN_RINGER_CHANGED = "warnonringerchange";
 	private static final String KEY_KEEP_IN_SILENT_MODE = "forcesilent";
 	private static final String KEY_DEFAULT_PATTERN = "defaultpattern";
+	private static final String KEY_WELCOMED = "welcomed";
 
 	private SharedPreferences sharedPreferences;
 
@@ -76,6 +77,19 @@ public class UserSettings implements IUserSettings {
 	public boolean backgroundService() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean welcomed() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public void welcomed(boolean welcomed) {
+		Editor editor = sharedPreferences.edit();
+		editor.putBoolean(KEY_WELCOMED, welcomed);
+		editor.commit();
 	}
 
 }

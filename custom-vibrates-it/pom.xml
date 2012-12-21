@@ -16,10 +16,10 @@
     <name>Custom Vibrates - Integration tests</name>
 
     <dependencies>
-        <dependency>
+ <!--        <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android-test</artifactId>
@@ -52,7 +52,7 @@
                     <resourceDirectory>${project.basedir}/res</resourceDirectory>
                     <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                     <sdk>
-                        <platform>14</platform>
+                        <platform>17</platform>
                     </sdk>
                                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
@@ -61,8 +61,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>

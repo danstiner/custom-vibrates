@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.danielstiner.vibrates.R;
-import com.danielstiner.vibrates.view.EntitiesActivity;
 
 public class Preferences extends RoboPreferenceActivity {
 

@@ -9,8 +9,8 @@ import android.provider.BaseColumns;
 
 import com.danielstiner.vibrates.model.internal.Database;
 import com.danielstiner.vibrates.model.internal.IDatabase;
-import com.danielstiner.vibrates.model.internal.IdentifierProvider;
 import com.danielstiner.vibrates.model.internal.Migration;
+import com.danielstiner.vibrates.model.provider.IdentifierProvider;
 
 public final class Identifiers implements BaseColumns {
 

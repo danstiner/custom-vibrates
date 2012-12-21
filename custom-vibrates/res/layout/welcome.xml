@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+	  >
+	  <LinearLayout
+	  	android:layout_width="fill_parent"
+	  	android:layout_height="wrap_content"
+	  	android:orientation="vertical"
+	  	>
+	  	<!-- Enable accessibilty integration -->
+		<LinearLayout
+		  	android:layout_width="fill_parent"
+		  	android:layout_height="wrap_content"
+		  	android:layout_gravity="center"
+		  	android:orientation="vertical"
+		  	android:padding="20px"
+	  		>
+	  		<TextView
+	  			android:text="1. Enable the Accessibility Service"
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="10pt"
+	  			/>
+	  		<TextView
+	  			android:text="Optional integration with Google Voice depends on the system accessiblity service."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="15px"
+	  			/>
+	  		<TextView
+	  			android:text="Click below, enable accessibility system-wide, then turn on the 'Custom Vibrates' service and hit back to return."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="10px"
+	  			/>
+	  		<Button
+		       	android:id="@+id/setup_manual_openaccessiblity"
+		       	android:text="Open System Accessiblity Menu"
+		       	android:layout_height="wrap_content"
+		       	android:layout_width="wrap_content"
+		       	android:layout_gravity="center_horizontal"
+		       	android:layout_marginTop="20px"
+		       	/>
+	  	</LinearLayout>
+	  	
+	  	<!-- Default pattern edit -->
+		<LinearLayout
+		  	android:layout_width="fill_parent"
+		  	android:layout_height="wrap_content"
+		  	android:layout_gravity="center"
+		  	android:orientation="vertical"
+		  	android:padding="20px"
+	  		>
+	  		<TextView
+	  			android:text="2. Set a default vibration"
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="10pt"
+				android:layout_marginBottom="10px"
+	  			/>
+	  		<TextView
+	  			android:text="Optional pattern to play when a message is recieved for an uncustomzied contact. Note that the default system vibrations are not automatically turned off, please disable these in your phone's settings to prevent doubled vibratation patterns."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="15px"
+	  			/>
+	  		<LinearLayout
+	  			android:id="@+id/setup_manual_defaultpattern_editbox"
+		  		android:layout_width="fill_parent"
+			  	android:layout_height="wrap_content"
+			  	android:layout_gravity="center"
+			  	android:orientation="vertical"
+			  	android:gravity="center"
+			  	android:padding="20px"
+			  	android:background="@drawable/back_rect_whiterounded"
+		  		>
+		  		<TextView
+			  		android:text="@string/entity_edit_pattern_premessage"
+			  		android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_horizontal"
+			  		android:layout_marginBottom="30px"
+			  		/>
+		  		<com.danielstiner.vibrates.view.components.PatternView
+			    	android:id="@+id/setup_manual_defaultpattern"
+			    	android:layout_width="match_parent"
+				    android:layout_height="22px"
+				    android:layout_marginBottom="30px"
+			    	/>
+		    </LinearLayout>
+	  	</LinearLayout>
+
+		<!-- Add a contact -->
+		<LinearLayout
+		  	android:layout_width="fill_parent"
+		  	android:layout_height="wrap_content"
+		  	android:layout_gravity="center"
+		  	android:orientation="vertical"
+		  	android:padding="20px"
+	  		>
+	  		<TextView
+	  			android:text="3. Add the first contact(s)"
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="10pt"
+	  			/>
+	  		<TextView
+	  			android:text="Contacts must be manually added to have custom vibrate patterns. However, an automatic system based on communication frequency is in the works."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="15px"
+	  			/>
+	  		<TextView
+	  			android:text="Additional contacts can be added later from the app menu. (Hit the hardware menu button while the app is open)"
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="10px"
+	  			/>
+	  		<Button
+		       	android:id="@+id/setup_manual_addcontact"
+		       	android:text="Add Contact"
+		       	android:layout_height="wrap_content"
+		       	android:layout_width="wrap_content"
+		       	android:layout_gravity="center_horizontal"
+		       	android:layout_marginTop="20px"
+		       	/>
+	  	</LinearLayout>
+
+		<!-- That's all folks! -->
+		<LinearLayout
+		  android:layout_width="match_parent"
+		  android:layout_height="match_parent"
+		  android:padding="20px"
+		  android:orientation="vertical">
+		  	<TextView
+	  			android:text="4. Finish setup"
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="10pt"
+	  			/>
+  			<TextView
+	  			android:text="That's all folks. This app is kept simple so you can get on with your life. Some additional options are available in the Settings menu, also feel free to contact me through the android market."
+	  			android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5px"
+				android:layout_marginBottom="15px"
+	  			/>
+		    <Button
+		       	android:id="@+id/setup_manual_complete"
+		       	android:text="Enable Custom Vibrates!"
+		       	android:layout_height="wrap_content"
+		       	android:layout_width="wrap_content"
+		       	android:layout_gravity="center_horizontal"
+		       	android:layout_marginTop="40px"
+		       	/>
+		</LinearLayout>
+	</LinearLayout>
+</ScrollView>

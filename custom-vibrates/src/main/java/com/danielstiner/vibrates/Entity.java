@@ -3,12 +3,12 @@
  */
 package com.danielstiner.vibrates;
 
-import com.danielstiner.vibrates.model.Entities;
-import com.danielstiner.vibrates.model.IDataModel;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.danielstiner.vibrates.model.Entities;
+import com.danielstiner.vibrates.model.IDataModel;
 
 public class Entity {
 

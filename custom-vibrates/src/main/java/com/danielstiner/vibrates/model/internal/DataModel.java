@@ -19,7 +19,6 @@ import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Entity.Kind;
 import com.danielstiner.vibrates.Identifier;
 import com.danielstiner.vibrates.Pattern;
-import com.danielstiner.vibrates.model.Entities;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.util.PatternUtil;

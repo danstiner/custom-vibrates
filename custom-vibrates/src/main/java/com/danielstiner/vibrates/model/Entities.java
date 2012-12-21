@@ -10,9 +10,9 @@ import android.provider.BaseColumns;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.model.internal.Database;
-import com.danielstiner.vibrates.model.internal.EntityProvider;
 import com.danielstiner.vibrates.model.internal.IDatabase;
 import com.danielstiner.vibrates.model.internal.Migration;
+import com.danielstiner.vibrates.model.provider.EntityProvider;
 
 public final class Entities implements BaseColumns {
 

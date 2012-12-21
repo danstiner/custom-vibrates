@@ -1,32 +1,31 @@
 package com.danielstiner.vibrates.view;
 
+import roboguice.activity.RoboFragmentActivity;
 import roboguice.inject.ContextScopedProvider;
 import roboguice.inject.InjectView;
 import roboguice.util.Ln;
+import android.app.ActionBar;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract.QuickContact;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;
 import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.view.fragments.PatternEditFragment;
 import com.danielstiner.vibrates.view.model.OnMenuSettingsClickListener;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-public class EntityDetail extends RoboSherlockFragmentActivity implements
+public class EntityDetail extends RoboFragmentActivity implements
 		PatternEditFragment.ContainerActivityInterface {
 
 	public static void show(Entity e, Context context) {
@@ -77,7 +76,7 @@ public class EntityDetail extends RoboSherlockFragmentActivity implements
 			mTypeTextView.setText(mEntity.getKind().toDisplayString());
 		}
 
-		ActionBar actionBar = getSupportActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.addTab(actionBar.newTab().setText("Pattern"));
 

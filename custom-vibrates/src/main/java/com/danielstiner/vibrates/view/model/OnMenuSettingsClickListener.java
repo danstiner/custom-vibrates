@@ -1,13 +1,13 @@
 package com.danielstiner.vibrates.view.model;
 
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import android.content.Context;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+
 import com.danielstiner.vibrates.settings.Preferences;
 
-import android.content.Context;
-
 public class OnMenuSettingsClickListener implements
-		com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener {
+		android.view.MenuItem.OnMenuItemClickListener {
 
 	private Context mContext;
 
@@ -15,8 +15,7 @@ public class OnMenuSettingsClickListener implements
 		this.mContext = context;
 	}
 
-	public static OnMenuItemClickListener getInstance(
-			Context context) {
+	public static OnMenuItemClickListener getInstance(Context context) {
 		return new OnMenuSettingsClickListener(context);
 	}
 

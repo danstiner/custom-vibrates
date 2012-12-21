@@ -1,9 +1,7 @@
 package com.danielstiner.vibrates.model.internal;
 
-import roboguice.util.Ln;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Identifier;

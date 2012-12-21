@@ -1,11 +1,7 @@
 package com.danielstiner.vibrates.service;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ListIterator;
-import java.util.Queue;
-import java.util.Timer;
 
 import roboguice.inject.ContextScopedProvider;
 import roboguice.inject.ContextSingleton;
@@ -13,7 +9,6 @@ import roboguice.util.Ln;
 import android.app.Application;
 import android.content.Context;
 import android.os.PowerManager.WakeLock;
-import android.os.Vibrator;
 
 import com.danielstiner.vibrates.Entity;
 import com.danielstiner.vibrates.Pattern;

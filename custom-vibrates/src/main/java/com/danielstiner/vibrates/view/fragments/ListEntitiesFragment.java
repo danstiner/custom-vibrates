@@ -20,8 +20,6 @@ import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.model.StorageUtil;
-import com.danielstiner.vibrates.view.EntitiesActivity;
-import com.danielstiner.vibrates.view.fragments.PatternEditFragment.ContainerActivityInterface;
 import com.danielstiner.vibrates.view.model.EntityCursorAdapter;
 import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.google.inject.Inject;

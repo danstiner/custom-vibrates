@@ -22,7 +22,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_share">Share</string>
         <string name="accessiblity_listener_desc">Tie in for vibrating on accessibility events</string>
-    <string name="app_name">Contact Vibrates</string>
+    <string name="app_name">Custom Vibrates</string>
     <string name="buttonlabel_automajic_setup">Automajic Setup</string>
     <string name="buttonlabel_finish">Finish</string>
     <string name="buttonlabel_help">Help</string>
