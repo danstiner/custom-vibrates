@@ -166,4 +166,9 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		}
 	}
 
+	public void reload() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

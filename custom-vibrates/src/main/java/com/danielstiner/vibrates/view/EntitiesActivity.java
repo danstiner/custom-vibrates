@@ -1,10 +1,16 @@
 package com.danielstiner.vibrates.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.widget.ArrayAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -27,6 +33,8 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+		Map<Kind, ListEntitiesFragment> fragments = new HashMap<Entity.Kind, ListEntitiesFragment>();
+
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
@@ -39,6 +47,19 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 				return Kind.Group;
 			case 2:
 				return Kind.App;
+			default:
+				throw new IllegalArgumentException("Unsupported section");
+			}
+		}
+
+		private int kindToIndex(Kind kind) {
+			switch (kind) {
+			case Contact:
+				return 0;
+			case Group:
+				return 1;
+			case App:
+				return 2;
 			default:
 				throw new IllegalArgumentException("Unsupported section");
 			}
@@ -59,13 +80,23 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 		}
 
 		@Override
-		public Fragment getItem(int i) {
+		public ListEntitiesFragment getItem(int i) {
+			Kind k = indexToKind(i);
+
+			if (fragments.containsKey(k))
+				return fragments.get(k);
 
 			ListEntitiesFragment frag = mEntitiesFragmentProvider.get();
 
-			frag.setKind(indexToKind(i));
+			frag.setKind(k);
+
+			fragments.put(k, frag);
 
 			return frag;
+		}
+
+		ListEntitiesFragment getItem(Kind k) {
+			return getItem(kindToIndex(k));
 		}
 
 		@Override
@@ -113,28 +144,10 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 	private Provider<ListEntitiesFragment> mEntitiesFragmentProvider;
 
 	private MenuItem mMenuAddAction;
+	
+	private SectionsPagerAdapter mSectionsPagerAdapter;
 
-	// private final ActionBar.OnNavigationListener mNavListener = new
-	// ActionBar.OnNavigationListener() {
-	//
-	// public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-	//
-	// switch (itemPosition) {
-	// case CONTACTS_TAB_POS:
-	// setKind(Entity.Kind.Contact);
-	// break;
-	// case GROUPS_TAB_POS:
-	// setKind(Entity.Kind.Group);
-	// break;
-	// case APPS_TAB_POS:
-	// setKind(Entity.Kind.App);
-	// break;
-	// }
-	//
-	// return true;
-	// }
-	//
-	// };
+	private Kind mSelectedKind;
 
 	private OnMenuItemClickListener mOnMenuAddEntityClick = new OnMenuItemClickListener() {
 
@@ -148,44 +161,11 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 
 	};
 
-	private SectionsPagerAdapter mSectionsPagerAdapter;
-
-	private Entity mSelectedEntity;
-
-	private Kind mSelectedKind;
-
-	// private IListEntitiesFragment loadChildFragment() {
-	// if (mEntitiesFragment == null
-	// || mEntitiesFragment != getSupportFragmentManager()
-	// .findFragmentById(R.id.fragment_container)) {
-	//
-	// if (mEntitiesFragment == null)
-	// mEntitiesFragment = (ListEntitiesFragment) getSupportFragmentManager()
-	// .findFragmentByTag(ENTITIES_TAG);
-	//
-	// if (mEntitiesFragment == null) {
-	// mEntitiesFragment = mEntitiesFragmentProvider.get();
-	//
-	// FragmentTransaction transact = getSupportFragmentManager()
-	// .beginTransaction();
-	//
-	// transact.replace(R.id.fragment_container,
-	// (ListEntitiesFragment) mEntitiesFragment, ENTITIES_TAG);
-	//
-	// transact.commit();
-	// }
-	// }
-	//
-	// // Should always have a fragment by this time
-	// return mEntitiesFragment;
-	// }
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		// this.refresh();
-
 		super.onActivityResult(requestCode, resultCode, data);
+		
+		this.reload(this.mSelectedKind);
 	}
 
 	@Override
@@ -225,7 +205,7 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 		menu.add(Menu.NONE, Menu.NONE, Menu.CATEGORY_CONTAINER, "Settings")
 				.setIcon(R.drawable.action_settings)
 				.setOnMenuItemClickListener(
-						OnMenuSettingsClickListener.getInstance(this))
+						OnMenuSettingsClickListener.getCompatInstance(this))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
 
 		return true;
@@ -233,8 +213,6 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 
 	@Override
 	public void onEntitySelected(Entity e) {
-		mSelectedEntity = e;
-
 		EditEntity editEntity = (EditEntity) getSupportFragmentManager()
 				.findFragmentById(R.id.entity_edit_fragment);
 
@@ -250,8 +228,7 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 		super.onSaveInstanceState(outState);
 
 		// Save selected navigation list element
-		// outState.putInt(STATE_NAV_INDEX, getActionBar()
-		// .getSelectedNavigationIndex());
+		outState.putString(STATE_NAV_INDEX, mSelectedKind.toString());
 	}
 
 	private void restoreState(Bundle savedInstanceState) {
@@ -264,29 +241,27 @@ public class EntitiesActivity extends RoboSherlockFragmentActivity implements
 		// savedInstanceState.getInt(STATE_NAV_INDEX));
 	}
 
-	private void setKind(Entity.Kind kind) {
-
-		// IListEntitiesFragment entities_frag = loadChildFragment();
-
-		this.mSelectedKind = kind;
-
-		updateAddAction();
-
-		// if (entities_frag != null)
-		// entities_frag.setKind(kind);
+	private void reload(Kind kind) {
+		mSectionsPagerAdapter.getItem(kind).reload();
 	}
 
-	private void updateAddAction() {
+	private void setKind(Entity.Kind kind) {
+		this.mSelectedKind = kind;
+
+		updateAddAction(kind);
+	}
+
+	private void updateAddAction(Kind kind) {
 
 		if (mMenuAddAction == null) {
 			// Do nothing
-		} else if (mSelectedKind == Kind.Contact) {
+		} else if (kind == Kind.Contact) {
 			mMenuAddAction.setIcon(R.drawable.social_add_person);
 			mMenuAddAction.setTitle("Add Contact");
-		} else if (mSelectedKind == Kind.Group) {
+		} else if (kind == Kind.Group) {
 			mMenuAddAction.setIcon(R.drawable.social_add_group);
 			mMenuAddAction.setTitle("Add Group");
-		} else if (mSelectedKind == Kind.App) {
+		} else if (kind == Kind.App) {
 			mMenuAddAction.setIcon(R.drawable.av_add_to_queue);
 			mMenuAddAction.setTitle("Add App");
 		}
