@@ -3,54 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:id="@+id/entity_edit_linearlayout_details"
+    
+    <fragment
+        android:id="@+id/entity_fragment"
+        android:name="com.danielstiner.vibrates.view.fragments.EntityDetailFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="15px" >
-
-        <QuickContactBadge
-            android:id="@+id/contact_badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <!--
-            <ImageView
-	    	android:id="@+id/entity_edit_image"
-	    	android:src="@drawable/icon"
-	    	android:layout_height="80px"
-	    	android:layout_width="wrap_content"
-	    	/>
-        -->
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14px"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="11pt" />
-
-            <TextView
-                android:id="@+id/type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-5px"
-                android:text=""
-                android:textSize="7pt" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

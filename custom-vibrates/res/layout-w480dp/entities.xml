@@ -8,7 +8,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/pager"
-        android:layout_width="250dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         tools:context=".EntitiesActivity" >
 
@@ -26,11 +26,10 @@
             android:paddingTop="4dp"
             android:textColor="#fff" />
     </android.support.v4.view.ViewPager>
-
-    <FrameLayout
-        android:id="@+id/entity_edit_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </FrameLayout>
+    
+    <fragment android:name="com.danielstiner.vibrates.view.fragments.EntityDetailFragment"
+              android:id="@+id/entity_fragment"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
 
 </LinearLayout>

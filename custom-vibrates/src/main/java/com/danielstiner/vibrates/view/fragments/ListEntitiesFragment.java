@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.model.IEntityFilter;
 import com.danielstiner.vibrates.model.StorageUtil;
+import com.danielstiner.vibrates.model.internal.EntityFilter;
 import com.danielstiner.vibrates.view.model.EntityCursorAdapter;
 import com.danielstiner.vibrates.view.model.OnEntitySelectedListener;
 import com.google.inject.Inject;
@@ -27,15 +27,12 @@ import com.google.inject.Provider;
 
 public class ListEntitiesFragment extends RoboListFragment implements
 		IListEntitiesFragment, OnEntitySelectedListener {
-	
+
 	public interface ContainerActivityInterface {
 		public void onEntitySelected(Entity e);
 	}
-	
 
 	private static final int CONTEXTMENU_DELETE = 1;
-
-	private static final int MENU_ADD_ACTION = Menu.FIRST;
 
 	@Inject
 	private ContextScopedProvider<IDataModel> mManagerProvider;
@@ -47,13 +44,13 @@ public class ListEntitiesFragment extends RoboListFragment implements
 
 	private EntityCursorAdapter mAdapter;
 
-	@Inject
-	private IEntityFilter mEntityFilter;
+	//@Inject
+	private IEntityFilter mEntityFilter = new EntityFilter();
 
 	@Inject
 	private Provider<Application> mContextProvider;
 
-	private MenuItem mMenuAddAction;
+	private boolean stale = true;
 
 	public ListEntitiesFragment() {
 
@@ -82,14 +79,13 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		mManager = (mManager != null) ? mManager : mManagerProvider
 				.get(mContextProvider.get());
 		mAdapter = (mAdapter != null) ? mAdapter : mAdapterProvider
-				.get(getActivity().getApplicationContext());
+				.get(mContextProvider.get());
 
 		getListView().setAdapter(mAdapter);
-
-		StorageUtil.searchIntoAdapter(getLoaderManager(), mManager,
-				mEntityFilter, mAdapter);
+		
+		reloadIfStale();
 	}
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -97,12 +93,12 @@ public class ListEntitiesFragment extends RoboListFragment implements
 		// Force correct container type
 		getContainer();
 	}
-	
+
 	private ContainerActivityInterface getContainer() {
 
 		Activity activity = getActivity();
-		
-		if(activity == null)
+
+		if (activity == null)
 			return null;
 
 		try {
@@ -145,7 +141,7 @@ public class ListEntitiesFragment extends RoboListFragment implements
 	private void onRemoveEntity(Entity entity) {
 		mManager.remove(entity);
 
-		mEntityFilter.refresh();
+		reload();
 	}
 
 	@Override
@@ -160,15 +156,25 @@ public class ListEntitiesFragment extends RoboListFragment implements
 
 	@Override
 	public void setKind(Entity.Kind kind) {
-		if (mEntityFilter.getKind() == null
-				|| !mEntityFilter.getKind().equals(kind)) {
-			mEntityFilter.setKind(kind);
-		}
+		mEntityFilter.setKind(kind);
+
+		reload();
 	}
 
 	public void reload() {
-		// TODO Auto-generated method stub
-		
+		if (getActivity() != null && mManager != null && mEntityFilter.getKind() != null) {
+			StorageUtil.searchIntoAdapter(getLoaderManager(), mManager,
+					mEntityFilter, mAdapter);
+			stale = false;
+		} else {
+			stale = true;
+		}
+	}
+
+	private void reloadIfStale() {
+		if (stale) {
+			reload();
+		}
 	}
 
 }

@@ -24,7 +24,7 @@ public class LaunchActivity extends RoboActivity {
 			if (!mSettings.welcomed()) {
 				WelcomeActivity.show((Context) this);
 			} else {
-				EntitiesActivity.show((Context) this);
+				EntitiesListActivity.show((Context) this);
 			}
 		} else {
 			finish();

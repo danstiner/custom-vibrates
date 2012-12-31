@@ -46,4 +46,5 @@
 	<string name="buttonlabel_manual_setup_start">Quick Setup</string>
 	<string name="tab_contacts_label">Contacts</string>
 	<string name="tab_groups_label">Groups</string>
+	<string name="empty_list">Nothing to display.</string>
 </resources>

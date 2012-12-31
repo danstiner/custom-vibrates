@@ -15,7 +15,7 @@ import com.danielstiner.vibrates.R;
 import com.danielstiner.vibrates.model.IDataModel;
 import com.danielstiner.vibrates.settings.IUserSettings;
 import com.danielstiner.vibrates.util.PatternEditManager;
-import com.danielstiner.vibrates.view.EntitiesActivity;
+import com.danielstiner.vibrates.view.EntitiesListActivity;
 import com.danielstiner.vibrates.view.components.PatternView;
 import com.google.inject.Inject;
 
@@ -53,7 +53,7 @@ public class ManualSetup extends RoboActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		startMainScreenIntent = new Intent(this, EntitiesActivity.class);
+		startMainScreenIntent = new Intent(this, EntitiesListActivity.class);
 
 		setTitle("Custom Vibrates: Quick Setup");
 

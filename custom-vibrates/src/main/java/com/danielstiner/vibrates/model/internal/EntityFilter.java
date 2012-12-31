@@ -64,7 +64,7 @@ public class EntityFilter implements IEntityFilter {
 
 		// Build selection
 		String selection = "";
-		String selJoiner = " AND ";
+		final String selJoiner = " AND ";
 		List<String> selectionArgs = new ArrayList<String>();
 
 		// Kind
